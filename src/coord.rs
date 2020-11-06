@@ -7,6 +7,28 @@ pub struct Coord {
     lng: f32,
 }
 
+impl Coord {
+    pub fn coord(input: &str) -> Result<Coord> {
+        let items: Vec<&str> = input.split(",").collect();
+        match items.len() {
+            2 => Ok(Coord {
+                lat: items[0].parse::<f32>()?,
+                lng: items[1].parse::<f32>()?,
+            }),
+            _ => bail!("need 2 float for coordinate"),
+        }
+    }
+
+    pub fn coords(input: &str) -> Result<Vec<Coord>> {
+        let mut r: Vec<Coord> = Vec::new();
+        let items = input.split("|");
+        for item in items {
+            r.push(Coord::coord(item)?);
+        }
+        Ok(r)
+    }
+}
+
 impl Locatable for Coord {
     fn lat(&self) -> f32 {
         self.lat
