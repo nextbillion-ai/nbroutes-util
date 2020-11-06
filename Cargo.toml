@@ -1,0 +1,15 @@
+[package]
+name = "nbroutes-util"
+version = "0.1.0"
+authors = ["chang <chang@nextbillion.ai>"]
+edition = "2018"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+serde_yaml = "0.8.13"
+serde = {version = "1.0.116", features = ["derive"] }
+geo = "0.15.0"
+simple-error = "0.2.2"
+log = "0.4.0"
+env_logger = "0.7.1"
