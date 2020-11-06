@@ -2,7 +2,7 @@ pub mod coord;
 pub mod osrm_path;
 pub mod poly;
 use crate::coord::{Coord, Locatable};
-use crate::osrm_path::OsrmPaths;
+use crate::osrm_path::get_data_root;
 use crate::poly::load as load_poly;
 use geo::Polygon;
 use serde::{Deserialize, Serialize};
@@ -86,7 +86,7 @@ pub fn find_service(
 // todo: fix the osrm path and data root later. currently gateway doesn't need osrmpaths
 pub fn load_polygons(borders: &Borders) -> Result<HashMap<String, Vec<Polygon<f32>>>> {
     // let osrm_paths = OsrmPaths::load()?;
-    let data_root = "share"; // osrm_paths.data_root.as_ref().unwrap(),
+    let data_root = get_data_root();
     let mut polygons = HashMap::<String, Vec<Polygon<f32>>>::new();
     for area_name in borders.areas.keys() {
         polygons.insert(
