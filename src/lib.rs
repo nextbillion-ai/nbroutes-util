@@ -80,7 +80,8 @@ pub fn find_service(
             },
         }
     }
-    bail!("cannot determine mode")
+
+    Ok(r)
 }
 
 // todo: fix the osrm path and data root later. currently gateway doesn't need osrmpaths
