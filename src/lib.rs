@@ -83,18 +83,16 @@ pub fn find_service(
     bail!("cannot determine mode")
 }
 
+// todo: fix the osrm path and data root later. currently gateway doesn't need osrmpaths
 pub fn load_polygons(borders: &Borders) -> Result<HashMap<String, Vec<Polygon<f32>>>> {
-    let osrm_paths = OsrmPaths::load()?;
+    // let osrm_paths = OsrmPaths::load()?;
+    let data_root = "share"; // osrm_paths.data_root.as_ref().unwrap(),
     let mut polygons = HashMap::<String, Vec<Polygon<f32>>>::new();
     for area_name in borders.areas.keys() {
         polygons.insert(
             area_name.clone(),
-            load_poly(&format!(
-                "{}/mojo/borders/{}.poly",
-                osrm_paths.data_root.as_ref().unwrap(),
-                &area_name
-            ))
-            .expect(&format!("failed to load poly for {}", &area_name)),
+            load_poly(&format!("{}/mojo/borders/{}.poly", data_root, &area_name))
+                .expect(&format!("failed to load poly for {}", &area_name)),
         );
         info!("loaded poly file for {}", &area_name);
     }
