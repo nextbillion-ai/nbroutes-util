@@ -1,4 +1,5 @@
 use crate::Result;
+use jwks_client::jwt::Jwt;
 use jwks_client::keyset::KeyStore;
 
 pub struct Jwks {
@@ -12,37 +13,44 @@ impl Jwks {
         }
     }
 
-    pub fn verify(&self, token: &str, auds: &Vec<&str>) -> Result<()> {
+    pub fn verify_without_auds(&self, token: &str) -> Result<Jwt> {
         match self.ks.verify(token) {
             Ok(jwt) => {
                 if jwt.expired().unwrap_or(false) {
                     bail!("jwt expired");
                 }
-                println!("{:?}", jwt.payload());
-                let _auds = jwt.payload().get_array("aud");
-                if _auds.is_none() {
-                    bail!("no aud");
-                }
-                let _auds = _auds.unwrap();
-                let mut found = false;
-                'outer: for a in auds {
-                    for b in _auds {
-                        let b = &b.as_str().unwrap_or("");
-                        if a == b {
-                            found = true;
-                            break 'outer;
-                        }
-                    }
-                }
-                if !found {
-                    bail!("invalid aud");
-                }
-                Ok(())
+
+                Ok(jwt)
             }
             Err(e) => {
                 bail!(format!("key decoding failed: {:?}", e));
             }
         }
+    }
+
+    pub fn verify(&self, token: &str, auds: &Vec<&str>) -> Result<()> {
+        let jwt = self.verify_without_auds(token)?;
+
+        let _auds = jwt.payload().get_array("aud");
+        if _auds.is_none() {
+            bail!("no aud");
+        }
+
+        let _auds = _auds.unwrap();
+        let mut found = false;
+        'outer: for a in auds {
+            for b in _auds {
+                let b = &b.as_str().unwrap_or("");
+                if a == b {
+                    found = true;
+                    break 'outer;
+                }
+            }
+        }
+        if !found {
+            bail!("invalid aud");
+        }
+        Ok(())
     }
 }
 
