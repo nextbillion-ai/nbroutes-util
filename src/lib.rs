@@ -42,7 +42,7 @@ pub struct Service {
 pub fn find_service(
     mode: &Option<String>,
     coords: &Vec<Coord>,
-    polygons: &HashMap<String, Vec<Polygon<f32>>>,
+    polygons: &HashMap<String, Vec<Polygon<f64>>>,
     areas: &BTreeMap<String, Area>,
 ) -> Result<Service> {
     let mut detected: Option<&String> = None;
@@ -86,10 +86,10 @@ pub fn find_service(
 }
 
 // todo: fix the osrm path and data root later. currently gateway doesn't need osrmpaths
-pub fn load_polygons(borders: &Borders) -> Result<HashMap<String, Vec<Polygon<f32>>>> {
+pub fn load_polygons(borders: &Borders) -> Result<HashMap<String, Vec<Polygon<f64>>>> {
     // let osrm_paths = OsrmPaths::load()?;
     let data_root = get_data_root();
-    let mut polygons = HashMap::<String, Vec<Polygon<f32>>>::new();
+    let mut polygons = HashMap::<String, Vec<Polygon<f64>>>::new();
     for area_name in borders.areas.keys() {
         polygons.insert(
             area_name.clone(),

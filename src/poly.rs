@@ -1,17 +1,17 @@
 use geo::{LineString, Polygon};
 use std::fs;
 
-pub fn load(path: &str) -> Result<Vec<Polygon<f32>>, std::io::Error> {
+pub fn load(path: &str) -> Result<Vec<Polygon<f64>>, std::io::Error> {
     debug!("loading poly from path: {}", path);
     let contents = fs::read_to_string(path).expect("Something went wrong reading the file");
     _load(&contents)
 }
 
-fn _load(contents: &str) -> Result<Vec<Polygon<f32>>, std::io::Error> {
+fn _load(contents: &str) -> Result<Vec<Polygon<f64>>, std::io::Error> {
     let lines = contents.lines();
     let mut mode = 0;
-    let mut coords: Vec<(f32, f32)> = Vec::new();
-    let mut polygons: Vec<Polygon<f32>> = Vec::new();
+    let mut coords: Vec<(f64, f64)> = Vec::new();
+    let mut polygons: Vec<Polygon<f64>> = Vec::new();
     for line in lines {
         let trimed = line.trim_end();
         let replaced = trimed.replace("\t", " ");
@@ -25,18 +25,18 @@ fn _load(contents: &str) -> Result<Vec<Polygon<f32>>, std::io::Error> {
             }
             1 => {
                 if swt {
-                    let items: Vec<&str> = replaced.trim().split(" ").collect();
+                    let items: Vec<&str> = replaced.trim().split_whitespace().collect();
                     if items.len() == 2 {
                         let coord = (
-                            items[0].parse::<f32>().unwrap(),
-                            items[1].parse::<f32>().unwrap(),
+                            items[0].parse::<f64>().unwrap(),
+                            items[1].parse::<f64>().unwrap(),
                         );
                         coords.push(coord);
                     }
                 }
                 if trimed == "END" {
                     mode = 0;
-                    polygons.push(Polygon::<f32>::new(LineString::from(coords), vec![]));
+                    polygons.push(Polygon::<f64>::new(LineString::from(coords), vec![]));
                     coords = vec![];
                 }
             }
@@ -74,7 +74,7 @@ END";
         let polygons = _load(content).unwrap();
         println!("{}", content);
         println!("number of polygons parsed: {}", polygons.len());
-        let point = Point::<f32>::new(77.1064213, 24.2050449);
+        let point = Point::<f64>::new(77.1064213, 24.2050449);
         let mut ok = false;
         for polygon in polygons {
             if polygon.contains(&point) {
