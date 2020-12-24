@@ -2,6 +2,7 @@ pub mod coord;
 pub mod jwks;
 pub mod osrm_path;
 pub mod poly;
+pub mod def;
 use crate::coord::{Coord, Locatable};
 use crate::osrm_path::get_data_root;
 use crate::poly::load as load_poly;
