@@ -1,7 +1,6 @@
-use paperclip::actix::{
-    Apiv2Schema,
-};
+use paperclip::actix::Apiv2Schema;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 #[derive(Serialize, Deserialize, Clone, Apiv2Schema)]
 pub enum GeometryInput {
@@ -52,6 +51,14 @@ pub struct DirectionsOutput {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub mode: Option<String>,
     pub routes: Vec<Route>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+pub struct DirectionsTableOutput {
+    pub status: String,
+    #[serde(rename = "errorMessage")]
+    pub error_msg: Option<String>,
+    pub results: HashMap<String, DirectionsOutput>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
