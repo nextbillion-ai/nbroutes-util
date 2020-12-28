@@ -2,6 +2,9 @@ use paperclip::actix::Apiv2Schema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
+const STATUS_OK: &str = "Ok";
+const STATUS_FAILED: &str = "Failed";
+
 #[derive(Serialize, Deserialize, Clone, Apiv2Schema)]
 pub enum GeometryInput {
     #[serde(rename = "polyline")]
