@@ -1,8 +1,8 @@
 pub mod coord;
+pub mod def;
 pub mod jwks;
 pub mod osrm_path;
 pub mod poly;
-pub mod def;
 use crate::coord::{Coord, Locatable};
 use crate::osrm_path::get_data_root;
 use crate::poly::load as load_poly;
@@ -62,28 +62,30 @@ pub fn find_service(
         bail!("detected area not in config")
     }
     let area = areas.get(detected).unwrap();
-    let mut r = Service {
+    let mapped_mode = map_mode(mode, area.default_service.clone(), area);
+
+    let r = Service {
         area: detected.clone(),
-        mode: area.default_service.clone(),
+        mode: mapped_mode,
     };
 
+    Ok(r)
+}
+
+pub fn map_mode(mode: &Option<String>, default_mode: String, area: &Area) -> String {
     if mode.is_some() {
         match area.mappings.get(mode.as_ref().unwrap()) {
-            Some(v) => {
-                r.mode = v.clone();
-                return Ok(r);
-            }
+            Some(v) => return v.clone(),
             _ => match area.mappings.get("all") {
                 Some(v) => {
-                    r.mode = v.clone();
-                    return Ok(r);
+                    return v.clone();
                 }
                 _ => {}
             },
         }
     }
 
-    Ok(r)
+    default_mode
 }
 
 // todo: fix the osrm path and data root later. currently gateway doesn't need osrmpaths
