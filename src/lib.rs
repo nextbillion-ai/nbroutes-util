@@ -38,6 +38,7 @@ pub struct Area {
 pub struct Service {
     pub area: String,
     pub mode: String,
+    pub origin_area_conf: Area,
 }
 
 pub fn find_service(
@@ -67,6 +68,7 @@ pub fn find_service(
     let r = Service {
         area: detected.clone(),
         mode: mapped_mode,
+        origin_area_conf: area.clone(),
     };
 
     Ok(r)
