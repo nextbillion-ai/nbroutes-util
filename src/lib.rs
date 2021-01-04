@@ -78,12 +78,18 @@ pub fn map_mode(mode: &Option<String>, default_mode: String, area: &Area) -> Str
     if mode.is_some() {
         match area.mappings.get(mode.as_ref().unwrap()) {
             Some(v) => return v.clone(),
-            _ => match area.mappings.get("all") {
-                Some(v) => {
-                    return v.clone();
+            _ => {
+                info!(
+                    "map_mode failed due to unknown mode: {}",
+                    mode.as_ref().unwrap()
+                );
+                match area.mappings.get("all") {
+                    Some(v) => {
+                        return v.clone();
+                    }
+                    _ => {}
                 }
-                _ => {}
-            },
+            }
         }
     }
 
