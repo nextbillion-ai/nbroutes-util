@@ -63,7 +63,7 @@ pub fn find_service(
         bail!("detected area not in config")
     }
     let area = areas.get(detected).unwrap();
-    let mapped_mode = map_mode(mode, area.default_service.clone(), area);
+    let mapped_mode = map_mode(mode, area.default_service.clone(), area)?;
 
     let r = Service {
         area: detected.clone(),
@@ -74,26 +74,25 @@ pub fn find_service(
     Ok(r)
 }
 
-pub fn map_mode(mode: &Option<String>, default_mode: String, area: &Area) -> String {
+pub fn map_mode(mode: &Option<String>, default_mode: String, area: &Area) -> Result<String> {
     if mode.is_some() {
         match area.mappings.get(mode.as_ref().unwrap()) {
-            Some(v) => return v.clone(),
+            Some(v) => return Ok(v.clone()),
             _ => {
-                info!(
-                    "map_mode failed due to unknown mode: {}",
-                    mode.as_ref().unwrap()
-                );
-                match area.mappings.get("all") {
-                    Some(v) => {
-                        return v.clone();
-                    }
-                    _ => {}
+                if mode.as_ref().unwrap().as_str() == default_mode.as_str() {
+                    return Ok(default_mode);
+                } else {
+                    warn!(
+                        "map_mode failed due to unknown mode: {}",
+                        mode.as_ref().unwrap()
+                    );
+                    bail!("unknown mode")
                 }
             }
         }
     }
 
-    default_mode
+    Ok(default_mode)
 }
 
 // todo: fix the osrm path and data root later. currently gateway doesn't need osrmpaths
