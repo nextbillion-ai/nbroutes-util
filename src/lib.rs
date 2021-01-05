@@ -86,7 +86,7 @@ pub fn map_mode(mode: &Option<String>, default_mode: String, area: &Area) -> Res
                         "map_mode failed due to unknown mode: {}",
                         mode.as_ref().unwrap()
                     );
-                    bail!("unknown mode")
+                    bail!("invalid mode input")
                 }
             }
         }
