@@ -96,7 +96,11 @@ pub fn map_mode(mode: &Option<String>, default_mode: String, area: &Area) -> Res
 }
 
 // todo: fix the osrm path and data root later. currently gateway doesn't need osrmpaths
-pub fn load_polygons(borders: &Borders) -> Result<HashMap<String, Vec<Polygon<f64>>>> {
+pub fn load_polygons(borders: &Option<Borders>) -> Option<HashMap<String, Vec<Polygon<f64>>>> {
+    if borders.is_none(){
+        return None;
+    }
+    let borders = borders.as_ref().unwrap();
     // let osrm_paths = OsrmPaths::load()?;
     let data_root = get_data_root();
     let mut polygons = HashMap::<String, Vec<Polygon<f64>>>::new();
@@ -108,5 +112,5 @@ pub fn load_polygons(borders: &Borders) -> Result<HashMap<String, Vec<Polygon<f6
         );
         info!("loaded poly file for {}", &area_name);
     }
-    Ok(polygons)
+    Some(polygons)
 }
