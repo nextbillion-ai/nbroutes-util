@@ -97,7 +97,7 @@ pub fn map_mode(mode: &Option<String>, default_mode: String, area: &Area) -> Res
 
 // todo: fix the osrm path and data root later. currently gateway doesn't need osrmpaths
 pub fn load_polygons(borders: &Option<Borders>) -> Option<HashMap<String, Vec<Polygon<f64>>>> {
-    if borders.is_none(){
+    if borders.is_none() {
         return None;
     }
     let borders = borders.as_ref().unwrap();

@@ -31,22 +31,35 @@ impl Jwks {
     pub fn verify(&self, token: &str, auds: &Vec<&str>) -> Result<()> {
         let jwt = self.verify_without_auds(token)?;
 
-        let _auds = jwt.payload().get_array("aud");
-        if _auds.is_none() {
-            bail!("no aud");
-        }
-
-        let _auds = _auds.unwrap();
         let mut found = false;
-        'outer: for a in auds {
-            for b in _auds {
-                let b = &b.as_str().unwrap_or("");
-                if a == b {
-                    found = true;
-                    break 'outer;
+        let _auds = jwt.payload().get_array("aud");
+        match _auds {
+            None => {
+                let _aud = jwt.payload().get_str("aud");
+                if _aud.is_none() {
+                    bail!("no aud");
+                }
+                let _aud = _aud.unwrap();
+                for a in auds {
+                    if a == &_aud {
+                        found = true;
+                        break;
+                    }
+                }
+            }
+            Some(v) => {
+                'outer: for a in auds {
+                    for b in v {
+                        let b = &b.as_str().unwrap_or("");
+                        if a == b {
+                            found = true;
+                            break 'outer;
+                        }
+                    }
                 }
             }
         }
+
         if !found {
             bail!("invalid aud");
         }
@@ -65,4 +78,12 @@ mod test {
         println!("verify result: {:?}", r);
         assert!(r.is_ok());
     }
+    #[test]
+    fn test_verify_old() {
+        let jwks = Jwks::load_from_url("https://static.nextbillion.io/jwks/nb.ai.pub?2");
+        let r = jwks.verify("eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Im5iLmFpIn0.eyJpc3MiOiJuZXh0YmlsbGlvbi5haSIsInN1YiI6Im5leHRiaWxsaW9uYWkiLCJjaWQiOiJNZWdhQ2FiIiwia2lkIjoiMjA3MTAwMzAxNDk2NzY1NDQwIiwiYXVkIjoibmIiLCJpYXQiOjE1OTU2NzczNTksImV4cCI6MTYyNzIxMzM1OX0.EfRNArJbOblIFXSchb6zF7phNbOb-1JCdAsf9T7pkU0jvPTUNU4Z9bd6GZOnfqorzvobewO_SVAKgpF8Mgqu8g2AzKCQHMvLTuWseyl_as5lzxJJTmMnJhrb2UckD67ycVfVf5ZADXq2QlawT-ffmzPvBOFQaXDCxG2GRVznrqkOoTvaunlyOv9s_HKDTVnYpDm3pKptIlyY-mNj7uC5CWezWI5_a6jr2-RRttEdzziokVl8gfN1Jn67gki34S2ANeRAI0Le2dSWyge66mEC72HGPqk6joiWFa6CZL5dQlOh095XK4fVOfxbZOFu80XcrA5R_eZFcXucmSoGf9dq5Q",&vec!["nb"]);
+        println!("verify result: {:?}", r);
+        assert!(r.is_ok());
+    }
+
 }
