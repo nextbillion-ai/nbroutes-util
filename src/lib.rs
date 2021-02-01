@@ -3,6 +3,8 @@ pub mod def;
 pub mod jwks;
 pub mod osrm_path;
 pub mod poly;
+pub mod statsd;
+
 use crate::coord::{Coord, Locatable};
 use crate::osrm_path::get_data_root;
 use crate::poly::load as load_poly;
@@ -14,6 +16,8 @@ use std::time::{SystemTime, UNIX_EPOCH};
 extern crate log;
 #[macro_use]
 extern crate simple_error;
+#[macro_use]
+extern crate prometheus;
 
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
