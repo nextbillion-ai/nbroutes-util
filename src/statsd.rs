@@ -5,8 +5,8 @@ use std::sync::mpsc::{channel, Sender};
 use std::sync::{Arc, RwLock};
 use std::thread;
 
-const LABELNAME_APPNAME: &str = "appname";
-const LABELNAME_SINK_TO: &str = "sink_to";
+pub const LABELNAME_APPNAME: &str = "appname";
+pub const LABELNAME_SINK_TO: &str = "sink_to";
 
 pub enum MetricType {
     Counter,
