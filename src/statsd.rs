@@ -1,7 +1,7 @@
 use prometheus::core::Collector;
 use prometheus::{unregister, CounterVec, Encoder, GaugeVec, HistogramVec, TextEncoder};
 use std::collections::HashMap;
-use std::sync::mpsc::{channel, Sender};
+use std::sync::mpsc::{sync_channel, SyncSender};
 use std::sync::{Arc, RwLock};
 use std::thread;
 
@@ -53,8 +53,8 @@ impl StatsdCollector {
     pub fn new(
         app_name: String,
         metrics: Vec<RegisterMetricInput>,
-    ) -> (Arc<RwLock<StatsdCollector>>, Sender<TypedTrackInput>) {
-        let (tx, rx) = channel::<TypedTrackInput>();
+    ) -> (Arc<RwLock<StatsdCollector>>, SyncSender<TypedTrackInput>) {
+        let (tx, rx) = sync_channel::<TypedTrackInput>(10000);
         let mut collector = StatsdCollector {
             counter_vec_map: HashMap::<String, CounterVec>::new(),
             histogram_vec_map: HashMap::<String, HistogramVec>::new(),
