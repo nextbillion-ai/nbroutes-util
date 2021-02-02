@@ -54,7 +54,7 @@ impl StatsdCollector {
         app_name: String,
         metrics: Vec<RegisterMetricInput>,
     ) -> (Arc<RwLock<StatsdCollector>>, SyncSender<TypedTrackInput>) {
-        let (tx, rx) = sync_channel::<TypedTrackInput>(1000);
+        let (tx, rx) = sync_channel::<TypedTrackInput>(10000);
         let mut collector = StatsdCollector {
             counter_vec_map: HashMap::<String, CounterVec>::new(),
             histogram_vec_map: HashMap::<String, HistogramVec>::new(),
