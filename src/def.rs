@@ -1,9 +1,11 @@
+#![allow(non_snake_case)]
 use paperclip::actix::Apiv2Schema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
 pub const STATUS_OK: &str = "Ok";
 pub const STATUS_FAILED: &str = "Failed";
+
 
 #[derive(Serialize, Deserialize, Clone, Apiv2Schema)]
 pub enum GeometryInput {
@@ -107,6 +109,36 @@ pub struct Step {
     pub geometry: Option<String>,
     pub start_location: Location,
     pub end_location: Location,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct GetNearbyInput{
+    #[doc = r"(currentlocation: lat,lng) ^[\d\.\-]+,[\d\.\-]+$"]
+    pub currentlocation: String,
+    pub servicetype: String,
+    #[doc = r#"Default: 10000"#]
+    pub searchradius: Option<i64>,
+    #[doc = r#"Default: 10"#]
+    pub maxcount: Option<i64>,
+    pub key: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct GetNearbyOutput {
+    pub status: String,
+    pub currentLocation: Location, 
+    pub searchRadius: i64,
+    pub maxCount: i64,
+    pub serviceType: String,
+    pub results: Vec<NearbyResult>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct NearbyResult{
+    pub id: String,
+    pub location: Location,
+    pub eta: f64,
+    pub distance: f64,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
