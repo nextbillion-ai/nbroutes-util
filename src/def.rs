@@ -119,7 +119,7 @@ pub struct GetNearbyInput{
     #[doc = r#"Default: 10000"#]
     pub searchradius: Option<i64>,
     #[doc = r#"Default: 10"#]
-    pub maxcount: Option<i64>,
+    pub maxcount: Option<usize>,
     pub key: Option<String>,
 }
 
@@ -128,7 +128,7 @@ pub struct GetNearbyOutput {
     pub status: String,
     pub currentLocation: Location, 
     pub searchRadius: i64,
-    pub maxCount: i64,
+    pub maxCount: usize,
     pub serviceType: String,
     pub results: Vec<NearbyResult>,
 }
