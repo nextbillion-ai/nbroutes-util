@@ -126,6 +126,7 @@ pub struct GetNearbyInput{
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct GetNearbyOutput {
     pub status: String,
+    pub msg: Option<String>,
     pub currentLocation: Location, 
     pub searchRadius: i64,
     pub maxCount: usize,
