@@ -14,18 +14,18 @@ impl Jwks {
     }
 
     pub fn verify_without_auds(&self, token: &str) -> Result<Jwt> {
-        match self.ks.verify(token) {
-            Ok(jwt) => {
-                if jwt.expired().unwrap_or(false) {
-                    bail!("jwt expired");
-                }
-
-                Ok(jwt)
-            }
-            Err(e) => {
-                bail!(format!("key decoding failed: {:?}", e));
-            }
+        let verify_res = self.ks.verify(token);
+        if let Err(e) = verify_res {
+            bail!(format!("key decoding failed: {:?}", e));
         }
+
+        let jwt = verify_res.unwrap();
+        if jwt.expired().unwrap_or(true) {
+            warn!("jwt is expired");
+            // bail!("jwt expired");
+        }
+
+        Ok(jwt)
     }
 
     pub fn verify(&self, token: &str, auds: &Vec<&str>) -> Result<()> {
@@ -85,5 +85,4 @@ mod test {
         println!("verify result: {:?}", r);
         assert!(r.is_ok());
     }
-
 }
