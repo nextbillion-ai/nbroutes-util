@@ -210,4 +210,5 @@ pub struct SnappedPoint {
     pub original_index: u64,
     pub distance: f64,
     pub name: String,
+    pub bearing: f64,
 }
