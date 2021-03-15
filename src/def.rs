@@ -6,7 +6,6 @@ use std::collections::HashMap;
 pub const STATUS_OK: &str = "Ok";
 pub const STATUS_FAILED: &str = "Failed";
 
-
 #[derive(Serialize, Deserialize, Clone, Apiv2Schema)]
 pub enum GeometryInput {
     #[serde(rename = "polyline")]
@@ -112,7 +111,7 @@ pub struct Step {
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
-pub struct GetNearbyInput{
+pub struct GetNearbyInput {
     #[doc = r"(currentlocation: lat,lng) ^[\d\.\-]+,[\d\.\-]+$"]
     pub currentlocation: String,
     pub servicetype: String,
@@ -127,7 +126,7 @@ pub struct GetNearbyInput{
 pub struct GetNearbyOutput {
     pub status: String,
     pub msg: Option<String>,
-    pub currentLocation: Location, 
+    pub currentLocation: Location,
     pub searchRadius: i64,
     pub maxCount: usize,
     pub serviceType: String,
@@ -135,11 +134,11 @@ pub struct GetNearbyOutput {
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
-pub struct NearbyResult{
+pub struct NearbyResult {
     pub id: String,
     pub location: Location,
-    pub eta: f64,
-    pub distance: f64,
+    pub eta: u64,
+    pub distance: u64,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
