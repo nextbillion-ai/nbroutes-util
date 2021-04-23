@@ -69,6 +69,7 @@ pub struct DirectionsTableOutput {
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
 pub struct Route {
+    #[doc = r#"Format: Polyline(https://developers.google.com/maps/documentation/utilities/polylinealgorithm)"#]
     pub geometry: Option<String>,
     pub distance: f64,
     pub duration: f64,
