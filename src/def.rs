@@ -49,6 +49,33 @@ pub struct DirectionsInput {
     pub key: Option<String>,
 }
 
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct ServerSideMeteringInput {
+    #[doc = r"(waypoints: lat0,lng0|lat1,lng1|...) ^[\d\.\-]+,[\d\.\-]+(\|[\d\.\-]+,[\d\.\-]+)*$"]
+    pub waypoints: String,
+    #[doc = r#"Default: polyline6"#]
+    pub geometry: Option<GeometryInput>,
+    #[doc = r#"Default: [traffic_signals]"#]
+    pub special_object_types: Vec<String>,
+    #[doc = r#"Default: """#]
+    pub mode: Option<String>,
+    #[doc = r#"Default: false"#]
+    pub debug: Option<bool>,
+    #[doc = r#"Default: """#]
+    pub context: Option<String>,
+    pub key: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+pub struct ServerSideMeteringOutput {
+    pub status: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub mode: Option<String>,
+    pub route: Option<MeteredRoute>,
+    #[serde(rename = "errorMessage", skip_serializing_if = "Option::is_none")]
+    pub error_msg: Option<String>,
+}
+
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
 pub struct DirectionsOutput {
     pub status: String,
@@ -65,6 +92,14 @@ pub struct DirectionsTableOutput {
     #[serde(rename = "errorMessage")]
     pub error_msg: Option<String>,
     pub results: HashMap<String, DirectionsOutput>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+pub struct MeteredRoute {
+    #[doc = r#"Format: Polyline(https://developers.google.com/maps/documentation/utilities/polylinealgorithm)"#]
+    pub geometry: String,
+    pub distance: f64,
+    pub special_objects: HashMap<String, Vec<Location>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
