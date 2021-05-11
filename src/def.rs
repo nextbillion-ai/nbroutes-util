@@ -54,7 +54,7 @@ pub struct ServerSideMeteringInput {
     #[doc = r"(waypoints: lat0,lng0|lat1,lng1|...) ^[\d\.\-]+,[\d\.\-]+(\|[\d\.\-]+,[\d\.\-]+)*$"]
     pub waypoints: String,
     #[doc = r#"Default: [traffic_signals]"#]
-    pub special_object_types: Vec<String>,
+    pub special_object_types: Option<Vec<String>>,
     #[doc = r#"Default: """#]
     pub mode: Option<String>,
     #[doc = r#"Default: false"#]
