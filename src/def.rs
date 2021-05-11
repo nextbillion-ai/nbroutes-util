@@ -50,7 +50,7 @@ pub struct DirectionsInput {
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
-pub struct ServerSideMeteringInput {
+pub struct PostTripRouteInput {
     #[doc = r"(waypoints: lat0,lng0|lat1,lng1|...) ^[\d\.\-]+,[\d\.\-]+(\|[\d\.\-]+,[\d\.\-]+)*$"]
     pub waypoints: String,
     #[doc = r#"Default: [traffic_signals]"#]
@@ -65,7 +65,7 @@ pub struct ServerSideMeteringInput {
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
-pub struct ServerSideMeteringOutput {
+pub struct PostTripRouteOutput {
     pub status: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub mode: Option<String>,
