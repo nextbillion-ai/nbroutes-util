@@ -92,12 +92,20 @@ pub struct DirectionsTableOutput {
     pub results: HashMap<String, DirectionsOutput>,
 }
 
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct SpecialObject {
+    #[serde(rename = "ID")]
+    pub id: String,
+    pub name: String,
+    pub coordinates: Location,
+}
+
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
 pub struct MeteredRoute {
     #[doc = r#"Format: Polyline(https://developers.google.com/maps/documentation/utilities/polylinealgorithm)"#]
     pub geometry: String,
     pub distance: f64,
-    pub special_objects: HashMap<String, Vec<Location>>,
+    pub special_objects: HashMap<String, Vec<SpecialObject>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
