@@ -47,13 +47,15 @@ pub struct DirectionsInput {
     #[doc = r#"Default: """#]
     pub context: Option<String>,
     pub key: Option<String>,
+    #[doc = r"(special_object_types: type1,type2,...)"]
+    pub special_object_types: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct PostTripRouteInput {
     #[doc = r"(waypoints: lat0,lng0|lat1,lng1|...) ^[\d\.\-]+,[\d\.\-]+(\|[\d\.\-]+,[\d\.\-]+)*$"]
     pub waypoints: String,
-    #[doc = r#"Default: [traffic_signals]"#]
+    #[doc = r#"Default: ["traffic_signals"]"#]
     pub special_object_types: Option<Vec<String>>,
     #[doc = r#"Default: """#]
     pub mode: Option<String>,
@@ -105,7 +107,7 @@ pub struct MeteredRoute {
     #[doc = r#"Format: Polyline(https://developers.google.com/maps/documentation/utilities/polylinealgorithm)"#]
     pub geometry: String,
     pub distance: f64,
-    pub special_objects: HashMap<String, Vec<SpecialObject>>,
+    pub special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
@@ -123,6 +125,8 @@ pub struct Route {
     pub raw_duration: Option<f64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub predicted_duration: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Apiv2Schema)]
