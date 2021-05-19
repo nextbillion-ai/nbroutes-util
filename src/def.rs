@@ -20,6 +20,11 @@ pub struct IntValue {
     pub value: u64,
 }
 
+#[derive(Deserialize, Apiv2Schema)]
+pub struct KeyInput {
+    pub key: Option<String>,
+}
+
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct DirectionsInput {
     #[doc = r"(origin: lat,lng) ^[\d\.\-]+,[\d\.\-]+$"]
