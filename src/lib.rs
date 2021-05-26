@@ -55,8 +55,14 @@ pub fn find_service(
     let mut detected = HashMap::<&String, i64>::new();
 
     for coord in coords {
-        let d = coord.locate(polygons)?;
-        *detected.entry(d).or_insert(0) += 1;
+        let d = coord.locate(polygons);
+        if d.is_err() {
+            if tolerate_outlier {
+                continue;
+            }
+            bail!(d.err().unwrap())
+        }
+        *detected.entry(d?).or_insert(0) += 1;
     }
     debug!("find_service detected: {:?}", detected);
 
