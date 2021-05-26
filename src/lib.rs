@@ -52,9 +52,8 @@ pub fn find_service<'a>(
     areas: &BTreeMap<String, Area>,
     tolerate_outlier: bool,
 ) -> Result<(Service, Vec<&'a Coord>)> {
-    let mut detected = HashMap::<&String, i64>::new();
+    let mut detected = HashMap::<&String, Vec<&Coord>>::new();
 
-    let mut new_coords = vec![];
     for coord in coords {
         let d = coord.locate(polygons);
         if d.is_err() {
@@ -63,17 +62,17 @@ pub fn find_service<'a>(
             }
             bail!(d.err().unwrap())
         }
-        *detected.entry(d?).or_insert(0) += 1;
-        new_coords.push(coord);
+        detected.entry(d?).or_insert(vec![]).push(coord);
     }
-    debug!("find_service detected: {:?}", detected);
 
     let mut detected_area = None;
+    let mut new_coords = vec![];
     match detected.len() {
         0 => bail!("not area is detected"),
         1 => {
-            for key in detected.keys().into_iter() {
-                detected_area = Some(key.clone());
+            for (key, locations) in detected.into_iter() {
+                detected_area = Some(key);
+                new_coords = locations;
                 break;
             }
         }
@@ -82,14 +81,15 @@ pub fn find_service<'a>(
                 bail!("more than one area is detected");
             }
             let mut best_area = None;
-            let mut best_count: i64 = 0;
-            for (area, count) in detected.into_iter() {
-                if best_area.is_none() || count > best_count {
+            let mut best_locations: Vec<&Coord> = vec![];
+            for (area, locations) in detected.into_iter() {
+                if best_area.is_none() || locations.len() > best_locations.len() {
                     best_area = Some(area);
-                    best_count = count;
+                    best_locations = locations;
                 }
             }
             detected_area = best_area;
+            new_coords = best_locations;
         }
     }
 
