@@ -51,9 +51,10 @@ pub fn find_service(
     polygons: &HashMap<String, Vec<Polygon<f64>>>,
     areas: &BTreeMap<String, Area>,
     tolerate_outlier: bool,
-) -> Result<Service> {
+) -> Result<(Service, &Vec<Coord>)> {
     let mut detected = HashMap::<&String, i64>::new();
 
+    let mut new_coords = vec![];
     for coord in coords {
         let d = coord.locate(polygons);
         if d.is_err() {
@@ -63,6 +64,7 @@ pub fn find_service(
             bail!(d.err().unwrap())
         }
         *detected.entry(d?).or_insert(0) += 1;
+        new_coords.push(coord);
     }
     debug!("find_service detected: {:?}", detected);
 
@@ -106,7 +108,7 @@ pub fn find_service(
         origin_area_conf: area.clone(),
     };
 
-    Ok(r)
+    Ok((r, new_coords))
 }
 
 pub fn map_mode(mode: &Option<String>, default_mode: String, area: &Area) -> Result<String> {
