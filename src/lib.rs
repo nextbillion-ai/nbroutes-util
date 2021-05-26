@@ -50,27 +50,52 @@ pub fn find_service(
     coords: &Vec<Coord>,
     polygons: &HashMap<String, Vec<Polygon<f64>>>,
     areas: &BTreeMap<String, Area>,
+    tolerate_outlier: bool,
 ) -> Result<Service> {
-    let mut detected: Option<&String> = None;
+    let mut detected = HashMap::<&String, i64>::new();
+
     for coord in coords {
         let d = coord.locate(polygons)?;
-        if detected.is_none() {
-            detected = Some(d);
-        } else if detected.unwrap() != d {
-            bail!("failed to detect area/city")
+        *detected.entry(d).or_insert(0) += 1;
+    }
+    debug!("find_service detected: {:?}", detected);
+
+    let mut detected_area = None;
+    match detected.len() {
+        0 => bail!("not area is detected"),
+        1 => {
+            for key in detected.keys().into_iter() {
+                detected_area = Some(key.clone());
+                break;
+            }
+        }
+        _ => {
+            if !tolerate_outlier {
+                bail!("more than one area is detected");
+            }
+            let mut best_area = None;
+            let mut best_count: i64 = 0;
+            for (area, count) in detected.into_iter() {
+                if best_area.is_none() || count > best_count {
+                    best_area = Some(area);
+                    best_count = count;
+                }
+            }
+            detected_area = best_area;
         }
     }
-    let detected = detected.unwrap();
 
-    if !areas.contains_key(detected) {
-        warn!("area {} not found in config", detected);
+    let detected_area = detected_area.unwrap();
+
+    if !areas.contains_key(detected_area) {
+        warn!("area {} not found in config", detected_area);
         bail!("detected area not in config")
     }
-    let area = areas.get(detected).unwrap();
+    let area = areas.get(detected_area).unwrap();
     let mapped_mode = map_mode(mode, area.default_service.clone(), area)?;
 
     let r = Service {
-        area: detected.clone(),
+        area: detected_area.clone(),
         mode: mapped_mode,
         origin_area_conf: area.clone(),
     };
