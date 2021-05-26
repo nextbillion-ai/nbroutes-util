@@ -45,13 +45,13 @@ pub struct Service {
     pub origin_area_conf: Area,
 }
 
-pub fn find_service(
+pub fn find_service<'a>(
     mode: &Option<String>,
-    coords: &Vec<Coord>,
+    coords: &'a Vec<Coord>,
     polygons: &HashMap<String, Vec<Polygon<f64>>>,
     areas: &BTreeMap<String, Area>,
     tolerate_outlier: bool,
-) -> Result<(Service, &Vec<Coord>)> {
+) -> Result<(Service, Vec<&'a Coord>)> {
     let mut detected = HashMap::<&String, i64>::new();
 
     let mut new_coords = vec![];
