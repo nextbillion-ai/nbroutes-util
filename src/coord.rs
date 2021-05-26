@@ -27,6 +27,15 @@ impl Coord {
         }
         Ok(r)
     }
+
+    pub fn coords_to_str(input: Vec<&Coord>) -> String {
+        let mut point_strs = vec![];
+        for coord in input.iter() {
+            let point_str = format!("{},{}", coord.lat, coord.lng);
+            point_strs.push(point_str);
+        }
+        point_strs.join("|")
+    }
 }
 
 impl Locatable for Coord {
