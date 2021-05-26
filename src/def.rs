@@ -69,6 +69,7 @@ pub struct PostTripRouteInput {
     #[doc = r#"Default: """#]
     pub context: Option<String>,
     pub key: Option<String>,
+    pub tolerate_outlier: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
