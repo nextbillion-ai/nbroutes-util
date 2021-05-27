@@ -52,10 +52,10 @@ pub fn find_service<'a>(
     polygons: &HashMap<String, Vec<Polygon<f64>>>,
     areas: &BTreeMap<String, Area>,
     tolerate_outlier: bool,
-) -> Result<(Service, Vec<&'a Coord>)> {
-    let mut detected = HashMap::<&String, Vec<&Coord>>::new();
+) -> Result<(Service, Option<Vec<usize>>)> {
+    let mut detected = HashMap::<&String, Vec<usize>>::new();
 
-    for coord in coords {
+    for (idx, coord) in coords.iter().enumerate() {
         let d = coord.locate(polygons);
         if d.is_err() {
             if tolerate_outlier {
@@ -63,17 +63,16 @@ pub fn find_service<'a>(
             }
             bail!(d.err().unwrap())
         }
-        detected.entry(d?).or_insert(vec![]).push(coord);
+        detected.entry(d?).or_insert(vec![]).push(idx);
     }
 
     let mut detected_area = None;
-    let mut new_coords = vec![];
+    let mut new_coord_indexes = None;
     match detected.len() {
         0 => bail!("not area is detected"),
         1 => {
-            for (key, locations) in detected.into_iter() {
-                detected_area = Some(key);
-                new_coords = locations;
+            for key in detected.keys() {
+                detected_area = Some(key.clone());
                 break;
             }
         }
@@ -82,7 +81,7 @@ pub fn find_service<'a>(
                 bail!("more than one area is detected");
             }
             let mut best_area = None;
-            let mut best_locations: Vec<&Coord> = vec![];
+            let mut best_locations: Vec<usize> = vec![];
             for (area, locations) in detected.into_iter() {
                 if best_area.is_none() || locations.len() > best_locations.len() {
                     best_area = Some(area);
@@ -90,7 +89,7 @@ pub fn find_service<'a>(
                 }
             }
             detected_area = best_area;
-            new_coords = best_locations;
+            new_coord_indexes = Some(best_locations);
         }
     }
 
@@ -109,7 +108,7 @@ pub fn find_service<'a>(
         origin_area_conf: area.clone(),
     };
 
-    Ok((r, new_coords))
+    Ok((r, new_coord_indexes))
 }
 
 pub fn map_mode(mode: &Option<String>, default_mode: String, area: &Area) -> Result<String> {
