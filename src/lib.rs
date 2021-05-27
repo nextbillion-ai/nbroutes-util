@@ -4,6 +4,7 @@ pub mod jwks;
 pub mod osrm_path;
 pub mod poly;
 pub mod statsd;
+pub mod util;
 
 use crate::coord::{Coord, Locatable};
 use crate::osrm_path::get_data_root;
