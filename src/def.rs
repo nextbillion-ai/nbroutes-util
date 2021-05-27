@@ -60,6 +60,8 @@ pub struct DirectionsInput {
 pub struct PostTripRouteInput {
     #[doc = r"(waypoints: lat0,lng0|lat1,lng1|...) ^[\d\.\-]+,[\d\.\-]+(\|[\d\.\-]+,[\d\.\-]+)*$"]
     pub waypoints: String,
+    #[doc = r"(timestamps(in seconds): ts0|ts1|...) ^[\d]+(\|[\d]+)*$"]
+    pub timestamps: Option<String>,
     #[doc = r#"Default: ["traffic_signals"]"#]
     pub special_object_types: Option<Vec<String>>,
     #[doc = r#"Default: """#]
