@@ -246,6 +246,7 @@ pub struct SnapInput {
     pub key: Option<String>,
     #[doc = r#"Default: """#]
     pub context: Option<String>,
+    pub tolerate_outlier: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
