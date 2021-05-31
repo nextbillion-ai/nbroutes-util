@@ -71,8 +71,11 @@ pub fn find_service<'a>(
     match detected.len() {
         0 => bail!("not area is detected"),
         1 => {
-            for key in detected.keys() {
-                detected_area = Some(key.clone());
+            for (key, value) in detected.into_iter() {
+                detected_area = Some(key);
+                if value.len() != coords.len() {
+                    new_coord_indexes = Some(value);
+                }
                 break;
             }
         }
