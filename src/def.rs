@@ -91,6 +91,7 @@ pub struct DirectionsOutput {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub mode: Option<String>,
     pub routes: Vec<Route>,
+    pub special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
     #[serde(rename = "errorMessage", skip_serializing_if = "Option::is_none")]
     pub error_msg: Option<String>,
 }
