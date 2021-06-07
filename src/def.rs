@@ -54,6 +54,7 @@ pub struct DirectionsInput {
     pub key: Option<String>,
     #[doc = r"(special_object_types: type1,type2,...)"]
     pub special_object_types: Option<String>,
+    pub nearby_special_obj: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
