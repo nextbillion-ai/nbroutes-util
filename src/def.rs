@@ -124,7 +124,11 @@ pub struct MeteredRoute {
 pub struct Route {
     #[doc = r#"Format: Polyline(https://developers.google.com/maps/documentation/utilities/polylinealgorithm)"#]
     pub geometry: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub geometry_full: Option<String>,
     pub distance: f64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub distance_full: Option<f64>,
     pub duration: f64,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub start_location: Option<Location>,
