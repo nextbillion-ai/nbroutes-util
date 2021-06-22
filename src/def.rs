@@ -49,7 +49,7 @@ pub struct DirectionsInput {
     pub alternatives: Option<bool>,
     #[doc = "enable to show debug information.\n\nDefault: `false`"]
     pub debug: Option<bool>,
-    #[doc(hidden)]
+    #[doc = "`deprecated`"]
     pub context: Option<String>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
@@ -69,7 +69,7 @@ pub struct PostTripRouteInput {
     pub mode: Option<String>,
     #[doc = "enable to show debug information.\n\nDefault: `false`"]
     pub debug: Option<bool>,
-    #[doc = "this shall be invisible.\n\nDefault: `\"\"`"]
+    #[doc = "`deprecated`"]
     pub context: Option<String>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
@@ -260,7 +260,7 @@ pub struct MatrixInput {
     pub debug: Option<bool>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
-    #[doc = "this should be invisible"]
+    #[doc = "`deprecated`"]
     pub context: Option<String>,
 }
 
@@ -304,7 +304,7 @@ pub struct SnapInput {
     pub interpolate: Option<bool>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
-    #[doc = "invisible"]
+    #[doc = "`deprecated`"]
     pub context: Option<String>,
     #[doc = "enable to ignore location not found in service boundary.\n\nNote: enable this to ignore outliers, otherwise an error will be thrown.\n\nDefault: `false`"]
     pub tolerate_outlier: Option<bool>,
