@@ -141,7 +141,7 @@ pub struct Route {
     #[doc = "encoded geometry value in `polyline` or `polyline6`.\n\nFormat: [Link: Polyline](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)"]
     pub geometry: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    #[doc = "encoded geometry value in `polyline` or `polyline6`.\n\nFormat: [Link: Polyline](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)"]
+    #[doc = "`Debug Only!` encoded geometry value in `polyline` or `polyline6`.\n\nNote: might contains `raw` geometry before filtering.\n\nFormat: [Link: Polyline](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)"]
     pub geometry_full: Option<String>,
     #[doc = "route driving distance.\n\nUnit: `meters`"]
     pub distance: f64,
