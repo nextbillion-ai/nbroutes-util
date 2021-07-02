@@ -3,6 +3,7 @@ pub mod def;
 pub mod jwks;
 pub mod osrm_path;
 pub mod poly;
+pub mod protos;
 pub mod statsd;
 pub mod util;
 

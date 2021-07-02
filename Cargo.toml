@@ -17,3 +17,7 @@ env_logger = "0.7.1"
 jwks-client = "0.1.4"
 paperclip = { version = "0.5", features = ["actix", "v2"] }
 prometheus = "0.10.0"
+protobuf = "2.24.1"
+
+[build-dependencies]
+protobuf-codegen-pure = "2.24.1"
