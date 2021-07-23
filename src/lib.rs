@@ -11,6 +11,7 @@ use crate::coord::{Coord, Locatable};
 use crate::osrm_path::get_data_root;
 use crate::poly::load as load_poly;
 use geo::Polygon;
+use reqwest;
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashMap};
 use std::time::{SystemTime, UNIX_EPOCH};
@@ -33,11 +34,99 @@ pub struct Borders {
     pub areas: BTreeMap<String, Area>,
 }
 
+impl Borders {
+    pub async fn populate_time_dependant_setting(&mut self, namespace: &Option<String>) {
+        for (area, area_setting) in self.areas.iter_mut() {
+            if area_setting.time_dependant.is_none() {
+                continue;
+            }
+            if namespace.is_none() {
+                warn!("populate_time_dependant_setting fails since namespace is not configured");
+                continue;
+            }
+
+            let ns = namespace.as_ref().unwrap().as_str();
+
+            let mut area_time_dependant =
+                BTreeMap::<String, BTreeMap<String, TimeDependantSetting>>::new();
+            for (mode, mode_setting) in area_setting.time_dependant.as_ref().unwrap() {
+                let mut mode_time_dependant = BTreeMap::<String, TimeDependantSetting>::new();
+
+                for (ctx, enabled) in mode_setting {
+                    if !enabled {
+                        continue;
+                    }
+
+                    let mut filename = area.to_owned();
+                    if ctx.as_str() != "" {
+                        filename = filename + "-" + ctx.as_str();
+                    }
+                    filename = filename + "-" + mode.as_str();
+
+                    let url = "https://storage.googleapis.com/static.nextbillion.io/nbroute/time_dependant_setting/".to_owned() + ns + "/" + filename.as_str() + ".yaml";
+                    let maybe_resp = reqwest::get(url.as_str()).await;
+                    if maybe_resp.is_err() {
+                        warn!("populate_time_dependant_setting fails to get setting for filename {} due to {:?}", &filename, maybe_resp.err().unwrap());
+                        continue;
+                    }
+                    let maybe_body = maybe_resp.unwrap().text().await;
+                    if maybe_body.is_err() {
+                        warn!("populate_time_dependant_setting fails to get setting for filename {} due to {:?}", &filename, maybe_body.err().unwrap());
+                        continue;
+                    }
+                    let body = maybe_body.unwrap();
+                    let maybe_setting = serde_yaml::from_str(&body);
+                    if maybe_setting.is_err() {
+                        warn!("populate_time_dependant_setting fails to get setting for filename {} due to {:?}", &filename, maybe_setting.err().unwrap());
+                        continue;
+                    }
+                    mode_time_dependant.insert(ctx.clone(), maybe_setting.unwrap());
+                }
+
+                if mode_time_dependant.len() > 0 {
+                    area_time_dependant.insert(mode.clone(), mode_time_dependant);
+                }
+            }
+
+            if area_time_dependant.len() > 0 {
+                area_setting.time_dependant_settings = Some(area_time_dependant);
+            }
+        }
+    }
+}
+
+#[derive(Deserialize, Clone)]
+pub struct DaysAheadSlotSetting {
+    pub id: String,
+    pub range: Vec<u64>,
+}
+
+#[derive(Deserialize, Clone)]
+pub struct DaysAheadDaySetting {
+    pub prefix: String,
+    pub slots: Vec<DaysAheadSlotSetting>,
+}
+
+#[derive(Deserialize, Clone)]
+pub struct DaysAheadSettting {
+    pub timezone: f64,
+    pub days: Vec<DaysAheadDaySetting>,
+}
+
+#[derive(Deserialize, Clone)]
+pub struct TimeDependantSetting {
+    pub setting_type: String,
+    pub days_ahead_setting: Option<DaysAheadSettting>,
+}
+
 #[derive(Serialize, Deserialize, Clone)]
 pub struct Area {
     pub name: String,
     pub default_service: String,
     pub mappings: BTreeMap<String, String>,
+    pub time_dependant: Option<BTreeMap<String, BTreeMap<String, bool>>>,
+    #[serde(skip_deserializing, skip_serializing)]
+    pub time_dependant_settings: Option<BTreeMap<String, BTreeMap<String, TimeDependantSetting>>>,
 }
 
 #[derive(Clone)]
