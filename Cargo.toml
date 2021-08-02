@@ -19,6 +19,7 @@ paperclip = { version = "0.5", features = ["actix", "v2"] }
 prometheus = "0.10.0"
 protobuf = "2.24.1"
 reqwest = "0.11.4"
+rsc_osrm= "0.1.21"
 
 [build-dependencies]
 protobuf-codegen-pure = "2.24.1"

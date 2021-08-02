@@ -1,5 +1,6 @@
 #![allow(non_snake_case)]
 use paperclip::actix::Apiv2Schema;
+use rsc_osrm::general::Annotation as rAnnotation;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 
@@ -177,6 +178,29 @@ pub struct Location {
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+pub struct Annotation {
+    pub duration: Vec<f64>,
+    pub distance: Vec<f64>,
+    pub speed: Vec<f64>,
+    pub weight: Vec<f64>,
+    pub nodes: Vec<i64>,
+    pub datasources: Vec<i32>,
+}
+
+impl Annotation {
+    pub fn new(anno: &rAnnotation) -> Annotation {
+        Annotation {
+            duration: anno.duration.clone(),
+            distance: anno.distance.clone(),
+            speed: anno.speed.clone(),
+            weight: anno.weight.clone(),
+            nodes: anno.nodes.clone(),
+            datasources: anno.datasources.clone(),
+        }
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
 pub struct Leg {
     #[doc = "leg driving distance.\n\nUnit: `meters`"]
     pub distance: IntValue,
@@ -194,6 +218,9 @@ pub struct Leg {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "`steps` of `leg`"]
     pub steps: Option<Vec<Step>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`deprecated`"]
+    pub annotation: Option<Annotation>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
