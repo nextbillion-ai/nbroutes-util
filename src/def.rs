@@ -55,6 +55,8 @@ pub struct DirectionsInput {
     pub key: Option<String>,
     #[doc = "special geospatial objects to include in response.\n\nFormat: `type1,type2,...`.\n\nDefault:`\"\"`"]
     pub special_object_types: Option<String>,
+    #[doc = "`deprecated`"]
+    pub annotations: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
