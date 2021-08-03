@@ -63,7 +63,7 @@ impl Borders {
                     }
                     filename = filename + "-" + mode.as_str();
 
-                    let url = "https://storage.googleapis.com/static.nextbillion.io/nbroute/time_dependant_setting/".to_owned() + ns + "/" + filename.as_str() + ".yaml";
+                    let url = format!("https://storage.googleapis.com/static.nextbillion.io/nbroute/time_dependant_setting/{}/{}.yaml?{}", ns, filename.as_str(), timestamp());
                     let maybe_resp = reqwest::get(url.as_str()).await;
                     if maybe_resp.is_err() {
                         warn!("populate_time_dependant_setting fails to get setting for filename {} due to {:?}", &filename, maybe_resp.err().unwrap());
