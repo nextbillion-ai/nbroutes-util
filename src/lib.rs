@@ -6,6 +6,7 @@ pub mod poly;
 pub mod protos;
 pub mod statsd;
 pub mod util;
+use chrono::prelude::*;
 
 use crate::coord::{Coord, Locatable};
 use crate::osrm_path::get_data_root;
@@ -15,6 +16,7 @@ use reqwest;
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashMap};
 use std::time::{SystemTime, UNIX_EPOCH};
+
 #[macro_use]
 extern crate log;
 #[macro_use]
@@ -77,7 +79,7 @@ impl Borders {
                     let body = maybe_body.unwrap();
                     let maybe_setting = serde_yaml::from_str(&body);
                     if maybe_setting.is_err() {
-                        warn!("populate_time_dependant_setting fails to get setting for filename {} due to {:?}", &filename, maybe_setting.err().unwrap());
+                        warn!("populate_time_dependant_setting fails to get setting for filename {} due to {:?}, contents: {}", &filename, maybe_setting.err().unwrap(), body.as_str());
                         continue;
                     }
                     mode_time_dependant.insert(ctx.clone(), maybe_setting.unwrap());
@@ -98,7 +100,7 @@ impl Borders {
 #[derive(Deserialize, Clone)]
 pub struct DaysAheadSlotSetting {
     pub id: String,
-    pub range: Vec<u64>,
+    pub range: Vec<u32>,
 }
 
 #[derive(Deserialize, Clone)]
@@ -114,9 +116,197 @@ pub struct DaysAheadSettting {
 }
 
 #[derive(Deserialize, Clone)]
+pub struct RecurringDayDefinition {
+    pub day_type: String,
+    pub date_value: Option<Vec<String>>,
+    pub weekday_value: Option<Vec<u32>>,
+}
+
+impl RecurringDayDefinition {
+    pub fn match_time(&self, target_date: &str, target_weekday: &Weekday) -> bool {
+        return match self.day_type.as_str() {
+            "date" => {
+                if self.date_value.is_none() {
+                    warn!("match_time missing date_value with day_type=date");
+                    return false;
+                }
+                for v in self.date_value.as_ref().unwrap() {
+                    if target_date == v.as_str() {
+                        return true;
+                    }
+                }
+                false
+            }
+            "weekday" => {
+                if self.weekday_value.is_none() {
+                    warn!("match_time missing weekday_value with day_type=weekday");
+                    return false;
+                }
+                for v in self.weekday_value.as_ref().unwrap() {
+                    if target_weekday.number_from_monday() - 1 == v.clone() {
+                        return true;
+                    }
+                }
+                debug!(
+                    "match_time fails since target_weekday {} does not match {:?}",
+                    target_weekday.number_from_monday() - 1,
+                    self.weekday_value.as_ref().unwrap()
+                );
+                false
+            }
+            _ => {
+                warn!("match_time invalid day_type: {}", self.day_type.as_str());
+                false
+            }
+        };
+    }
+}
+
+#[derive(Deserialize, Clone)]
+pub struct RecurringDaySetting {
+    pub name: String,
+    pub prefix: String,
+    pub days: Vec<RecurringDayDefinition>,
+    pub slots: Vec<DaysAheadSlotSetting>,
+}
+
+#[derive(Deserialize, Clone)]
+pub struct RecurringSetting {
+    pub timezone: f64,
+    pub days: Vec<RecurringDaySetting>,
+}
+
+#[derive(Deserialize, Clone)]
 pub struct TimeDependantSetting {
     pub setting_type: String,
     pub days_ahead_setting: Option<DaysAheadSettting>,
+    pub recurring_setting: Option<RecurringSetting>,
+}
+
+impl TimeDependantSetting {
+    pub fn get_additional_ctx_days_ahead(&self, ts: i64) -> Option<String> {
+        if self.days_ahead_setting.is_none() {
+            warn!("days_ahead_setting is None");
+            return None;
+        }
+        let days_ahead_setting = self.days_ahead_setting.as_ref().unwrap();
+
+        let time_zone: FixedOffset;
+        if days_ahead_setting.timezone >= 0.0 {
+            time_zone = FixedOffset::east((days_ahead_setting.timezone * 3600.0) as i32);
+        } else {
+            time_zone = FixedOffset::west((-days_ahead_setting.timezone * 3600.0) as i32);
+        }
+        let time_now = Utc::now().with_timezone(&time_zone);
+        let today_start_ts = time_zone
+            .ymd(time_now.year(), time_now.month(), time_now.day())
+            .and_hms_nano(0, 0, 0, 0)
+            .timestamp();
+        debug!("get_additional_ctx today_start_ts is {}", today_start_ts);
+
+        let target_ts_since_today = ts - today_start_ts;
+        if target_ts_since_today < 0 {
+            debug!("get_additional_ctx returns None ts is before today");
+            return None;
+        }
+
+        let days_since_today = target_ts_since_today / 86400;
+        if days_since_today >= days_ahead_setting.days.len() as i64 {
+            debug!("get_additional_ctx returns None ts is beyond plan");
+            return None;
+        }
+
+        let seconds_since_target_day = target_ts_since_today - (days_since_today * 86400);
+        let target_day = &days_ahead_setting.days[days_since_today as usize];
+        for slot in target_day.slots.iter() {
+            if seconds_since_target_day >= ((slot.range[0] * 3600) as i64)
+                && seconds_since_target_day <= ((slot.range[1] * 3600) as i64)
+            {
+                return Some(target_day.prefix.to_owned() + slot.id.as_str());
+            }
+        }
+
+        debug!("get_additional_ctx returns None since no slot is found for the day");
+        None
+    }
+
+    pub fn get_additional_ctx_recurring(&self, ts: i64) -> Option<String> {
+        if self.recurring_setting.is_none() {
+            warn!("recurring_setting is None");
+            return None;
+        }
+        let recurring_setting = self.recurring_setting.as_ref().unwrap();
+
+        let time_zone: FixedOffset;
+        if recurring_setting.timezone >= 0.0 {
+            time_zone = FixedOffset::east((recurring_setting.timezone * 3600.0) as i32);
+        } else {
+            time_zone = FixedOffset::west((-recurring_setting.timezone * 3600.0) as i32);
+        }
+
+        // get target ts's time as local time
+        // TODO: experiment whether this really work...
+        let target_local_time =
+            DateTime::<FixedOffset>::from_utc(NaiveDateTime::from_timestamp(ts, 0), time_zone);
+        let target_date = format!(
+            "{}/{}/{}",
+            target_local_time.year(),
+            target_local_time.month(),
+            target_local_time.day()
+        );
+        let target_weekday = target_local_time.weekday();
+        let target_hour = target_local_time.hour();
+        debug!(
+            "local time for ts {} is {:?} {} {}, {}",
+            ts,
+            &target_local_time,
+            target_date.as_str(),
+            target_weekday.number_from_monday() - 1,
+            target_hour
+        );
+
+        for recurring_day in recurring_setting.days.iter() {
+            for day in recurring_day.days.iter() {
+                if !day.match_time(target_date.as_str(), &target_weekday) {
+                    continue;
+                }
+                for slot in recurring_day.slots.iter() {
+                    if slot.range.len() < 2 {
+                        warn!(
+                            "get_additional_ctx_recurring invalid slot range {:?}",
+                            &slot.range
+                        );
+                        continue;
+                    }
+                    if target_hour < slot.range[0] {
+                        continue;
+                    }
+                    if target_hour >= slot.range[1] {
+                        continue;
+                    }
+
+                    return Some(recurring_day.prefix.to_owned() + slot.id.as_str());
+                }
+            }
+        }
+
+        debug!("get_additional_ctx returns None since no slot is found for the day");
+        None
+    }
+
+    pub fn get_additional_ctx(&self, ts: i64) -> Option<String> {
+        return match self.setting_type.as_str() {
+            "days-ahead" => self.get_additional_ctx_days_ahead(ts),
+            "recurring" => self.get_additional_ctx_recurring(ts),
+            _ => {
+                warn!(
+                    "get_additional_ctx encouters invalid setting type: {}",
+                    self.setting_type.as_str()
+                );
+                None
+            }
+        };
+    }
 }
 
 #[derive(Serialize, Deserialize, Clone)]
