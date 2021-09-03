@@ -1,4 +1,6 @@
 #![allow(non_snake_case)]
+use crate::util::straight_distance;
+use geo::{LineString, Polygon};
 use paperclip::actix::Apiv2Schema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -27,7 +29,7 @@ pub struct KeyInput {
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct DirectionsInput {
-    #[doc = "location of origin.\n\nFormat: `lat,lng`.\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+$"]
+    #[doc = "{{location_of_origin}}\n\nFormat: `lat,lng`.\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+$"]
     pub origin: String,
     #[doc = "location of destination.\n\nFormat: `lat,lng`.\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+$"]
     pub destination: String,
@@ -349,4 +351,182 @@ pub struct SnappedPoint {
     pub name: String,
     #[doc = "bearing angle of the snapped point.\n\nUnit: `radian`"]
     pub bearing: f64,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ConfigCoord {
+    pub lat: f64,
+    pub lng: f64,
+}
+
+impl ConfigCoord {
+    pub fn distance(&self, someone: &ConfigCoord) -> f64 {
+        straight_distance(self.lat, self.lng, someone.lat, someone.lng)
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ConfigPolygon {
+    pub name: String,
+    pub coords: Vec<ConfigCoord>,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ConfigArea {
+    pub id: String,
+    pub polygons: Vec<ConfigPolygon>,
+}
+#[derive(Serialize, Deserialize, Debug)]
+pub struct ConfigCluster {
+    pub id: String,
+    pub address: String,
+    pub nbroutes: Vec<String>,
+    pub location: ConfigCoord,
+}
+
+#[derive(Serialize, Deserialize, Debug)]
+pub struct MaaasConfig {
+    pub areas: Vec<ConfigArea>,
+    pub clusters: Vec<ConfigCluster>,
+    #[serde(skip)]
+    pub parsed_areas: HashMap<String, Vec<Polygon<f64>>>,
+    #[serde(skip)]
+    pub inited: bool,
+}
+
+#[derive(Debug)]
+pub struct MaaasLookupResult {
+    pub local: bool,
+    pub proxy_address: Option<String>,
+}
+
+impl MaaasConfig {
+    pub fn init(&mut self) {
+        if self.inited {
+            return;
+        }
+        for area in self.areas.iter() {
+            let mut polygons: Vec<Polygon<f64>> = Vec::new();
+            for p in area.polygons.iter() {
+                let mut coords: Vec<(f64, f64)> = Vec::new();
+                for c in p.coords.iter() {
+                    coords.push((c.lng, c.lat));
+                }
+                polygons.push(Polygon::<f64>::new(LineString::from(coords), vec![]));
+            }
+            self.parsed_areas.insert(area.id.to_owned(), polygons);
+        }
+        self.inited = true;
+    }
+
+    pub fn polygons(&mut self, area: &str) -> Option<&Vec<Polygon<f64>>> {
+        self.init();
+        self.parsed_areas.get(area)
+    }
+
+    pub fn lookup(&self, cluster_id: &str, nbroute: &str) -> Option<MaaasLookupResult> {
+        let mut self_cluster: Option<&ConfigCluster> = None;
+        for cluster in self.clusters.iter() {
+            if cluster.id == cluster_id {
+                self_cluster = Some(&cluster);
+                break;
+            }
+        }
+        for r in self_cluster?.nbroutes.iter() {
+            if r == nbroute {
+                return Some(MaaasLookupResult {
+                    local: true,
+                    proxy_address: None,
+                });
+            }
+        }
+        let mut proxy_address: Option<&str> = None;
+        let mut min_dist: f64 = -1.0;
+        for cluster in self.clusters.iter() {
+            for r in cluster.nbroutes.iter() {
+                if r == nbroute {
+                    let dist = self_cluster?.location.distance(&cluster.location);
+                    if min_dist < 0.0 || min_dist > dist {
+                        min_dist = dist;
+                        proxy_address = Some(&cluster.address);
+                    }
+                }
+            }
+        }
+        Some(MaaasLookupResult {
+            local: false,
+            proxy_address: Some(proxy_address?.to_owned()),
+        })
+    }
+}
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_load() {
+        let content = "areas:\n
+  - id: singapore\n
+    polygons:\n
+      - name: area1\n
+        coords:\n
+          - lng: 103.80844116210938\n
+            lat: 1.4802430218865072\n
+          - lng: 103.7164306640625\n
+            lat: 1.4596504356431457\n
+          - lng: 103.65875244140625\n
+            lat: 1.4267019064882447\n
+          - lng: 103.57498168945312\n
+            lat: 1.2317471514699085\n
+          - lng: 103.73428344726561\n
+            lat: 1.139756366394449\n
+          - lng: 104.0679931640625\n
+            lat: 1.334718132769963\n
+          - lng: 103.97872924804688\n
+            lat: 1.4308204986633148\n
+          - lng: 103.80844116210938\n
+            lat: 1.4802430218865072\n
+clusters:\n
+  - id: aks-sg\n
+    address: https://maaas-aks-sg.nextbillion.io\n
+    nbroutes:\n
+      - singapore-4w\n
+      - india-4w\n
+      - ca-4w\n
+    location:\n
+      lat: 1.3437459\n
+      lng: 103.8240449\n
+  - id: aks-ld\n
+    address: https://maaas-aks-ld.nextbillion.io\n
+    nbroutes: []\n
+    location:\n
+      lat: 51.5287352\n
+      lng: -0.3817863";
+        let mut r: MaaasConfig = serde_yaml::from_str(content).unwrap();
+        {
+            let lr = r.lookup("aks-sg", "singapore-4w");
+            assert!(lr.is_some());
+            let lr = lr.unwrap();
+            assert!(lr.local);
+        }
+        {
+            let lr = r.lookup("aks-sg", "singapore-8w");
+            assert!(lr.is_none());
+        }
+        {
+            let lr = r.lookup("aks-ld", "singapore-4w");
+            assert!(lr.is_some());
+            let lr = lr.unwrap();
+            assert!(!lr.local);
+            assert!(lr.proxy_address.is_some());
+            assert!(lr.proxy_address.unwrap() == "https://maaas-aks-sg.nextbillion.io");
+        }
+
+        let pl = r.polygons("singapore");
+        assert!(pl.is_some());
+        let pl = pl.unwrap();
+        assert!(pl.len() == 1);
+        assert!(r.areas.len() == 1);
+    }
 }
