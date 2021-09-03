@@ -54,22 +54,22 @@ mod tests {
 
     #[test]
     fn test_load() {
-        let content = "freight_tiger_boundary \n\
-area1\n\
-\t75.81\t38.86\n\
-\t68.86\t35.65\n\
-\t67.04\t22.21\n\
-\t72.38\t6.13\n\
-\t77.95\t4.26\n\
-\t83.6\t10.36\n\
-\t90.68\t18.78\n\
-\t99.63\t28.89\n\
-\t94.02\t30.58\n\
-\t86.49\t28.04\n\
-\t81.37\t31.07\n\
-\t81.46\t35.96\n\
-\t75.81\t38.86\n\
-END\n\
+        let content = "freight_tiger_boundary \n
+area1\n
+\t75.81\t38.86\n
+\t68.86\t35.65\n
+\t67.04\t22.21\n
+\t72.38\t6.13\n
+\t77.95\t4.26\n
+\t83.6\t10.36\n
+\t90.68\t18.78\n
+\t99.63\t28.89\n
+\t94.02\t30.58\n
+\t86.49\t28.04\n
+\t81.37\t31.07\n
+\t81.46\t35.96\n
+\t75.81\t38.86\n
+END\n
 END";
         let polygons = _load(content).unwrap();
         println!("{}", content);

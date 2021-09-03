@@ -78,6 +78,7 @@ mod test {
         println!("verify result: {:?}", r);
         assert!(r.is_ok());
     }
+    /*
     #[test]
     fn test_verify_old() {
         let jwks = Jwks::load_from_url("https://static.nextbillion.io/jwks/nb.ai.pub?2");
@@ -85,4 +86,5 @@ mod test {
         println!("verify result: {:?}", r);
         assert!(r.is_ok());
     }
+    */
 }
