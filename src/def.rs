@@ -385,22 +385,15 @@ pub struct ConfigCluster {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
-pub struct MaaasConfig {
+pub struct MaaasAreaConfig {
     pub areas: Vec<ConfigArea>,
-    pub clusters: Vec<ConfigCluster>,
     #[serde(skip)]
     pub parsed_areas: HashMap<String, Vec<Polygon<f64>>>,
     #[serde(skip)]
     pub inited: bool,
 }
 
-#[derive(Debug)]
-pub struct MaaasLookupResult {
-    pub local: bool,
-    pub proxy_address: Option<String>,
-}
-
-impl MaaasConfig {
+impl MaaasAreaConfig {
     pub fn init(&mut self) {
         if self.inited {
             return;
@@ -423,7 +416,20 @@ impl MaaasConfig {
         self.init();
         self.parsed_areas.get(area)
     }
+}
 
+#[derive(Serialize, Deserialize, Debug)]
+pub struct MaaasConfig {
+    pub clusters: Vec<ConfigCluster>,
+}
+
+#[derive(Debug)]
+pub struct MaaasLookupResult {
+    pub local: bool,
+    pub proxy_address: Option<String>,
+}
+
+impl MaaasConfig {
     pub fn lookup(&self, cluster_id: &str, nbroute: &str) -> Option<MaaasLookupResult> {
         let mut self_cluster: Option<&ConfigCluster> = None;
         for cluster in self.clusters.iter() {
@@ -466,7 +472,45 @@ mod tests {
 
     #[test]
     fn test_load() {
-        let content = "areas:\n
+        {
+            let content = "clusters:\n
+  - id: aks-sg\n
+    address: https://maaas-aks-sg.nextbillion.io\n
+    nbroutes:\n
+      - singapore-4w\n
+      - india-4w\n
+      - ca-4w\n
+    location:\n
+      lat: 1.3437459\n
+      lng: 103.8240449\n
+  - id: aks-ld\n
+    address: https://maaas-aks-ld.nextbillion.io\n
+    nbroutes: []\n
+    location:\n
+      lat: 51.5287352\n
+      lng: -0.3817863";
+            let r: MaaasConfig = serde_yaml::from_str(content).unwrap();
+            {
+                let lr = r.lookup("aks-sg", "singapore-4w");
+                assert!(lr.is_some());
+                let lr = lr.unwrap();
+                assert!(lr.local);
+            }
+            {
+                let lr = r.lookup("aks-sg", "singapore-8w");
+                assert!(lr.is_none());
+            }
+            {
+                let lr = r.lookup("aks-ld", "singapore-4w");
+                assert!(lr.is_some());
+                let lr = lr.unwrap();
+                assert!(!lr.local);
+                assert!(lr.proxy_address.is_some());
+                assert!(lr.proxy_address.unwrap() == "https://maaas-aks-sg.nextbillion.io");
+            }
+        }
+        {
+            let content = "areas:\n
   - id: singapore\n
     polygons:\n
       - name: area1\n
@@ -486,47 +530,15 @@ mod tests {
           - lng: 103.97872924804688\n
             lat: 1.4308204986633148\n
           - lng: 103.80844116210938\n
-            lat: 1.4802430218865072\n
-clusters:\n
-  - id: aks-sg\n
-    address: https://maaas-aks-sg.nextbillion.io\n
-    nbroutes:\n
-      - singapore-4w\n
-      - india-4w\n
-      - ca-4w\n
-    location:\n
-      lat: 1.3437459\n
-      lng: 103.8240449\n
-  - id: aks-ld\n
-    address: https://maaas-aks-ld.nextbillion.io\n
-    nbroutes: []\n
-    location:\n
-      lat: 51.5287352\n
-      lng: -0.3817863";
-        let mut r: MaaasConfig = serde_yaml::from_str(content).unwrap();
-        {
-            let lr = r.lookup("aks-sg", "singapore-4w");
-            assert!(lr.is_some());
-            let lr = lr.unwrap();
-            assert!(lr.local);
-        }
-        {
-            let lr = r.lookup("aks-sg", "singapore-8w");
-            assert!(lr.is_none());
-        }
-        {
-            let lr = r.lookup("aks-ld", "singapore-4w");
-            assert!(lr.is_some());
-            let lr = lr.unwrap();
-            assert!(!lr.local);
-            assert!(lr.proxy_address.is_some());
-            assert!(lr.proxy_address.unwrap() == "https://maaas-aks-sg.nextbillion.io");
-        }
+            lat: 1.4802430218865072\n";
 
-        let pl = r.polygons("singapore");
-        assert!(pl.is_some());
-        let pl = pl.unwrap();
-        assert!(pl.len() == 1);
-        assert!(r.areas.len() == 1);
+            let mut r: MaaasAreaConfig = serde_yaml::from_str(content).unwrap();
+
+            let pl = r.polygons("singapore");
+            assert!(pl.is_some());
+            let pl = pl.unwrap();
+            assert!(pl.len() == 1);
+            assert!(r.areas.len() == 1);
+        }
     }
 }
