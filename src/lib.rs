@@ -11,6 +11,7 @@ use chrono::prelude::*;
 use crate::coord::{Coord, Locatable};
 use crate::osrm_path::get_data_root;
 use crate::poly::load as load_poly;
+use crate::util::load_maaas_area_config; 
 use geo::Polygon;
 use reqwest;
 use serde::{Deserialize, Serialize};
@@ -416,15 +417,22 @@ pub fn map_mode(mode: &Option<String>, default_mode: String, area: &Area) -> Res
 }
 
 // todo: fix the osrm path and data root later. currently gateway doesn't need osrmpaths
-pub fn load_polygons(borders: &Option<Borders>) -> Option<HashMap<String, Vec<Polygon<f64>>>> {
+pub async fn load_polygons(borders: &Option<Borders>) -> Option<HashMap<String, Vec<Polygon<f64>>>> {
     if borders.is_none() {
         return None;
     }
+    let mut maaas_area_cfg = load_maaas_area_config().await.ok()?;
     let borders = borders.as_ref().unwrap();
     // let osrm_paths = OsrmPaths::load()?;
     let data_root = get_data_root();
     let mut polygons = HashMap::<String, Vec<Polygon<f64>>>::new();
     for area_name in borders.areas.keys() {
+        let ps = maaas_area_cfg.polygons(&area_name);
+        if ps.is_some() {
+            polygons.insert(area_name.clone(), ps.unwrap().to_vec());
+            info!("loaded poly file from maaas-area-cfg for {}", &area_name);
+            continue;
+        }
         polygons.insert(
             area_name.clone(),
             load_poly(&format!("{}/mojo/borders/{}.poly", data_root, &area_name))

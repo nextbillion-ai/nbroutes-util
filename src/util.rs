@@ -1,4 +1,4 @@
-use crate::def::MaaasConfig;
+use crate::def::{MaaasAreaConfig, MaaasConfig};
 use async_process::Command;
 use std::str::FromStr;
 use std::string::ToString;
@@ -38,7 +38,13 @@ pub async fn gsutil(input: &str) -> Result<String> {
 
 pub async fn load_maaas_config() -> Result<MaaasConfig> {
     Ok(serde_yaml::from_str(
-        &gsutil("gs://saas-platform/maaas-cfg.yaml").await?,
+        &gsutil("gs://maaas/maaas-cfg.yaml").await?,
+    )?)
+}
+
+pub async fn load_maaas_area_config() -> Result<MaaasAreaConfig> {
+    Ok(serde_yaml::from_str(
+        &gsutil("gs://maaas/maaas-area-cfg.yaml").await?,
     )?)
 }
 
