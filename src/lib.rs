@@ -421,7 +421,7 @@ pub async fn load_polygons(borders: &Option<Borders>) -> Option<HashMap<String, 
     if borders.is_none() {
         return None;
     }
-    let mut maaas_area_cfg = load_maaas_area_config().await.ok()?;
+    let mut maaas_area_cfg = load_maaas_area_config().await.unwrap();
     let borders = borders.as_ref().unwrap();
     // let osrm_paths = OsrmPaths::load()?;
     let data_root = get_data_root();
