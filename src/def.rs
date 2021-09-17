@@ -186,6 +186,12 @@ pub struct Annotation {
     pub weight: Vec<f64>,
     pub nodes: Vec<i64>,
     pub datasources: Vec<i32>,
+    pub metadata: Option<MetaData>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+pub struct MetaData {
+    pub datasource_names: Vec<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
