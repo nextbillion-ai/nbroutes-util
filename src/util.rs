@@ -1,11 +1,10 @@
 use crate::def::{MaaasAreaConfig, MaaasConfig};
+use crate::Result;
 use async_process::Command;
 use std::str::FromStr;
 use std::string::ToString;
 
 const EARTH_RADIUS_METER: f64 = 6373000.0_f64;
-
-pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
 
 pub fn parse_list<T: FromStr>(input: &str) -> Result<Vec<T>> {
     let mut r: Vec<T> = Vec::new();

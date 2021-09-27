@@ -11,7 +11,7 @@ use chrono::prelude::*;
 use crate::coord::{Coord, Locatable};
 use crate::osrm_path::get_data_root;
 use crate::poly::load as load_poly;
-use crate::util::load_maaas_area_config; 
+use crate::util::load_maaas_area_config;
 use geo::Polygon;
 use reqwest;
 use serde::{Deserialize, Serialize};
@@ -25,7 +25,7 @@ extern crate simple_error;
 #[macro_use]
 extern crate prometheus;
 
-pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error>>;
+pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>>;
 
 pub fn timestamp() -> i64 {
     let now = SystemTime::now();
@@ -417,7 +417,9 @@ pub fn map_mode(mode: &Option<String>, default_mode: String, area: &Area) -> Res
 }
 
 // todo: fix the osrm path and data root later. currently gateway doesn't need osrmpaths
-pub async fn load_polygons(borders: &Option<Borders>) -> Option<HashMap<String, Vec<Polygon<f64>>>> {
+pub async fn load_polygons(
+    borders: &Option<Borders>,
+) -> Option<HashMap<String, Vec<Polygon<f64>>>> {
     if borders.is_none() {
         return None;
     }
