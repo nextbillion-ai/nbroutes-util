@@ -32,7 +32,7 @@ pub fn timestamp() -> i64 {
     now.duration_since(UNIX_EPOCH).unwrap().as_secs() as i64
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Borders {
     pub areas: BTreeMap<String, Area>,
 }
@@ -98,25 +98,25 @@ impl Borders {
     }
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Clone, Debug)]
 pub struct DaysAheadSlotSetting {
     pub id: String,
     pub range: Vec<u32>,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Clone, Debug)]
 pub struct DaysAheadDaySetting {
     pub prefix: String,
     pub slots: Vec<DaysAheadSlotSetting>,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Clone, Debug)]
 pub struct DaysAheadSettting {
     pub timezone: f64,
     pub days: Vec<DaysAheadDaySetting>,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Clone, Debug)]
 pub struct RecurringDayDefinition {
     pub day_type: String,
     pub date_value: Option<Vec<String>>,
@@ -163,7 +163,7 @@ impl RecurringDayDefinition {
     }
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Clone, Debug)]
 pub struct RecurringDaySetting {
     pub name: String,
     pub prefix: String,
@@ -171,13 +171,13 @@ pub struct RecurringDaySetting {
     pub slots: Vec<DaysAheadSlotSetting>,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Clone, Debug)]
 pub struct RecurringSetting {
     pub timezone: f64,
     pub days: Vec<RecurringDaySetting>,
 }
 
-#[derive(Deserialize, Clone)]
+#[derive(Deserialize, Clone, Debug)]
 pub struct TimeDependantSetting {
     pub setting_type: String,
     pub days_ahead_setting: Option<DaysAheadSettting>,
@@ -310,7 +310,7 @@ impl TimeDependantSetting {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone)]
+#[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Area {
     pub name: String,
     pub default_service: String,
@@ -320,7 +320,7 @@ pub struct Area {
     pub time_dependant_settings: Option<BTreeMap<String, BTreeMap<String, TimeDependantSetting>>>,
 }
 
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Service {
     pub area: String,
     pub mode: String,
