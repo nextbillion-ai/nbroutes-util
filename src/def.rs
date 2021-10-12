@@ -16,6 +16,16 @@ pub enum GeometryInput {
     Polyline6,
 }
 
+#[derive(Serialize, Deserialize, Clone, Apiv2Schema)]
+pub enum OverviewInput {
+    #[serde(rename = "full")]
+    Full,
+    #[serde(rename = "simplified")]
+    Simplified,
+    #[serde(rename = "false")]
+    False,
+}
+
 // wrapper type to keep consistent with python api
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
 pub struct IntValue {
@@ -45,6 +55,8 @@ pub struct DirectionsInput {
     pub session: Option<String>,
     #[doc = "output format of geometry.\n\nDefault: `polyline6`"]
     pub geometry: Option<GeometryInput>,
+    #[doc = "output verbosity of overview (whole trip) geometry.\n\nDefault: `full`"]
+    pub overview: Option<OverviewInput>,
     #[doc = "number of alternative routes to return.\n\nDefault: `1` if `alternatives` is disabled, `3` otherwise"]
     pub altcount: Option<i32>,
     #[doc = "enable to return alternative routes.\n\nNote: `altcount` will default to `3` if this is disabled.\n\nDefault: `false`"]
