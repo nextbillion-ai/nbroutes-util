@@ -308,6 +308,22 @@ pub struct MatrixOutput {
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct MatrixConciseOutput {
+    #[doc = "`Ok` for success."]
+    pub status: String,
+    #[doc = "matrix output.\n\n
+|e00,d00|e01,d01|e02,d02...|\n
+|e10,d10|e11,d11|e12,d02...|\n
+|e20,d00|e21,d01|e22,d02...|\n
+...\n
+where:\n
+e(xy) eta for origins[x] to dest[y]\n
+d(xy) distance for origins[x] to dest[y]\n
+"]
+    pub rows: Vec<Vec<Vec<u64>>>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct Row {
     #[doc = "`elements` for a particular row|origin"]
     pub elements: Vec<Element>,
