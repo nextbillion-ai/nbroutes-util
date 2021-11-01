@@ -1,6 +1,8 @@
 use crate::def::{MaaasAreaConfig, MaaasConfig};
-use crate::Result;
+use crate::{Result, TimeDependantSetting};
 use async_process::Command;
+use serde::{Deserialize, Serialize};
+use std::collections::BTreeMap;
 use std::str::FromStr;
 use std::string::ToString;
 
@@ -59,6 +61,16 @@ pub(crate) fn straight_distance(lat1: f64, lng1: f64, lat2: f64, lng2: f64) -> f
     let central_angle = 2.0 * central_angle_inner.sqrt().asin();
 
     (EARTH_RADIUS_METER * central_angle) as f64
+}
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct Area {
+    pub name: String,
+    pub default_service: String,
+    pub mappings: BTreeMap<String, String>,
+    pub time_dependant: Option<BTreeMap<String, BTreeMap<String, bool>>>,
+    #[serde(skip_deserializing, skip_serializing)]
+    pub time_dependant_settings: Option<BTreeMap<String, BTreeMap<String, TimeDependantSetting>>>,
 }
 
 //uncomment following testcase to ensure gsutil function works as expected

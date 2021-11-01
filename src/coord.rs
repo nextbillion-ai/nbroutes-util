@@ -1,7 +1,9 @@
+use crate::util::Area;
 use crate::Result;
 use geo::algorithm::contains::Contains;
 use geo::{Point, Polygon};
-use std::collections::HashMap;
+use std::collections::{BTreeMap, HashMap};
+
 pub struct Coord {
     lat: f64,
     lng: f64,
@@ -50,9 +52,17 @@ impl Locatable for Coord {
 pub trait Locatable {
     fn lat(&self) -> f64;
     fn lng(&self) -> f64;
-    fn locate<'a>(&self, areas: &'a HashMap<String, Vec<Polygon<f64>>>) -> Result<&'a String> {
+    fn locate<'a>(
+        &self,
+        area_polygons: &'a HashMap<String, Vec<Polygon<f64>>>,
+        selected_areas: &BTreeMap<String, Area>,
+    ) -> Result<&'a String> {
         let p = Point::<f64>::new(self.lng(), self.lat());
-        for (k, vs) in areas.iter() {
+        for (k, vs) in area_polygons.iter() {
+            if !selected_areas.contains_key(k) {
+                continue;
+            }
+
             for v in vs {
                 if v.contains(&p) {
                     return Ok(k);

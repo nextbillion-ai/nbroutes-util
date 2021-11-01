@@ -17,6 +17,7 @@ use reqwest;
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashMap, HashSet};
 use std::time::{SystemTime, UNIX_EPOCH};
+use util::Area;
 
 #[macro_use]
 extern crate log;
@@ -310,16 +311,6 @@ impl TimeDependantSetting {
     }
 }
 
-#[derive(Serialize, Deserialize, Clone, Debug)]
-pub struct Area {
-    pub name: String,
-    pub default_service: String,
-    pub mappings: BTreeMap<String, String>,
-    pub time_dependant: Option<BTreeMap<String, BTreeMap<String, bool>>>,
-    #[serde(skip_deserializing, skip_serializing)]
-    pub time_dependant_settings: Option<BTreeMap<String, BTreeMap<String, TimeDependantSetting>>>,
-}
-
 #[derive(Clone, Debug)]
 pub struct Service {
     pub area: String,
@@ -337,7 +328,7 @@ pub fn find_service<'a>(
     let mut detected = HashMap::<&String, Vec<usize>>::new();
 
     for (idx, coord) in coords.iter().enumerate() {
-        let d = coord.locate(polygons);
+        let d = coord.locate(polygons, areas);
         if d.is_err() {
             if tolerate_outlier {
                 continue;
@@ -378,11 +369,6 @@ pub fn find_service<'a>(
     }
 
     let detected_area = detected_area.unwrap();
-
-    if !areas.contains_key(detected_area) {
-        warn!("area {} not found in config", detected_area);
-        bail!("detected area not in config")
-    }
     let area = areas.get(detected_area).unwrap();
     let mapped_mode = map_mode(mode, area.default_service.clone(), area)?;
 
@@ -415,35 +401,6 @@ pub fn map_mode(mode: &Option<String>, default_mode: String, area: &Area) -> Res
 
     Ok(default_mode)
 }
-
-// // todo: fix the osrm path and data root later. currently gateway doesn't need osrmpaths
-// pub async fn load_polygons(
-//     borders: &Option<Borders>,
-// ) -> Option<HashMap<String, Vec<Polygon<f64>>>> {
-//     if borders.is_none() {
-//         return None;
-//     }
-//     let mut maaas_area_cfg = load_maaas_area_config().await.unwrap();
-//     let borders = borders.as_ref().unwrap();
-//     // let osrm_paths = OsrmPaths::load()?;
-//     let data_root = get_data_root();
-//     let mut polygons = HashMap::<String, Vec<Polygon<f64>>>::new();
-//     for area_name in borders.areas.keys() {
-//         let ps = maaas_area_cfg.polygons(&area_name);
-//         if ps.is_some() {
-//             polygons.insert(area_name.clone(), ps.unwrap().to_vec());
-//             info!("loaded poly file from maaas-area-cfg for {}", &area_name);
-//             continue;
-//         }
-//         polygons.insert(
-//             area_name.clone(),
-//             load_poly(&format!("{}/mojo/borders/{}.poly", data_root, &area_name))
-//                 .expect(&format!("failed to load poly for {}", &area_name)),
-//         );
-//         info!("loaded poly file for {}", &area_name);
-//     }
-//     Some(polygons)
-// }
 
 pub async fn load_polygons(areas: &HashSet<String>) -> Option<HashMap<String, Vec<Polygon<f64>>>> {
     if areas.len() == 0 {
