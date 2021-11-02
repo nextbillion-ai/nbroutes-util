@@ -35,21 +35,12 @@ pub fn timestamp() -> i64 {
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Borders {
-    pub area_list: Option<Vec<Area>>,
-    pub areas: BTreeMap<String, Area>,
+    pub area_list: Vec<Area>,
 }
 
 impl Borders {
     pub async fn populate_time_dependant_setting(&mut self, namespace: &Option<String>) {
-        if self.area_list.is_none() {
-            let mut area_list = vec![];
-            for (_area, area_setting) in self.areas.iter() {
-                area_list.push(area_setting.clone());
-            }
-            self.area_list = Some(area_list)
-        }
-
-        for area_setting in self.area_list.as_mut().unwrap().iter_mut() {
+        for area_setting in self.area_list.iter_mut() {
             if area_setting.time_dependant.is_none() {
                 continue;
             }
