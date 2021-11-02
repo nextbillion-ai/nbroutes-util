@@ -35,12 +35,21 @@ pub fn timestamp() -> i64 {
 
 #[derive(Serialize, Deserialize, Clone, Debug)]
 pub struct Borders {
+    pub area_list: Option<Vec<Area>>,
     pub areas: BTreeMap<String, Area>,
 }
 
 impl Borders {
     pub async fn populate_time_dependant_setting(&mut self, namespace: &Option<String>) {
-        for (area, area_setting) in self.areas.iter_mut() {
+        if self.area_list.is_none() {
+            let mut area_list = vec![];
+            for (_area, area_setting) in self.areas.iter() {
+                area_list.push(area_setting.clone());
+            }
+            self.area_list = Some(area_list)
+        }
+
+        for area_setting in self.area_list.as_mut().unwrap().iter_mut() {
             if area_setting.time_dependant.is_none() {
                 continue;
             }
@@ -61,7 +70,7 @@ impl Borders {
                         continue;
                     }
 
-                    let mut filename = area.to_owned();
+                    let mut filename = area_setting.name.to_owned();
                     if ctx.as_str() != "" {
                         filename = filename + "-" + ctx.as_str();
                     }
@@ -322,7 +331,7 @@ pub fn find_service<'a>(
     mode: &Option<String>,
     coords: &'a Vec<Coord>,
     polygons: &HashMap<String, Vec<Polygon<f64>>>,
-    areas: &BTreeMap<String, Area>,
+    areas: &Vec<Area>,
     tolerate_outlier: bool,
 ) -> Result<(Service, Option<Vec<usize>>)> {
     let mut detected = HashMap::<&String, Vec<usize>>::new();
@@ -335,16 +344,16 @@ pub fn find_service<'a>(
             }
             bail!(d.err().unwrap())
         }
-        detected.entry(d?).or_insert(vec![]).push(idx);
+        detected.entry(&(d?.name)).or_insert(vec![]).push(idx);
     }
 
-    let mut detected_area = None;
+    let mut detected_area_name = None;
     let mut new_coord_indexes = None;
     match detected.len() {
         0 => bail!("not area is detected"),
         1 => {
             for (key, value) in detected.into_iter() {
-                detected_area = Some(key);
+                detected_area_name = Some(key);
                 if value.len() != coords.len() {
                     new_coord_indexes = Some(value);
                 }
@@ -363,19 +372,27 @@ pub fn find_service<'a>(
                     best_locations = locations;
                 }
             }
-            detected_area = best_area;
+            detected_area_name = best_area;
             new_coord_indexes = Some(best_locations);
         }
     }
 
+    let detected_area_name = detected_area_name.unwrap();
+    let mut detected_area = None;
+    for area in areas {
+        if &area.name == detected_area_name {
+            detected_area = Some(area);
+            break;
+        }
+    }
     let detected_area = detected_area.unwrap();
-    let area = areas.get(detected_area).unwrap();
-    let mapped_mode = map_mode(mode, area.default_service.clone(), area)?;
+
+    let mapped_mode = map_mode(mode, detected_area.default_service.clone(), detected_area)?;
 
     let r = Service {
-        area: detected_area.clone(),
+        area: detected_area_name.clone(),
         mode: mapped_mode,
-        origin_area_conf: area.clone(),
+        origin_area_conf: detected_area.clone(),
     };
 
     Ok((r, new_coord_indexes))

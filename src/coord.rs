@@ -2,7 +2,7 @@ use crate::util::Area;
 use crate::Result;
 use geo::algorithm::contains::Contains;
 use geo::{Point, Polygon};
-use std::collections::{BTreeMap, HashMap};
+use std::collections::HashMap;
 
 pub struct Coord {
     lat: f64,
@@ -54,21 +54,24 @@ pub trait Locatable {
     fn lng(&self) -> f64;
     fn locate<'a>(
         &self,
-        area_polygons: &'a HashMap<String, Vec<Polygon<f64>>>,
-        selected_areas: &BTreeMap<String, Area>,
-    ) -> Result<&'a String> {
+        area_polygons: &HashMap<String, Vec<Polygon<f64>>>,
+        selected_areas: &'a Vec<Area>,
+    ) -> Result<&'a Area> {
         let p = Point::<f64>::new(self.lng(), self.lat());
-        for (k, vs) in area_polygons.iter() {
-            if !selected_areas.contains_key(k) {
+        for area in selected_areas.iter() {
+            let vs = area_polygons.get(area.name.as_str());
+            if vs.is_none() {
+                warn!("area name {} doesn't have polylgon", area.name.as_str());
                 continue;
             }
 
-            for v in vs {
+            for v in vs.unwrap() {
                 if v.contains(&p) {
-                    return Ok(k);
+                    return Ok(area);
                 }
             }
         }
+
         bail!(format!("area not found for {},{}", self.lat(), self.lng()))
     }
 }
