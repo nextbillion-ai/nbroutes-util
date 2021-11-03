@@ -74,4 +74,15 @@ pub trait Locatable {
 
         bail!(format!("area not found for {},{}", self.lat(), self.lng()))
     }
+
+    fn is_in_polygons<'a>(&self, polygons: &Vec<Polygon<f64>>) -> bool {
+        let p = Point::<f64>::new(self.lng(), self.lat());
+        for v in polygons {
+            if v.contains(&p) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

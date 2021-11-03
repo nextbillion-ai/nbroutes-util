@@ -318,6 +318,139 @@ pub struct Service {
     pub origin_area_conf: Area,
 }
 
+// TODO: remove this after rollout, now it's for reference purpose
+// pub fn find_service<'a>(
+//     mode: &Option<String>,
+//     coords: &'a Vec<Coord>,
+//     polygons: &HashMap<String, Vec<Polygon<f64>>>,
+//     areas: &Vec<Area>,
+//     tolerate_outlier: bool,
+// ) -> Result<(Service, Option<Vec<usize>>)> {
+//     let mut detected = HashMap::<&String, Vec<usize>>::new();
+//
+//     for (idx, coord) in coords.iter().enumerate() {
+//         let d = coord.locate(polygons, areas);
+//         if d.is_err() {
+//             if tolerate_outlier {
+//                 continue;
+//             }
+//             bail!(d.err().unwrap())
+//         }
+//         detected.entry(&(d?.name)).or_insert(vec![]).push(idx);
+//     }
+//
+//     let mut detected_area_name = None;
+//     let mut new_coord_indexes = None;
+//     match detected.len() {
+//         0 => bail!("not area is detected"),
+//         1 => {
+//             for (key, value) in detected.into_iter() {
+//                 detected_area_name = Some(key);
+//                 if value.len() != coords.len() {
+//                     new_coord_indexes = Some(value);
+//                 }
+//                 break;
+//             }
+//         }
+//         _ => {
+//             if !tolerate_outlier {
+//                 bail!("more than one area is detected");
+//             }
+//             let mut best_area = None;
+//             let mut best_locations: Vec<usize> = vec![];
+//             for (area, locations) in detected.into_iter() {
+//                 if best_area.is_none() || locations.len() > best_locations.len() {
+//                     best_area = Some(area);
+//                     best_locations = locations;
+//                 }
+//             }
+//             detected_area_name = best_area;
+//             new_coord_indexes = Some(best_locations);
+//         }
+//     }
+//
+//     let detected_area_name = detected_area_name.unwrap();
+//     let mut detected_area = None;
+//     for area in areas {
+//         if &area.name == detected_area_name {
+//             detected_area = Some(area);
+//             break;
+//         }
+//     }
+//     let detected_area = detected_area.unwrap();
+//
+//     let mapped_mode = map_mode(mode, detected_area.default_service.clone(), detected_area)?;
+//
+//     let r = Service {
+//         area: detected_area_name.clone(),
+//         mode: mapped_mode,
+//         origin_area_conf: detected_area.clone(),
+//     };
+//
+//     Ok((r, new_coord_indexes))
+// }
+
+pub fn find_area<'a>(
+    coords: &Vec<Coord>,
+    polygons: &HashMap<String, Vec<Polygon<f64>>>,
+    areas: &'a Vec<Area>,
+    tolerate_outlier: bool,
+) -> Result<(&'a Area, Option<Vec<usize>>)> {
+    let mut best_area = None;
+    let mut best_coord_index = vec![];
+
+    for area in areas.iter() {
+        let vs = polygons.get(area.name.as_str());
+        if vs.is_none() {
+            warn!("area name {} doesn't have polylgon", area.name.as_str());
+            continue;
+        }
+        let vs = vs.unwrap();
+
+        // coord_index stores the idx of coordinates that are in this area
+        let mut coord_index = vec![];
+        for (idx, coord) in coords.iter().enumerate() {
+            if coord.is_in_polygons(vs) {
+                coord_index.push(idx);
+                continue;
+            }
+
+            if !tolerate_outlier {
+                // early stop since we don't tolerate outlier
+                break;
+            }
+            // continue to see how many coordinates actually is in this area
+            continue;
+        }
+
+        if coord_index.len() == 0 {
+            continue;
+        }
+
+        if coord_index.len() == coords.len() {
+            //     return here since we found an area that contains all points
+            //      with the highest priority
+            //      no need to return coord indexes since they're all in the area
+            return Ok((area, None));
+        }
+
+        if !tolerate_outlier {
+            continue;
+        }
+
+        if coord_index.len() > best_coord_index.len() {
+            best_area = Some(area);
+            best_coord_index = coord_index;
+        }
+    }
+
+    if best_area.is_some() {
+        return Ok((best_area.unwrap(), Some(best_coord_index)));
+    }
+
+    bail!("no area found")
+}
+
 pub fn find_service<'a>(
     mode: &Option<String>,
     coords: &'a Vec<Coord>,
@@ -325,59 +458,9 @@ pub fn find_service<'a>(
     areas: &Vec<Area>,
     tolerate_outlier: bool,
 ) -> Result<(Service, Option<Vec<usize>>)> {
-    let mut detected = HashMap::<&String, Vec<usize>>::new();
+    let (detected_area, coord_index) = find_area(coords, polygons, areas, tolerate_outlier)?;
 
-    for (idx, coord) in coords.iter().enumerate() {
-        let d = coord.locate(polygons, areas);
-        if d.is_err() {
-            if tolerate_outlier {
-                continue;
-            }
-            bail!(d.err().unwrap())
-        }
-        detected.entry(&(d?.name)).or_insert(vec![]).push(idx);
-    }
-
-    let mut detected_area_name = None;
-    let mut new_coord_indexes = None;
-    match detected.len() {
-        0 => bail!("not area is detected"),
-        1 => {
-            for (key, value) in detected.into_iter() {
-                detected_area_name = Some(key);
-                if value.len() != coords.len() {
-                    new_coord_indexes = Some(value);
-                }
-                break;
-            }
-        }
-        _ => {
-            if !tolerate_outlier {
-                bail!("more than one area is detected");
-            }
-            let mut best_area = None;
-            let mut best_locations: Vec<usize> = vec![];
-            for (area, locations) in detected.into_iter() {
-                if best_area.is_none() || locations.len() > best_locations.len() {
-                    best_area = Some(area);
-                    best_locations = locations;
-                }
-            }
-            detected_area_name = best_area;
-            new_coord_indexes = Some(best_locations);
-        }
-    }
-
-    let detected_area_name = detected_area_name.unwrap();
-    let mut detected_area = None;
-    for area in areas {
-        if &area.name == detected_area_name {
-            detected_area = Some(area);
-            break;
-        }
-    }
-    let detected_area = detected_area.unwrap();
-
+    let detected_area_name = detected_area.name.clone();
     let mapped_mode = map_mode(mode, detected_area.default_service.clone(), detected_area)?;
 
     let r = Service {
@@ -386,7 +469,7 @@ pub fn find_service<'a>(
         origin_area_conf: detected_area.clone(),
     };
 
-    Ok((r, new_coord_indexes))
+    Ok((r, coord_index))
 }
 
 pub fn map_mode(mode: &Option<String>, default_mode: String, area: &Area) -> Result<String> {
