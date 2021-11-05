@@ -500,6 +500,25 @@ impl MaaasConfig {
     }
 }
 
+// KeySKUSetting is not needed now but leaves the room for things like rate limit etc
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct KeySKUSetting {
+    pub sku_id: i64,
+}
+
+#[derive(Deserialize, Clone, Debug, Serialize)]
+pub struct KeyServerAuthKeyDecodedSource {
+    pub referers: Option<Vec<String>>,
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct KeyServerAuthKey {
+    pub source: Option<KeyServerAuthKeyDecodedSource>,
+    pub sku_map: Option<HashMap<String, KeySKUSetting>>,
+    pub labels: Option<HashMap<String, String>>,
+    pub qps_limit: Option<u32>,
+}
+
 #[cfg(test)]
 mod tests {
     use super::*;

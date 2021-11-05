@@ -20,8 +20,7 @@ impl Jwks {
         }
 
         let jwt = verify_res.unwrap();
-        if jwt.expired().unwrap_or(true) {
-            // warn!("jwt is expired");
+        if jwt.expired().unwrap_or(false) {
             bail!("jwt expired");
         }
 
