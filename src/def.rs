@@ -237,6 +237,10 @@ pub struct Step {
     pub start_location: Location,
     #[doc = "end location of `step`"]
     pub end_location: Location,
+    #[doc = "step driving distance.\n\nUnit: `meters`"]
+    pub distance: IntValue,
+    #[doc = "step driving duration.\n\nUnit: `seconds`"]
+    pub duration: IntValue,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
