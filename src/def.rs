@@ -513,6 +513,7 @@ pub struct KeySKUSetting {
 #[derive(Deserialize, Clone, Debug, Serialize)]
 pub struct KeyServerAuthKeyDecodedSource {
     pub referers: Option<Vec<String>>,
+    pub origins: Option<Vec<String>>,
 }
 
 #[derive(Clone, Debug, Deserialize, Serialize)]
