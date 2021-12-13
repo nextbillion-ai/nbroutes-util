@@ -1,11 +1,13 @@
 pub mod coord;
 pub mod def;
+pub mod def_here;
 pub mod jwks;
 pub mod osrm_path;
 pub mod poly;
 pub mod protos;
 pub mod statsd;
 pub mod util;
+
 use chrono::prelude::*;
 
 use crate::coord::{Coord, Locatable};
