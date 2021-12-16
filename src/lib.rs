@@ -495,20 +495,32 @@ pub fn map_mode(mode: &Option<String>, default_mode: String, area: &Area) -> Res
     Ok(default_mode)
 }
 
-pub async fn load_polygons(areas: &HashSet<String>) -> Option<HashMap<String, Vec<Polygon<f64>>>> {
+pub async fn load_polygons(
+    areas: &HashSet<String>,
+    skip_maaas: bool,
+) -> Option<HashMap<String, Vec<Polygon<f64>>>> {
     if areas.len() == 0 {
         return None;
     }
-    let mut maaas_area_cfg = load_maaas_area_config().await.unwrap();
+    let mut maaas_area_cfg = load_maaas_area_config().await.ok();
+    if !skip_maaas && maaas_area_cfg.is_none() {
+        panic!("failed to load area defs from maaas");
+    }
     let data_root = get_data_root();
     let mut polygons = HashMap::<String, Vec<Polygon<f64>>>::new();
     for area_name in areas {
-        let ps = maaas_area_cfg.polygons(area_name.as_str());
-        if ps.is_some() {
-            polygons.insert(area_name.clone(), ps.unwrap().to_vec());
-            info!("loaded poly file from maaas-area-cfg for {}", &area_name);
-            continue;
+        if !skip_maaas {
+            let ps = maaas_area_cfg
+                .as_mut()
+                .unwrap()
+                .polygons(area_name.as_str());
+            if ps.is_some() {
+                polygons.insert(area_name.clone(), ps.unwrap().to_vec());
+                info!("loaded poly file from maaas-area-cfg for {}", &area_name);
+                continue;
+            }
         }
+
         polygons.insert(
             area_name.clone(),
             load_poly(&format!("{}/mojo/borders/{}.poly", data_root, &area_name))
