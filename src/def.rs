@@ -38,6 +38,24 @@ pub struct KeyInput {
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct OptimizationInput {
+    #[doc = "A semicolon-separated list of {lat},{lng}.\n\nFormat: `lat0,lng0|lat1,lng1|...`.\n\nRegex: (^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$)"]
+    pub coordinates: String,
+    #[doc = "mode of service.\n\nValues:`car`.\n\nDefault: `\"car\"`"]
+    pub mode: Option<String>,
+    #[doc = "The coordinate at which to start the returned route.\n\nValues: `any|first`.\n\nDefault: `first`"]
+    pub source: Option<String>,
+    #[doc = "Specify the destination coordinate of the returned route.\n\nValues: `any|last`.\n\nDefault: `any`"]
+    pub destination: Option<String>,
+    #[doc = "Indicates whether the returned route is roundtrip.\n\nDefault: `true`"]
+    pub roundtrip: Option<bool>,
+    #[doc = "output format of geometry.\n\nValue: `geojson|polyline|polyline6`.\n\nDefault: `polyline6`"]
+    pub geometries: Option<String>,
+    #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
+    pub key: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct DirectionsInput {
     #[doc = "{{location_of_origin}}\n\nFormat: `lat,lng`.\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+$"]
     pub origin: String,
@@ -105,6 +123,40 @@ pub struct PostTripRouteOutput {
     #[serde(rename = "errorMessage", skip_serializing_if = "Option::is_none")]
     #[doc = "error message when `status` != `Ok`"]
     pub error_msg: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+pub struct OptimizationOutput {
+    #[doc = "`Ok` for success."]
+    pub code: String,
+    #[doc = "Each waypoint is an input coordinate snapped to the road and path network."]
+    pub waypoints: Vec<OptimizationWaypoint>,
+    #[doc = "An array of 0 or 1 trip objects."]
+    pub trips: Vec<OptimizationTrip>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+pub struct OptimizationWaypoint {
+    pub name: String,
+    pub location: Location,
+    pub trips_index: i64,
+    pub waypoint_index: i64,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+pub struct OptimizationTrip {
+    pub geometry: String,
+    pub legs: Vec<OptimizationLeg>,
+    pub duration: f64,
+    pub distance: f64,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+pub struct OptimizationLeg {
+    pub distance: f64,
+    pub duration: f64,
+    #[doc = "summary for this leg"]
+    pub summary: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
