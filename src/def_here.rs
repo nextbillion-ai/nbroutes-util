@@ -3,10 +3,11 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct LookupInput {
-    #[doc = "the HERE id of a location\n\n"]
+    #[doc = "Example: id=here:pds:place:276u33db-8097f3194e4b411081b761ea9a366776 
+    Location ID, which is the ID of a result item eg. of a Discover request"]
     pub id: String,
-    #[doc = "(Optional) the BCP 47 language code \n\n"]
-    pub lang: Option<String>,
+    #[doc = "Select the language to be used for result rendering from a list of BCP 47 compliant language codes."]
+    pub lang: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
