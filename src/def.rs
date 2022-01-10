@@ -49,6 +49,8 @@ pub struct OptimizationInput {
     pub destination: Option<String>,
     #[doc = "Indicates whether the returned route is roundtrip.\n\nDefault: `true`"]
     pub roundtrip: Option<bool>,
+    #[doc = "Indicates whether the return geometry.\n\nDefault: `false`"]
+    pub with_geometry: Option<bool>,
     #[doc = "output format of geometry.\n\nValue: `geojson|polyline|polyline6`.\n\nDefault: `polyline6`"]
     pub geometries: Option<String>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
@@ -157,6 +159,14 @@ pub struct OptimizationLeg {
     pub duration: f64,
     #[doc = "summary for this leg"]
     pub summary: String,
+    pub steps: Vec<OptimizationStep>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+pub struct OptimizationStep {
+    pub distance: f64,
+    pub duration: f64,
+    pub geometry: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
