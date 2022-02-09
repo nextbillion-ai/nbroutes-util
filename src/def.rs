@@ -303,6 +303,27 @@ pub struct Step {
     pub distance: IntValue,
     #[doc = "step driving duration.\n\nUnit: `seconds`"]
     pub duration: IntValue,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "step Maneuver"]
+    pub metadata: Option<Maneuver>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+pub struct Maneuver {
+    pub bearing_before: i32,
+    pub bearing_after: i32,
+    pub coordinate: Coordinate,
+    pub maneuver_type: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub modifer: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+pub struct Coordinate {
+    pub latitude: f64,
+    pub longitude: f64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub name: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
