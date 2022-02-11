@@ -37,15 +37,15 @@ pub async fn gsutil(input: &str) -> Result<String> {
     Ok(std::str::from_utf8(&output.stdout)?.to_owned())
 }
 
-pub async fn load_maaas_config() -> Result<MaaasConfig> {
+pub async fn load_maaas_config(path: Option<&str>) -> Result<MaaasConfig> {
     Ok(serde_yaml::from_str(
-        &gsutil("gs://maaas/maaas-cfg.yaml").await?,
+        &gsutil(path.unwrap_or("gs://maaas/maaas-cfg.yaml")).await?,
     )?)
 }
 
-pub async fn load_maaas_area_config() -> Result<MaaasAreaConfig> {
+pub async fn load_maaas_area_config(path: Option<&str>) -> Result<MaaasAreaConfig> {
     Ok(serde_yaml::from_str(
-        &gsutil("gs://maaas/maaas-area-cfg.yaml").await?,
+        &gsutil(path.unwrap_or("gs://maaas/maaas-area-cfg.yaml")).await?,
     )?)
 }
 
