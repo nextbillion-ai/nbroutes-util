@@ -37,10 +37,12 @@ pub async fn gsutil(input: &str) -> Result<String> {
     Ok(std::str::from_utf8(&output.stdout)?.to_owned())
 }
 
-pub async fn load_maaas_config(path: Option<&str>) -> Result<MaaasConfig> {
-    Ok(serde_yaml::from_str(
-        &gsutil(path.unwrap_or("gs://maaas/maaas-cfg.yaml")).await?,
-    )?)
+pub async fn load_maaas_config(path: Option<String>) -> Result<MaaasConfig> {
+    let mut real_path = "gs://maaas/maaas-cfg.yaml";
+    if path.is_some() {
+        real_path = path.as_ref().unwrap().as_str();
+    }
+    Ok(serde_yaml::from_str(&gsutil(real_path).await?)?)
 }
 
 pub async fn load_maaas_area_config() -> Result<MaaasAreaConfig> {
