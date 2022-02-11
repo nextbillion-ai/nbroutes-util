@@ -43,9 +43,9 @@ pub async fn load_maaas_config(path: Option<&str>) -> Result<MaaasConfig> {
     )?)
 }
 
-pub async fn load_maaas_area_config(path: Option<&str>) -> Result<MaaasAreaConfig> {
+pub async fn load_maaas_area_config() -> Result<MaaasAreaConfig> {
     Ok(serde_yaml::from_str(
-        &gsutil(path.unwrap_or("gs://maaas/maaas-area-cfg.yaml")).await?,
+        &gsutil("gs://maaas/maaas-area-cfg.yaml").await?,
     )?)
 }
 
