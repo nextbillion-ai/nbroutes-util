@@ -505,7 +505,7 @@ pub struct ConfigCluster {
     pub location: ConfigCoord,
     //for example: singapore-4w: {matrix_size: {large: 10000}}
     //which is saying for singapore-4w sku, if matrix-size > 10000, feature=large
-    pub features: Option<HashMap<String, HashMap<String, ConfigKeyValue>>>,
+    pub features: Option<HashMap<String, HashMap<String, Vec<ConfigKeyValue>>>>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
