@@ -58,6 +58,26 @@ pub struct OptimizationInput {
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct ConverterInput {
+    pub geometry: String,
+    #[doc = "format of geometry.\n\nValue: `polyline`.\n\nDefault: `polyline`"]
+    pub geometry_type: Option<String>,
+    #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
+    pub key: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct ConverterOutput {
+    #[doc = "`Ok` for success."]
+    pub status: String,
+    #[doc = "`routes` calculated."]
+    pub routes: Vec<Route>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "error message when `status` != `Ok`"]
+    pub error_msg: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct DirectionsInput {
     #[doc = "{{location_of_origin}}\n\nFormat: `lat,lng`.\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+$"]
     pub origin: String,
