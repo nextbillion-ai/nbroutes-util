@@ -314,19 +314,20 @@ impl TimeDependantSetting {
 
 #[derive(Clone, Debug)]
 pub struct Service {
-    pub area: String,
+    pub area: Area,
     pub mode: String,
-    pub origin_area_conf: Area,
 }
 
 pub fn find_area<'a>(
+    mode: &Option<String>,
     coords: &Vec<Coord>,
     polygons: &HashMap<String, Vec<Polygon<f64>>>,
     areas: &'a Vec<Area>,
     tolerate_outlier: bool,
-) -> Result<(&'a Area, Option<Vec<usize>>)> {
+) -> Result<(&'a Area, String, Option<Vec<usize>>)> {
     let mut best_area = None;
     let mut best_coord_index = vec![];
+    let mut mapped_mode: Option<String> = None;
 
     for area in areas.iter() {
         let vs = polygons.get(area.name.as_str());
@@ -360,7 +361,12 @@ pub fn find_area<'a>(
             //     return here since we found an area that contains all points
             //      with the highest priority
             //      no need to return coord indexes since they're all in the area
-            return Ok((area, None));
+
+            let mapped_mode_result = map_mode(mode, area.default_service.clone(), area);
+            if mapped_mode_result.is_ok() {
+                return Ok((area, mapped_mode_result.unwrap(), None));
+            }
+            continue;
         }
 
         if !tolerate_outlier {
@@ -368,13 +374,21 @@ pub fn find_area<'a>(
         }
 
         if coord_index.len() > best_coord_index.len() {
-            best_area = Some(area);
-            best_coord_index = coord_index;
+            let mapped_mode_result = map_mode(mode, area.default_service.clone(), area);
+            if mapped_mode_result.is_ok() {
+                best_area = Some(area);
+                best_coord_index = coord_index;
+                mapped_mode = Some(mapped_mode_result.unwrap());
+            }
         }
     }
 
-    if best_area.is_some() {
-        return Ok((best_area.unwrap(), Some(best_coord_index)));
+    if best_area.is_some() && mapped_mode.is_some() {
+        return Ok((
+            best_area.unwrap(),
+            mapped_mode.unwrap(),
+            Some(best_coord_index),
+        ));
     }
 
     bail!("no area found")
@@ -387,15 +401,12 @@ pub fn find_service<'a>(
     areas: &Vec<Area>,
     tolerate_outlier: bool,
 ) -> Result<(Service, Option<Vec<usize>>)> {
-    let (detected_area, coord_index) = find_area(coords, polygons, areas, tolerate_outlier)?;
-
-    let detected_area_name = detected_area.name.clone();
-    let mapped_mode = map_mode(mode, detected_area.default_service.clone(), detected_area)?;
+    let (detected_area, mode, coord_index) =
+        find_area(mode, coords, polygons, areas, tolerate_outlier)?;
 
     let r = Service {
-        area: detected_area_name.clone(),
-        mode: mapped_mode,
-        origin_area_conf: detected_area.clone(),
+        area: detected_area.clone(),
+        mode: mode,
     };
 
     Ok((r, coord_index))
