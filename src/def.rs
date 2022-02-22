@@ -523,7 +523,7 @@ pub struct ConfigCluster {
     pub address: String,
     pub nbroutes: Vec<String>,
     pub location: ConfigCoord,
-    //for example: singapore-4w: {matrix_size: {large: 10000}}
+    //for example: singapore-4w: {matrix_size: {name: large, value: 10000}}
     //which is saying for singapore-4w sku, if matrix-size > 10000, feature=large
     pub features: Option<HashMap<String, HashMap<String, Vec<ConfigKeyValue>>>>,
 }
