@@ -111,6 +111,8 @@ pub struct DirectionsInput {
     pub special_object_types: Option<String>,
     #[doc = "`deprecated`"]
     pub annotations: Option<bool>,
+    #[doc = "Indicates that the calculated route(s) should avoid the indicated features. \n\nFormat: `value1|value2|...`. Default:`\"\"`"]
+    pub avoid: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
