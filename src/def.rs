@@ -337,7 +337,7 @@ pub struct Maneuver {
     pub coordinate: Coordinate,
     pub maneuver_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub modifer: Option<String>,
+    pub modifier: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
