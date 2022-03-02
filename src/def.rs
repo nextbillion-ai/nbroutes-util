@@ -468,6 +468,7 @@ pub struct SnapInput {
     pub context: Option<String>,
     #[doc = "enable to ignore location not found in service boundary.\n\nNote: enable this to ignore outliers, otherwise an error will be thrown.\n\nDefault: `false`"]
     pub tolerate_outlier: Option<bool>,
+    pub mode: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
