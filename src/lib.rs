@@ -339,12 +339,14 @@ pub fn find_area<'a>(
 
         // coord_index stores the idx of coordinates that are in this area
         let mut coord_index = vec![];
+        let mut missing_coords = vec![];
         for (idx, coord) in coords.iter().enumerate() {
             if coord.is_in_polygons(vs) {
                 coord_index.push(idx);
                 continue;
             }
 
+            missing_coords.push(coord);
             if !tolerate_outlier {
                 // early stop since we don't tolerate outlier
                 break;
@@ -368,6 +370,11 @@ pub fn find_area<'a>(
             }
             continue;
         }
+
+        debug!(
+            "some coordinates are not in area {:?}, coords: {:?}",
+            area.name, missing_coords
+        );
 
         if !tolerate_outlier {
             continue;

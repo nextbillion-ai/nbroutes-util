@@ -4,6 +4,7 @@ use geo::algorithm::contains::Contains;
 use geo::{Point, Polygon};
 use std::collections::HashMap;
 
+#[derive(Debug)]
 pub struct Coord {
     lat: f64,
     lng: f64,
