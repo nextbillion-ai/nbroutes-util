@@ -1,6 +1,7 @@
 use crate::util::Area;
 use crate::Result;
 use geo::algorithm::contains::Contains;
+use geo::prelude::BoundingRect;
 use geo::{Point, Polygon};
 use std::collections::HashMap;
 
@@ -79,6 +80,14 @@ pub trait Locatable {
     fn is_in_polygons<'a>(&self, polygons: &Vec<Polygon<f64>>) -> bool {
         let p = Point::<f64>::new(self.lng(), self.lat());
         for v in polygons {
+            let brect = v.bounding_rect().unwrap();
+            if p.x() < brect.min().x
+                || p.x() > brect.max().x
+                || p.y() < brect.min().y
+                || p.y() > brect.max().y
+            {
+                continue;
+            }
             if v.contains(&p) {
                 return true;
             }
