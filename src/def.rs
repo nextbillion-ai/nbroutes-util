@@ -360,7 +360,7 @@ pub struct Maneuver {
     pub coordinate: Coordinate,
     pub maneuver_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub modifer: Option<String>,
+    pub modifier: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
@@ -491,6 +491,7 @@ pub struct SnapInput {
     pub context: Option<String>,
     #[doc = "enable to ignore location not found in service boundary.\n\nNote: enable this to ignore outliers, otherwise an error will be thrown.\n\nDefault: `false`"]
     pub tolerate_outlier: Option<bool>,
+    pub mode: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
