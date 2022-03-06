@@ -59,6 +59,7 @@ pub struct OptimizationInput {
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct NavigatingInput {
+    #[doc = "geometry."]
     pub geometry: Option<String>,
     #[doc = "format of geometry.\n\nValue: `polyline`.\n\nDefault: `polyline`"]
     pub geometry_type: Option<String>,
@@ -84,6 +85,8 @@ pub struct NavigatingInput {
     pub alternatives: Option<bool>,
     #[doc = "Indicates that the calculated route(s) should avoid the indicated features. \n\nFormat: `value1|value2|...`. Default:`\"\"`"]
     pub avoid: Option<String>,
+    #[doc = "language of the text instruction"]
+    pub lang: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
