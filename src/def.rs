@@ -58,16 +58,39 @@ pub struct OptimizationInput {
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
-pub struct ConverterInput {
-    pub geometry: String,
+pub struct NavigatingInput {
+    #[doc = "geometry."]
+    pub geometry: Option<String>,
     #[doc = "format of geometry.\n\nValue: `polyline`.\n\nDefault: `polyline`"]
     pub geometry_type: Option<String>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
+    #[doc = "{{location_of_origin}}\n\nFormat: `lat,lng`.\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+$"]
+    pub origin: Option<String>,
+    #[doc = "location of destination.\n\nFormat: `lat,lng`.\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+$"]
+    pub destination: Option<String>,
+    #[doc = "location(s) of waypoint(s) along the trip.\n\nFormat: `lat0,lng0|lat1,lng1|...`.\n\nRegex: (^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$)"]
+    pub waypoints: Option<String>,
+    #[doc = "mode of service.\n\nValues:`car|auto|bike|escooter|4w|2w...`.\n\nDefault: `\"\"`"]
+    pub mode: Option<String>,
+    #[doc = "departure time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
+    pub departure_time: Option<i64>,
+    #[doc = "unique session id for trip identification.\n\nNote: Help to reuse cached trip characteritics when set. \n\nDefault: `\"\"`"]
+    pub session: Option<String>,
+    #[doc = "output verbosity of overview (whole trip) geometry.\n\nDefault: `full`"]
+    pub overview: Option<OverviewInput>,
+    #[doc = "number of alternative routes to return.\n\nDefault: `1` if `alternatives` is disabled, `3` otherwise"]
+    pub altcount: Option<i32>,
+    #[doc = "enable to return alternative routes.\n\nNote: `altcount` will default to `3` if this is disabled.\n\nDefault: `false`"]
+    pub alternatives: Option<bool>,
+    #[doc = "Indicates that the calculated route(s) should avoid the indicated features. \n\nFormat: `value1|value2|...`. Default:`\"\"`"]
+    pub avoid: Option<String>,
+    #[doc = "language of the text instruction"]
+    pub lang: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
-pub struct ConverterOutput {
+pub struct NavigatingOutput {
     #[doc = "`Ok` for success."]
     pub status: String,
     #[doc = "`routes` calculated."]
@@ -328,6 +351,9 @@ pub struct Step {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "step Maneuver"]
     pub metadata: Option<Maneuver>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "text instruction of this step"]
+    pub text_instruction: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
