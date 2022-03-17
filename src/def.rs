@@ -350,14 +350,13 @@ pub struct Step {
     pub duration: IntValue,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "step Maneuver"]
-    pub metadata: Option<Maneuver>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[doc = "text instruction of this step"]
-    pub text_instruction: Option<String>,
+    pub maneuver: Option<Maneuver>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
 pub struct Maneuver {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub instruction: Option<String>,
     pub bearing_before: i32,
     pub bearing_after: i32,
     pub coordinate: Coordinate,
