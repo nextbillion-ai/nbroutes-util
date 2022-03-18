@@ -351,6 +351,29 @@ pub struct Step {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "step Maneuver"]
     pub maneuver: Option<Maneuver>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "step name"]
+    pub name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "step intersections"]
+    pub intersections: Option<Vec<Intersection>>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+pub struct Intersection {
+    pub location: Coordinate,
+    pub bearings: Vec<i32>,
+    pub classes: Vec<String>,
+    pub entry: Vec<bool>,
+    pub intersection_in: i32,
+    pub intersection_out: i32,
+    pub lanes: Vec<Lane>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+pub struct Lane {
+    pub indications: Vec<String>,
+    pub valid: bool,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
