@@ -87,6 +87,7 @@ pub struct NavigatingInput {
     pub avoid: Option<String>,
     #[doc = "language of the text instruction"]
     pub lang: Option<String>,
+    pub approaches: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -136,6 +137,7 @@ pub struct DirectionsInput {
     pub annotations: Option<bool>,
     #[doc = "Indicates that the calculated route(s) should avoid the indicated features. \n\nFormat: `value1|value2|...`. Default:`\"\"`"]
     pub avoid: Option<String>,
+    pub approaches: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
