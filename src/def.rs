@@ -55,7 +55,6 @@ pub struct OptimizationInput {
     pub geometries: Option<String>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
-    pub avoid: None,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
