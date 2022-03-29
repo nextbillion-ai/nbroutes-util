@@ -456,6 +456,7 @@ pub struct MatrixInput {
     pub key: Option<String>,
     #[doc = "`deprecated`"]
     pub context: Option<String>,
+    pub avoid: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
