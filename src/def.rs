@@ -27,7 +27,7 @@ pub enum OverviewInput {
 }
 
 // wrapper type to keep consistent with python api
-#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct IntValue {
     pub value: u64,
 }
@@ -489,7 +489,7 @@ pub struct Row {
     pub elements: Vec<Element>,
 }
 
-#[derive(Serialize, Deserialize, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
 pub struct Element {
     #[doc = "traveling duration between origin and destination.\n\nUnit: `seconds`"]
     pub duration: IntValue,
