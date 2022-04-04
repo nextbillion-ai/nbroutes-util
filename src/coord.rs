@@ -12,6 +12,10 @@ pub struct Coord {
 }
 
 impl Coord {
+    pub fn new(lat: f64, lng: f64) -> Self {
+        Self { lat, lng }
+    }
+
     pub fn coord(input: &str) -> Result<Coord> {
         let items: Vec<&str> = input.split(",").collect();
         match items.len() {
