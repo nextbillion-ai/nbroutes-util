@@ -504,6 +504,23 @@ pub struct Element {
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
+
+pub struct IsochroneInput {
+    pub center: String,
+    pub resolution: i32,
+    pub speed: i32,
+    pub time: i32,
+    pub timestamp: i64,
+    pub unit: String,
+    pub key: Option<String>,
+}
+
+pub struct IsochroneOutput {
+    pub status: String,
+    pub line_coords: Vec<Coordinate>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct SnapInput {
     #[doc = "`locations` to perform `snap2roads`\n\nFormat: `lat0,lng0|lat1,lng1|...`\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$"]
     pub path: String,
