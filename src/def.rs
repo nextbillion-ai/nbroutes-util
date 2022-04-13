@@ -504,7 +504,6 @@ pub struct Element {
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
-
 pub struct IsochroneInput {
     pub center: String,
     pub resolution: i32,
@@ -515,9 +514,10 @@ pub struct IsochroneInput {
     pub key: Option<String>,
 }
 
+#[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct IsochroneOutput {
     pub status: String,
-    pub line_coords: Vec<Coordinate>,
+    pub polyline: String,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
