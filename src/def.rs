@@ -506,9 +506,9 @@ pub struct Element {
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct IsochroneInput {
     pub center: String,
-    pub resolution: i32,
-    pub speed: i32,
+    pub resolution: Option<i32>,
     pub time: i32,
+    pub mode: String,
     pub timestamp: i64,
     pub unit: String,
     pub key: Option<String>,
