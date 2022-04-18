@@ -507,17 +507,23 @@ pub struct Element {
 pub struct IsochroneInput {
     pub center: String,
     pub resolution: Option<i32>,
-    pub time: i32,
+    pub times: Option<String>,
+    pub distances: Option<String>,
+    pub strokes: Option<String>,
+    pub opacities: Option<String>, // range: [0, 1], 0 for transparent
     pub mode: String,
     pub timestamp: i64,
-    pub unit: String,
     pub key: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct IsochroneOutput {
     pub status: String,
-    pub polyline: String,
+    pub polylines: Vec<String>,
+    pub strokes: Option<Vec<String>>,
+    pub opacities: Option<Vec<f64>>,
+    pub times: Option<Vec<i32>>,
+    pub distances: Option<Vec<i32>>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
