@@ -511,8 +511,8 @@ pub struct IsochroneInput {
     pub distances: Option<String>,
     pub strokes: Option<String>,
     pub opacities: Option<String>, // range: [0, 1], 0 for transparent
-    pub mode: String,
-    pub timestamp: i64,
+    pub mode: Option<String>,
+    pub departure_time: Option<i64>,
     pub key: Option<String>,
 }
 
