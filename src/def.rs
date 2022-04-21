@@ -55,6 +55,7 @@ pub struct OptimizationInput {
     pub geometries: Option<String>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
+    pub approaches: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -457,6 +458,7 @@ pub struct MatrixInput {
     #[doc = "`deprecated`"]
     pub context: Option<String>,
     pub avoid: Option<String>,
+    pub approaches: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -544,6 +546,7 @@ pub struct SnapInput {
     pub tolerate_outlier: Option<bool>,
     pub mode: Option<String>,
     pub avoid: Option<String>,
+    pub approaches: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
