@@ -14,6 +14,8 @@ pub enum GeometryInput {
     Polyline,
     #[serde(rename = "polyline6")]
     Polyline6,
+    #[serde(rename = "geojson")]
+    GeoJSON,
 }
 
 #[derive(Serialize, Deserialize, Clone, Apiv2Schema)]
