@@ -8,7 +8,7 @@ use std::collections::HashMap;
 pub const STATUS_OK: &str = "Ok";
 pub const STATUS_FAILED: &str = "Failed";
 
-#[derive(Serialize, Deserialize, Clone, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Clone, Apiv2Schema, PartialEq)]
 pub enum GeometryInput {
     #[serde(rename = "polyline")]
     Polyline,
