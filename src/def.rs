@@ -3,7 +3,6 @@ use crate::util::straight_distance;
 use geo::{LineString, Polygon};
 use paperclip::actix::Apiv2Schema;
 use serde::{Deserialize, Serialize};
-use serde_json::Value;
 use std::collections::HashMap;
 
 pub const STATUS_OK: &str = "Ok";
@@ -27,6 +26,11 @@ pub enum OverviewInput {
     Simplified,
     #[serde(rename = "false")]
     False,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct Geojson {
+    pub coordinates: Vec<Vec<f64>>,
 }
 
 // wrapper type to keep consistent with python api
@@ -299,7 +303,7 @@ pub struct Route {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "special geospatial objects crossed along the trip."]
     pub special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
-    pub geojson: Option<Value>,
+    pub geojson: Option<Geojson>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Apiv2Schema)]
@@ -368,7 +372,7 @@ pub struct Step {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "step intersections"]
     pub intersections: Option<Vec<Intersection>>,
-    pub geojson: Option<Value>,
+    pub geojson: Option<Geojson>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
