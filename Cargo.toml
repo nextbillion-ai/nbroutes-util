@@ -14,7 +14,7 @@ geo = "0.15.0"
 simple-error = "0.2.2"
 log = "0.4.0"
 env_logger = "0.7.1"
-paperclip = { version = "0.5", features = ["actix", "v2"] }
+paperclip = { version = "0.7", features = ["actix-base", "v3", "actix3"] }
 prometheus = "0.10.0"
 protobuf = "2.24.1"
 reqwest = { version="0.11.4", default-features = false, features = ["rustls-tls"] }
