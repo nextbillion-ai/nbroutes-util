@@ -67,9 +67,9 @@ pub struct OptimizationInput {
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct NavigatingInput {
-    #[doc = "geometry."]
+    #[doc = "geometry input, if this is given, other params will not be considered except `geometry_type` & `lang` & `key`."]
     pub geometry: Option<String>,
-    #[doc = "format of geometry.\n\nValue: `polyline`.\n\nDefault: `polyline`"]
+    #[doc = "format of geometry.\n\nDefault: `polyline6`"]
     pub geometry_type: Option<String>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
@@ -125,7 +125,7 @@ pub struct DirectionsInput {
     pub departure_time: Option<i64>,
     #[doc = "unique session id for trip identification.\n\nNote: Help to reuse cached trip characteritics when set. \n\nDefault: `\"\"`"]
     pub session: Option<String>,
-    #[doc = "output format of geometry.\n\nDefault: `polyline6`"]
+    #[doc = "output format of geometry.\n\nDefault: `polyline`"]
     pub geometry: Option<GeometryInput>,
     #[doc = "output verbosity of overview (whole trip) geometry.\n\nDefault: `full`"]
     pub overview: Option<OverviewInput>,
@@ -393,9 +393,17 @@ pub struct Lane {
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+pub struct VoiceInstruction {
+    pub distance_before: i32,
+    pub unit: String,
+    pub instruction: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
 pub struct Maneuver {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub instruction: Option<String>,
+    pub voice_instruction: Vec<VoiceInstruction>,
     pub bearing_before: i32,
     pub bearing_after: i32,
     pub coordinate: Coordinate,
