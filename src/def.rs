@@ -560,6 +560,8 @@ pub struct SnapInput {
     pub mode: Option<String>,
     pub avoid: Option<String>,
     pub approaches: Option<String>,
+    #[doc = "only supports for polyline and geojson"]
+    pub geometry: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
@@ -572,6 +574,7 @@ pub struct SnapOutput {
     pub distance: u64,
     #[doc = "encoded geometry value in `polyline` or `polyline6`.\n\nFormat: [Link: Polyline](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)"]
     pub geometry: Option<Vec<Option<String>>>,
+    pub geojson: Option<Vec<Option<Geojson>>>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
