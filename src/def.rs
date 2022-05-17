@@ -210,6 +210,8 @@ pub struct OptimizationTrip {
     pub legs: Vec<OptimizationLeg>,
     pub duration: f64,
     pub distance: f64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub geojson: Option<Geojson>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
@@ -226,6 +228,8 @@ pub struct OptimizationStep {
     pub distance: f64,
     pub duration: f64,
     pub geometry: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub geojson: Option<Geojson>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
@@ -303,6 +307,7 @@ pub struct Route {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "special geospatial objects crossed along the trip."]
     pub special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub geojson: Option<Geojson>,
 }
 
@@ -372,6 +377,7 @@ pub struct Step {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "step intersections"]
     pub intersections: Option<Vec<Intersection>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub geojson: Option<Geojson>,
 }
 
@@ -574,6 +580,7 @@ pub struct SnapOutput {
     pub distance: u64,
     #[doc = "encoded geometry value in `polyline` or `polyline6`.\n\nFormat: [Link: Polyline](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)"]
     pub geometry: Option<Vec<Option<String>>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub geojson: Option<Vec<Option<Geojson>>>,
 }
 
