@@ -400,7 +400,7 @@ pub struct Lane {
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
 pub struct VoiceInstruction {
-    pub distance_before: i32,
+    pub distance_along_geometry: i32,
     pub unit: String,
     pub instruction: String,
 }
