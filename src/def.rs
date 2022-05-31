@@ -33,6 +33,107 @@ pub struct Geojson {
     pub coordinates: Vec<Vec<f64>>,
 }
 
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct Locations {
+    pub id: u64,
+    pub description: Option<String>,
+    pub location: String,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct Job {
+    pub id: u64,
+    pub location_index: i32,
+    pub service: Option<u64>,
+    pub delivery: Option<Vec<u64>>,
+    pub pickup: Option<Vec<u64>>,
+    pub time_windows: Option<Vec<Vec<f64>>>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct Vehicle {
+    pub id: u64,
+    pub start_index: Option<u64>,
+    pub end_index: Option<u64>,
+    pub capacity: Option<Vec<i64>>,
+    pub time_window: Option<Vec<f64>>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct VRoomResult {
+    pub code: u8,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error: Option<String>,
+    pub summary: Option<Summary>,
+    pub unassigned: Option<Vec<Unassigned>>,
+    pub routes: Option<Vec<VRoomRoute>>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct Unassigned {
+    pub id: u64,
+    #[serde(rename = "type")]
+    pub task_type: Option<String>,
+    pub location: Option<Vec<f64>>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct VRoomRoute {
+    pub vehicle: Option<u64>,
+    pub cost: Option<u64>,
+    pub steps: Option<Vec<VRoomStep>>,
+    pub setup: Option<u64>,
+    pub service: Option<u64>,
+    pub duration: Option<f64>,
+    pub waiting_time: Option<u64>,
+    pub priority: Option<u64>,
+    pub violations: Option<Vec<Violation>>,
+    pub delivery: Option<u64>,
+    pub pickup: Option<u64>,
+    pub description: Option<String>,
+    pub geometry: Option<String>,
+    pub distance: Option<f64>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct VRoomStep {
+    #[serde(rename = "type")]
+    pub step_type: Option<String>,
+    pub arrival: Option<f64>,
+    pub duration: Option<f64>,
+    pub setup: Option<u64>,
+    pub service: Option<u64>,
+    pub waiting_time: Option<u64>,
+    pub violations: Option<Vec<Violation>>,
+    pub description: Option<String>,
+    pub location: Option<Vec<f64>>,
+    pub id: Option<u64>,
+    pub load: Option<f64>,
+    pub distance: Option<f64>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct Summary {
+    pub cost: Option<u64>,
+    pub routes: Option<u64>,
+    pub unassigned: Option<u64>,
+    pub setup: Option<u64>,
+    pub service: Option<u64>,
+    pub duration: Option<f64>,
+    pub waiting_time: Option<u64>,
+    pub priority: Option<u64>,
+    pub violations: Option<Vec<Violation>>,
+    pub delivery: Option<u64>,
+    pub pickup: Option<u64>,
+    pub distance: Option<f64>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct Violation {
+    pub cause: Option<String>,
+    pub duration: Option<f64>,
+}
+
 // wrapper type to keep consistent with python api
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct IntValue {
@@ -63,6 +164,33 @@ pub struct OptimizationInput {
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
     pub approaches: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct OptimizationPostInput {
+    pub key: Option<String>,
+    pub locations: Locations,
+    pub jobs: Vec<Job>,
+    pub vehicles: Vec<Vehicle>,
+}
+
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct OptimizationPostOutput {
+    pub id: String,
+    pub message: String,
+    pub status: String,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct OptimizationGetInput {
+    pub key: Option<String>,
+    pub id: String,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct OptimizationGetOutput {
+    pub result: VRoomResult,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -418,7 +546,7 @@ pub struct Maneuver {
     pub modifier: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct Coordinate {
     pub latitude: f64,
     pub longitude: f64,
