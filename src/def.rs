@@ -89,7 +89,7 @@ pub struct NavigatingInput {
     pub overview: Option<OverviewInput>,
     #[doc = "number of alternative routes to return.\n\nDefault: `1` if `alternatives` is disabled, `3` otherwise"]
     pub altcount: Option<i32>,
-    #[doc = "enable to return alternative routes.\n\nNote: `altcount` will default to `3` if this is disabled.\n\nDefault: `false`"]
+    #[doc = "enable to return alternative routes.\n\nNote: `altcount` will default to `3` if this is enabled.\n\nDefault: `false`"]
     pub alternatives: Option<bool>,
     #[doc = "Indicates that the calculated route(s) should avoid the indicated features. \n\nFormat: `value1|value2|...`. Default:`\"\"`"]
     pub avoid: Option<String>,
@@ -131,7 +131,7 @@ pub struct DirectionsInput {
     pub overview: Option<OverviewInput>,
     #[doc = "number of alternative routes to return.\n\nDefault: `1` if `alternatives` is disabled, `3` otherwise"]
     pub altcount: Option<i32>,
-    #[doc = "enable to return alternative routes.\n\nNote: `altcount` will default to `3` if this is disabled.\n\nDefault: `false`"]
+    #[doc = "enable to return alternative routes.\n\nNote: `altcount` will default to `3` if this is enabled.\n\nDefault: `false`"]
     pub alternatives: Option<bool>,
     #[doc = "enable to show debug information.\n\nDefault: `false`"]
     pub debug: Option<bool>,
