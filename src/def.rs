@@ -277,7 +277,7 @@ pub struct MeteredRoute {
     pub special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct Route {
     #[doc = "encoded geometry value in `polyline` or `polyline6`.\n\nFormat: [Link: Polyline](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)"]
     pub geometry: Option<String>,
@@ -317,7 +317,7 @@ pub struct Location {
     pub longitude: f64,
 }
 
-#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct Annotation {
     pub duration: Vec<f64>,
     pub distance: Vec<f64>,
@@ -328,12 +328,12 @@ pub struct Annotation {
     pub metadata: Option<MetaData>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct MetaData {
     pub datasource_names: Vec<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct Leg {
     #[doc = "leg driving distance.\n\nUnit: `meters`"]
     pub distance: IntValue,
@@ -356,7 +356,7 @@ pub struct Leg {
     pub annotation: Option<Annotation>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct Step {
     #[doc = "encoded geometry value for step in `polyline` or `polyline6`.\n\nFormat: [Link: Polyline](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)"]
     pub geometry: Option<String>,
@@ -381,7 +381,7 @@ pub struct Step {
     pub geojson: Option<Geojson>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct Intersection {
     pub location: Coordinate,
     pub bearings: Vec<i32>,
@@ -392,20 +392,20 @@ pub struct Intersection {
     pub lanes: Vec<Lane>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct Lane {
     pub indications: Vec<String>,
     pub valid: bool,
 }
 
-#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct VoiceInstruction {
     pub distance_along_geometry: i32,
     pub unit: String,
     pub instruction: String,
 }
 
-#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct Maneuver {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub instruction: Option<String>,
@@ -418,7 +418,7 @@ pub struct Maneuver {
     pub modifier: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct Coordinate {
     pub latitude: f64,
     pub longitude: f64,
