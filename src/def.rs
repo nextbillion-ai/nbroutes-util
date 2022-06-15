@@ -197,6 +197,8 @@ pub struct NavigatingInput {
     #[doc = "language of the text instruction"]
     pub lang: Option<String>,
     pub approaches: Option<String>,
+    #[doc = "Limits the search to segments with given bearing in degrees towards true north in clockwise direction. \n\nFormat: `degree,range;degree,range...`. Default:`\"\"`"]
+    pub bearings: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
