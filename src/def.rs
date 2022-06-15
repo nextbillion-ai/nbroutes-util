@@ -134,7 +134,6 @@ pub struct Violation {
     pub duration: Option<f64>,
 }
 
-
 // wrapper type to keep consistent with python api
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct IntValue {
@@ -305,7 +304,6 @@ pub struct OptimizationPostInput {
     pub jobs: Vec<Job>,
     pub vehicles: Vec<Vehicle>,
 }
-
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct OptimizationPostOutput {
@@ -508,6 +506,9 @@ pub struct Step {
     pub intersections: Option<Vec<Intersection>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub geojson: Option<Geojson>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "step reference"]
+    pub reference: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
