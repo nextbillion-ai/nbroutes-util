@@ -146,6 +146,23 @@ pub struct KeyInput {
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct UpdateRRTSimpleInput {
+    pub from_way_id: u64,
+    pub via_node: u64,
+    pub to_way_id: u64,
+    pub status: i32,
+    #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
+    pub key: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct UpdateRRTSimpleOutput {
+    pub success: bool,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub error_msg: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct OptimizationInput {
     #[doc = "A semicolon-separated list of {lat},{lng}.\n\nFormat: `lat0,lng0|lat1,lng1|...`.\n\nRegex: (^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$)"]
     pub coordinates: String,
