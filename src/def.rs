@@ -230,6 +230,51 @@ pub struct NavigatingOutput {
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct ValhallaDirectionsInput {
+    #[doc = "{{location_of_origin}}\n\nFormat: `lat,lng`.\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+$"]
+    pub origin: String,
+    #[doc = "location of destination.\n\nFormat: `lat,lng`.\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+$"]
+    pub destination: String,
+    #[doc = "location(s) of waypoint(s) along the trip.\n\nFormat: `lat0,lng0|lat1,lng1|...`.\n\nRegex: (^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$)"]
+    pub waypoints: Option<String>,
+    #[doc = "enable to include `steps` in response.\n\nDefault: `false`"]
+    pub steps: Option<bool>,
+    #[doc = "mode of service.\n\nValues:`car|auto|bike|escooter|4w|2w...`.\n\nDefault: `\"\"`"]
+    pub mode: Option<String>,
+    #[doc = "departure time, conflict with arrive_time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
+    pub departure_time: Option<i64>,
+    #[doc = "arrive time, conflict with departure_time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
+    pub arrive_time: Option<i64>,
+    #[doc = "unique session id for trip identification.\n\nNote: Help to reuse cached trip characteritics when set. \n\nDefault: `\"\"`"]
+    pub session: Option<String>,
+    #[doc = "output format of geometry.\n\nDefault: `polyline`"]
+    pub geometry: Option<GeometryInput>,
+    #[doc = "output verbosity of overview (whole trip) geometry.\n\nDefault: `full`"]
+    pub overview: Option<OverviewInput>,
+    #[doc = "number of alternative routes to return.\n\nDefault: `1` if `alternatives` is disabled, `3` otherwise"]
+    pub altcount: Option<i32>,
+    #[doc = "enable to return alternative routes.\n\nNote: `altcount` will default to `3` if this is enabled.\n\nDefault: `false`"]
+    pub alternatives: Option<bool>,
+    #[doc = "enable to show debug information.\n\nDefault: `false`"]
+    pub debug: Option<bool>,
+    #[doc = "`deprecated`"]
+    pub context: Option<String>,
+    #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
+    pub key: Option<String>,
+    #[doc = "special geospatial objects to include in response.\n\nFormat: `type1,type2,...`.\n\nDefault:`\"\"`"]
+    pub special_object_types: Option<String>,
+    #[doc = "`deprecated`"]
+    pub annotations: Option<bool>,
+    #[doc = "Indicates that the calculated route(s) should avoid the indicated features. \n\nFormat: `value1|value2|...`. Default:`\"\"`"]
+    pub avoid: Option<String>,
+    pub approaches: Option<String>,
+    #[doc = "Indicates the truck size in CM, only valid when mode=6w. \n\nFormat: `height,width,length`."]
+    pub truck_size: Option<String>,
+    #[doc = "Indicates the truck weight including trailers and shipped goods in KG, only valid when mode=6w."]
+    pub truck_weight: Option<i32>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct DirectionsInput {
     #[doc = "{{location_of_origin}}\n\nFormat: `lat,lng`.\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+$"]
     pub origin: String,
