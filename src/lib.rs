@@ -1,5 +1,6 @@
 pub mod coord;
 pub mod def;
+pub mod jwks;
 pub mod osrm_path;
 pub mod poly;
 pub mod protos;
