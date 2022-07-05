@@ -663,6 +663,28 @@ pub struct NearbyResult {
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct ValhallaMatrixInput {
+    #[doc = "locations of origins \n\nFormat: lat0,lng0|lat1,lng1|...\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$"]
+    pub origins: String,
+    #[doc = "locations of destinations\n\nFormat: lat0,lng0|lat1,lng1|...\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$"]
+    pub destinations: String,
+    #[doc = "mode of service.\n\nValues:`car|auto|bike|escooter|4w|2w...`.\n\nDefault: `\"\"`"]
+    pub mode: Option<String>,
+    #[doc = "departure time, conflict with arrive_time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
+    pub departure_time: Option<i64>,
+    #[doc = "arrive time, conflict with departure_time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
+    pub arrive_time: Option<i64>,
+    #[doc = "enable to show debug information.\n\nDefault: `false`"]
+    pub debug: Option<bool>,
+    #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
+    pub key: Option<String>,
+    #[doc = "`deprecated`"]
+    pub context: Option<String>,
+    pub avoid: Option<String>,
+    pub approaches: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct MatrixInput {
     #[doc = "locations of origins \n\nFormat: lat0,lng0|lat1,lng1|...\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$"]
     pub origins: String,
