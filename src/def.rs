@@ -610,6 +610,8 @@ pub struct Maneuver {
     pub maneuver_type: String,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub modifier: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub muted: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
