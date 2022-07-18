@@ -148,8 +148,11 @@ pub struct KeyInput {
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct UpdateRRTSimpleInput {
     pub from_way_id: u64,
-    pub via_node: u64,
+    pub from_way_nodes: String,
+    pub via_node_id: u64,
+    pub via_node: String,
     pub to_way_id: u64,
+    pub to_way_nodes: String,
     pub status: i32,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
