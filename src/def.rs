@@ -159,6 +159,14 @@ pub struct UpdateRRTSimpleInput {
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct UpdateRRTSegmentInput {
+    pub segment: String,
+    pub status: i32,
+    #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
+    pub key: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct UpdateRRTSimpleOutput {
     pub success: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
