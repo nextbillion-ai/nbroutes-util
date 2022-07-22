@@ -370,6 +370,7 @@ pub struct OptimizationPostInput {
     pub locations: Locations,
     pub jobs: Vec<Job>,
     pub vehicles: Vec<Vehicle>,
+    pub mode: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
