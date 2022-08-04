@@ -481,6 +481,8 @@ pub struct DirectionsOutput {
     #[serde(rename = "errorMessage", skip_serializing_if = "Option::is_none")]
     #[doc = "error message when `status` != `Ok`"]
     pub error_msg: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub country_code: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
