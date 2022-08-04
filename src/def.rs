@@ -404,7 +404,7 @@ pub struct OptimizationOutput {
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct OptimizationPostInput {
     pub key: Option<String>,
-    pub description: Option<string>,
+    pub description: Option<String>,
     pub locations: Locations,
     pub jobs: Option<Vec<Job>>,
     pub vehicles: Vec<Vehicle>,
