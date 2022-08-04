@@ -376,8 +376,9 @@ pub struct OptimizationOutput {
 pub struct OptimizationPostInput {
     pub key: Option<String>,
     pub locations: Locations,
-    pub jobs: Vec<Job>,
+    pub jobs: Option<Vec<Job>>,
     pub vehicles: Vec<Vehicle>,
+    pub shipments: Option<Shipment>,
     pub mode: Option<String>,
 }
 
