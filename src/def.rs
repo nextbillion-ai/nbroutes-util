@@ -36,7 +36,6 @@ pub struct Geojson {
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct Locations {
     pub id: u64,
-    pub description: Option<String>,
     pub location: String,
 }
 
@@ -47,16 +46,46 @@ pub struct Job {
     pub service: Option<u64>,
     pub delivery: Option<Vec<u64>>,
     pub pickup: Option<Vec<u64>>,
-    pub time_windows: Option<Vec<Vec<f64>>>,
+    pub time_windows: Option<Vec<Vec<u64>>>,
+    pub skills: Option<Vec<i64>>,
+    pub priority: Option<u64>,
+    pub setup: Option<u64>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct Vehicle {
     pub id: u64,
-    pub start_index: Option<u64>,
-    pub end_index: Option<u64>,
+    pub start_index: u64,
+    pub end_index: u64,
     pub capacity: Option<Vec<i64>>,
     pub time_window: Option<Vec<f64>>,
+    pub skills: Option<Vec<i64>>,
+    pub breaks: Option<Vec<Break>>,
+    pub max_tasks: Option<u64>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct Break {
+    pub id: u64,
+    pub time_windows: Vec<Vec<i64>>,
+    pub service: Option<u64>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct Shipment {
+    pub pickup: ShipmentStep,
+    pub delivery: ShipmentStep,
+    pub amount: Option<Vec<u64>>,
+    pub skills: Option<Vec<i64>>,
+    pub priority: Option<u64>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct ShipmentStep {
+    pub id: u64,
+    pub location_index: u64,
+    pub service: Option<u64>,
+    pub time_windows: Option<Vec<Vec<u64>>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
@@ -375,9 +404,11 @@ pub struct OptimizationOutput {
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct OptimizationPostInput {
     pub key: Option<String>,
+    pub description: Option<String>,
     pub locations: Locations,
-    pub jobs: Vec<Job>,
+    pub jobs: Option<Vec<Job>>,
     pub vehicles: Vec<Vehicle>,
+    pub shipments: Option<Vec<Shipment>>,
     pub mode: Option<String>,
 }
 
