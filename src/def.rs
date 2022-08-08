@@ -822,7 +822,7 @@ pub struct IsochroneOutput {
 pub struct SnapInput {
     #[doc = "`locations` to perform `snap2roads`\n\nFormat: `lat0,lng0|lat1,lng1|...`\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$"]
     pub path: String,
-    #[doc = "(unix timestamps for each `location`.\n\nUnit: `seconds`\n\nFormat: ts0|ts1|...\n\nRegex: ^[\\d]+(\\|[\\d]+)*$"]
+    #[doc = "unix timestamps for each `location`. Need to be monotonically increasing.\n\nUnit: `seconds`\n\nFormat: ts0|ts1|...\n\nRegex: ^[\\d]+(\\|[\\d]+)*$"]
     pub timestamps: Option<String>,
     #[doc = "radiuses of each `location` for performing `snap2road`\n\nUnit: `meters`\n\nFormat: `radius0|radius1|...`\n\nRegex: ^[\\d]+(\\|[\\d]+)*$"]
     pub radiuses: Option<String>,
