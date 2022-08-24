@@ -8,6 +8,62 @@ use std::collections::HashMap;
 pub const STATUS_OK: &str = "Ok";
 pub const STATUS_FAILED: &str = "Failed";
 
+#[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
+pub struct ISOChroneValhallaInput {
+    #[doc = "mode of service.\n\nValues:`car`.\n\nDefault: `\"4w\"`"]
+    pub mode: Option<String>,
+    #[doc = "center to the isochrone lines."]
+    pub coordinates: String,
+    pub contours_meters: Option<String>,
+    pub contours_minutes: Option<String>,
+    pub contours_colors: Option<String>,
+    pub polygons: Option<bool>,
+    pub denoise: Option<f32>,
+    pub generalize: Option<f32>,
+    #[doc = "departure time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
+    pub departure_time: Option<i64>,
+    #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
+    pub key: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
+pub struct ISOChroneValhallaOutput {
+    pub features: Vec<ISOChroneFeature>,
+    pub r#type: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
+pub struct ISOChroneFeature {
+    pub properties: ISOChroneProperty,
+    pub geometry: ISOChroneGeometry,
+    pub r#type: String,
+}
+#[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
+pub struct ISOChroneGeometry {
+    pub coordinates: ISOChroneGeometryCoordinates,
+    pub r#type: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
+#[serde(untagged)]
+pub enum ISOChroneGeometryCoordinates {
+    Linestring(Vec<Vec<f64>>),
+    Polygon(Vec<Vec<Vec<f64>>>),
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
+pub struct ISOChroneProperty {
+    pub fill: String,
+    #[serde(rename = "fillOpacity")]
+    pub fill_opacity: f32,
+    #[serde(rename = "fillColor")]
+    pub fill_color: String,
+    pub color: String,
+    pub contour: f32,
+    pub opacity: f32,
+    pub metric: String,
+}
+
 #[derive(Serialize, Deserialize, Clone, Apiv2Schema, PartialEq)]
 pub enum GeometryInput {
     #[serde(rename = "polyline")]
