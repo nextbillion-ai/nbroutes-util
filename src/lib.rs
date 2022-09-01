@@ -324,6 +324,7 @@ pub fn find_area<'a>(
     polygons: &HashMap<String, Vec<Polygon<f64>>>,
     areas: &'a Vec<Area>,
     tolerate_outlier: bool,
+    request_id: Option<&str>,
 ) -> Result<(&'a Area, String, Option<Vec<usize>>)> {
     let mut best_area = None;
     let mut best_coord_index = vec![];
@@ -371,9 +372,9 @@ pub fn find_area<'a>(
             continue;
         }
 
-        debug!(
-            "some coordinates are not in area {:?}, coords: {:?}",
-            area.name, missing_coords
+        warn!(
+            "some coordinates are not in area {:?}, coords: {:?}, request_id: {:?}",
+            area.name, missing_coords, &request_id
         );
 
         if !tolerate_outlier {
@@ -407,9 +408,10 @@ pub fn find_service<'a>(
     polygons: &HashMap<String, Vec<Polygon<f64>>>,
     areas: &Vec<Area>,
     tolerate_outlier: bool,
+    request_id: Option<&str>,
 ) -> Result<(Service, Option<Vec<usize>>)> {
     let (detected_area, mode, coord_index) =
-        find_area(mode, coords, polygons, areas, tolerate_outlier)?;
+        find_area(mode, coords, polygons, areas, tolerate_outlier, request_id)?;
 
     let r = Service {
         area: detected_area.clone(),
