@@ -651,6 +651,17 @@ pub struct Leg {
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct RoadShieldType {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "A Label identfying the inscription on the road shield, such as containing the road number."]
+    pub label: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "road shield image url"]
+    pub image_url: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct Step {
     #[doc = "encoded geometry value for step in `polyline` or `polyline6`.\n\nFormat: [Link: Polyline](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)"]
     pub geometry: Option<String>,
@@ -676,6 +687,9 @@ pub struct Step {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "step reference"]
     pub reference: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "road shield info"]
+    pub road_shield_type: Option<RoadShieldType>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
