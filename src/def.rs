@@ -857,7 +857,7 @@ pub struct Row {
 pub struct Element {
     #[doc = "traveling duration between origin and destination.\n\nUnit: `seconds`"]
     pub duration: IntValue,
-    #[doc = "traveling distance between origin and destination.\n\nUnit: `seconds`"]
+    #[doc = "traveling distance between origin and destination.\n\nUnit: `metres`"]
     pub distance: IntValue,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "traveling duration before adjust.\n\nUnit: `seconds`\n\nNote: debug only"]
