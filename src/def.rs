@@ -55,8 +55,8 @@ pub struct Job {
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct Vehicle {
     pub id: u64,
-    pub start_index: u64,
-    pub end_index: u64,
+    pub start_index: Option<u64>,
+    pub end_index: Option<u64>,
     pub capacity: Option<Vec<i64>>,
     pub time_window: Option<Vec<f64>>,
     pub skills: Option<Vec<i64>>,
