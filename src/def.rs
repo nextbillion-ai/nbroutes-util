@@ -8,6 +8,62 @@ use std::collections::HashMap;
 pub const STATUS_OK: &str = "Ok";
 pub const STATUS_FAILED: &str = "Failed";
 
+#[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
+pub struct ISOChroneValhallaInput {
+    #[doc = "mode of service.\n\nValues:`car`.\n\nDefault: `\"4w\"`"]
+    pub mode: Option<String>,
+    #[doc = "center to the isochrone lines."]
+    pub coordinates: String,
+    pub contours_meters: Option<String>,
+    pub contours_minutes: Option<String>,
+    pub contours_colors: Option<String>,
+    pub polygons: Option<bool>,
+    pub denoise: Option<f32>,
+    pub generalize: Option<f32>,
+    #[doc = "departure time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
+    pub departure_time: Option<i64>,
+    #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
+    pub key: Option<String>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
+pub struct ISOChroneValhallaOutput {
+    pub features: Vec<ISOChroneFeature>,
+    pub r#type: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
+pub struct ISOChroneFeature {
+    pub properties: ISOChroneProperty,
+    pub geometry: ISOChroneGeometry,
+    pub r#type: String,
+}
+#[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
+pub struct ISOChroneGeometry {
+    pub coordinates: ISOChroneGeometryCoordinates,
+    pub r#type: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
+#[serde(untagged)]
+pub enum ISOChroneGeometryCoordinates {
+    Linestring(Vec<Vec<f64>>),
+    Polygon(Vec<Vec<Vec<f64>>>),
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
+pub struct ISOChroneProperty {
+    pub fill: String,
+    #[serde(rename = "fillOpacity")]
+    pub fill_opacity: f32,
+    #[serde(rename = "fillColor")]
+    pub fill_color: String,
+    pub color: String,
+    pub contour: f32,
+    pub opacity: f32,
+    pub metric: String,
+}
+
 #[derive(Serialize, Deserialize, Clone, Apiv2Schema, PartialEq)]
 pub enum GeometryInput {
     #[serde(rename = "polyline")]
@@ -36,7 +92,6 @@ pub struct Geojson {
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct Locations {
     pub id: u64,
-    pub description: Option<String>,
     pub location: String,
 }
 
@@ -47,16 +102,46 @@ pub struct Job {
     pub service: Option<u64>,
     pub delivery: Option<Vec<u64>>,
     pub pickup: Option<Vec<u64>>,
-    pub time_windows: Option<Vec<Vec<f64>>>,
+    pub time_windows: Option<Vec<Vec<u64>>>,
+    pub skills: Option<Vec<i64>>,
+    pub priority: Option<u64>,
+    pub setup: Option<u64>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct Vehicle {
     pub id: u64,
-    pub start_index: Option<u64>,
-    pub end_index: Option<u64>,
+    pub start_index: u64,
+    pub end_index: u64,
     pub capacity: Option<Vec<i64>>,
     pub time_window: Option<Vec<f64>>,
+    pub skills: Option<Vec<i64>>,
+    pub breaks: Option<Vec<Break>>,
+    pub max_tasks: Option<u64>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct Break {
+    pub id: u64,
+    pub time_windows: Vec<Vec<i64>>,
+    pub service: Option<u64>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct Shipment {
+    pub pickup: ShipmentStep,
+    pub delivery: ShipmentStep,
+    pub amount: Option<Vec<u64>>,
+    pub skills: Option<Vec<i64>>,
+    pub priority: Option<u64>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct ShipmentStep {
+    pub id: u64,
+    pub location_index: u64,
+    pub service: Option<u64>,
+    pub time_windows: Option<Vec<Vec<u64>>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
@@ -238,6 +323,8 @@ pub struct NavigatingOutput {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "error message when `status` != `Ok`"]
     pub error_msg: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub country_code: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -375,10 +462,15 @@ pub struct OptimizationOutput {
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct OptimizationPostInput {
     pub key: Option<String>,
+    pub description: Option<String>,
     pub locations: Locations,
     pub jobs: Option<Vec<Job>>,
     pub vehicles: Vec<Vehicle>,
+<<<<<<< HEAD
     pub shipments: Option<Shipment>,
+=======
+    pub shipments: Option<Vec<Shipment>>,
+>>>>>>> 6f5a1e6ce66463e38d4a607b67da63badc346b05
     pub mode: Option<String>,
 }
 
@@ -451,6 +543,8 @@ pub struct DirectionsOutput {
     #[serde(rename = "errorMessage", skip_serializing_if = "Option::is_none")]
     #[doc = "error message when `status` != `Ok`"]
     pub error_msg: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub country_code: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
@@ -561,6 +655,17 @@ pub struct Leg {
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct RoadShieldType {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "A Label identfying the inscription on the road shield, such as containing the road number."]
+    pub label: Option<String>,
+
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "road shield image url"]
+    pub image_url: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct Step {
     #[doc = "encoded geometry value for step in `polyline` or `polyline6`.\n\nFormat: [Link: Polyline](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)"]
     pub geometry: Option<String>,
@@ -586,6 +691,9 @@ pub struct Step {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "step reference"]
     pub reference: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "road shield info"]
+    pub road_shield_type: Option<RoadShieldType>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
@@ -753,7 +861,7 @@ pub struct Row {
 pub struct Element {
     #[doc = "traveling duration between origin and destination.\n\nUnit: `seconds`"]
     pub duration: IntValue,
-    #[doc = "traveling distance between origin and destination.\n\nUnit: `seconds`"]
+    #[doc = "traveling distance between origin and destination.\n\nUnit: `metres`"]
     pub distance: IntValue,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "traveling duration before adjust.\n\nUnit: `seconds`\n\nNote: debug only"]
@@ -790,7 +898,7 @@ pub struct IsochroneOutput {
 pub struct SnapInput {
     #[doc = "`locations` to perform `snap2roads`\n\nFormat: `lat0,lng0|lat1,lng1|...`\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$"]
     pub path: String,
-    #[doc = "(unix timestamps for each `location`.\n\nUnit: `seconds`\n\nFormat: ts0|ts1|...\n\nRegex: ^[\\d]+(\\|[\\d]+)*$"]
+    #[doc = "unix timestamps for each `location`. Need to be monotonically increasing.\n\nUnit: `seconds`\n\nFormat: ts0|ts1|...\n\nRegex: ^[\\d]+(\\|[\\d]+)*$"]
     pub timestamps: Option<String>,
     #[doc = "radiuses of each `location` for performing `snap2road`\n\nUnit: `meters`\n\nFormat: `radius0|radius1|...`\n\nRegex: ^[\\d]+(\\|[\\d]+)*$"]
     pub radiuses: Option<String>,
