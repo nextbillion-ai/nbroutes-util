@@ -111,8 +111,8 @@ pub struct Job {
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct Vehicle {
     pub id: u64,
-    pub start_index: u64,
-    pub end_index: u64,
+    pub start_index: Option<u64>,
+    pub end_index: Option<u64>,
     pub capacity: Option<Vec<i64>>,
     pub time_window: Option<Vec<f64>>,
     pub skills: Option<Vec<i64>>,
@@ -466,11 +466,7 @@ pub struct OptimizationPostInput {
     pub locations: Locations,
     pub jobs: Option<Vec<Job>>,
     pub vehicles: Vec<Vehicle>,
-<<<<<<< HEAD
-    pub shipments: Option<Shipment>,
-=======
     pub shipments: Option<Vec<Shipment>>,
->>>>>>> 6f5a1e6ce66463e38d4a607b67da63badc346b05
     pub mode: Option<String>,
 }
 
