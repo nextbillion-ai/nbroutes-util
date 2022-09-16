@@ -72,6 +72,7 @@ pub struct Area {
     pub mappings: BTreeMap<String, String>,
     pub allowed_context: Option<BTreeMap<String, Vec<String>>>,
     pub time_dependant: Option<BTreeMap<String, BTreeMap<String, bool>>>,
+    pub flexible: Option<BTreeMap<String, BTreeMap<String, bool>>>,
     #[serde(skip_deserializing, skip_serializing)]
     pub time_dependant_settings: Option<BTreeMap<String, BTreeMap<String, TimeDependantSetting>>>,
 }
