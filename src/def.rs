@@ -585,6 +585,9 @@ pub struct Route {
     #[doc = "route driving duration.\n\nUnit: `seconds`"]
     pub duration: f64,
     #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "route weight.\n\n"]
+    pub weight: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "start location of route"]
     pub start_location: Option<Location>,
     #[serde(skip_serializing_if = "Option::is_none")]
