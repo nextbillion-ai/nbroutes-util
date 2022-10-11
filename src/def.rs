@@ -29,6 +29,7 @@ pub struct ISOChroneValhallaInput {
 #[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
 pub struct ISOChroneValhallaOutput {
     pub features: Vec<ISOChroneFeature>,
+    #[serde(rename = "type")]
     pub r#type: String,
 }
 
@@ -36,11 +37,13 @@ pub struct ISOChroneValhallaOutput {
 pub struct ISOChroneFeature {
     pub properties: ISOChroneProperty,
     pub geometry: ISOChroneGeometry,
+    #[serde(rename = "type")]
     pub r#type: String,
 }
 #[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
 pub struct ISOChroneGeometry {
     pub coordinates: ISOChroneGeometryCoordinates,
+    #[serde(rename = "type")]
     pub r#type: String,
 }
 
