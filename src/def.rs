@@ -416,6 +416,8 @@ pub struct DirectionsInput {
     pub truck_size: Option<String>,
     #[doc = "Indicates the truck weight including trailers and shipped goods in KG, only valid when mode=6w."]
     pub truck_weight: Option<i32>,
+    #[doc = "Limits the search to segments with given bearing in degrees towards true north in clockwise direction. \n\nFormat: `degree,range;degree,range...`. Default:`\"\"`"]
+    pub bearings: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -735,6 +737,8 @@ pub struct Maneuver {
     pub modifier: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub muted: Option<bool>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub roundabout_count: Option<i32>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
@@ -827,6 +831,8 @@ pub struct MatrixInput {
     pub context: Option<String>,
     pub avoid: Option<String>,
     pub approaches: Option<String>,
+    #[doc = "Limits the search to segments with given bearing in degrees towards true north in clockwise direction. \n\nFormat: `degree,range;degree,range...`. Default:`\"\"`"]
+    pub bearings: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
