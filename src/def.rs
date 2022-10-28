@@ -121,6 +121,30 @@ pub struct Vehicle {
     pub skills: Option<Vec<i64>>,
     pub breaks: Option<Vec<Break>>,
     pub max_tasks: Option<u64>,
+    pub costs: Option<VehicleCosts>,
+    pub depot: Option<u64>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct VehicleCosts {
+    pub fixed: Option<u64>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct OptimizationOptions {
+    pub objective: Option<ObjectiveOption>
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct ObjectiveOption {
+    pub travel_cost: Option<String>,
+    pub minimise_num_depots: Option<bool>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct Depot {
+    pub id: u64,
+    pub location_index: u64,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
@@ -473,6 +497,8 @@ pub struct OptimizationPostInput {
     pub vehicles: Vec<Vehicle>,
     pub shipments: Option<Vec<Shipment>>,
     pub mode: Option<String>,
+    pub options: Option<OptimizationOptions>,
+    pub depots: Option<Vec<Depot>>
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
