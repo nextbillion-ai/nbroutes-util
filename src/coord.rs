@@ -18,13 +18,18 @@ impl Coord {
 
     pub fn coord(input: &str) -> Result<Coord> {
         let items: Vec<&str> = input.split(",").collect();
-        match items.len() {
-            2 => Ok(Coord {
+        let point = match items.len() {
+            2 => Coord {
                 lat: items[0].parse::<f64>()?,
                 lng: items[1].parse::<f64>()?,
-            }),
+            },
             _ => bail!("need 2 float for coordinate"),
+        };
+        if point.lat.is_nan() || point.lng.is_nan() {
+            bail!("lat lng cannot be nan")
         }
+
+        Ok(point)
     }
 
     pub fn coords(input: &str) -> Result<Vec<Coord>> {
