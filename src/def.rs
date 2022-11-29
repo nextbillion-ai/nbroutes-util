@@ -132,7 +132,7 @@ pub struct VehicleCosts {
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct OptimizationOptions {
-    pub objective: Option<ObjectiveOption>
+    pub objective: Option<ObjectiveOption>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
@@ -323,6 +323,8 @@ pub struct NavigatingInput {
     #[doc = "mode of service.\n\nValues:`car|auto|bike|escooter|4w|2w...`.\n\nDefault: `\"\"`"]
     pub mode: Option<String>,
     #[doc = "departure time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
+    #[doc = "`deprecated`"]
+    pub context: Option<String>,
     pub departure_time: Option<i64>,
     #[doc = "unique session id for trip identification.\n\nNote: Help to reuse cached trip characteritics when set. \n\nDefault: `\"\"`"]
     pub session: Option<String>,
@@ -498,7 +500,7 @@ pub struct OptimizationPostInput {
     pub shipments: Option<Vec<Shipment>>,
     pub mode: Option<String>,
     pub options: Option<OptimizationOptions>,
-    pub depots: Option<Vec<Depot>>
+    pub depots: Option<Vec<Depot>>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
