@@ -109,6 +109,7 @@ pub struct Job {
     pub skills: Option<Vec<i64>>,
     pub priority: Option<u64>,
     pub setup: Option<u64>,
+    pub description: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
@@ -123,6 +124,7 @@ pub struct Vehicle {
     pub max_tasks: Option<u64>,
     pub costs: Option<VehicleCosts>,
     pub depot: Option<u64>,
+    pub description: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
@@ -145,6 +147,7 @@ pub struct ObjectiveOption {
 pub struct Depot {
     pub id: u64,
     pub location_index: u64,
+    pub description: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
@@ -152,6 +155,7 @@ pub struct Break {
     pub id: u64,
     pub time_windows: Vec<Vec<i64>>,
     pub service: Option<u64>,
+    pub description: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
@@ -169,6 +173,7 @@ pub struct ShipmentStep {
     pub location_index: u64,
     pub service: Option<u64>,
     pub time_windows: Option<Vec<Vec<u64>>>,
+    pub description: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
