@@ -284,6 +284,17 @@ pub struct UpdateRRTSegmentInput {
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct UpdateRRTFixedSpeedInput {
+    pub way_id: u64,
+    pub segment: String, // 路段纬经度, 传入顺序决定方向
+    pub from_ts: u64, // 生效时间
+    pub to_ts: u64, // 过期时间
+    pub speed: i32,
+    #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
+    pub key: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct UpdateRRTSimpleOutput {
     pub success: bool,
     #[serde(skip_serializing_if = "Option::is_none")]
