@@ -287,8 +287,8 @@ pub struct UpdateRRTSegmentInput {
 pub struct UpdateRRTFixedSpeedInput {
     pub way_id: u64,
     pub segment: String, // 路段纬经度, 传入顺序决定方向
-    pub from_ts: u64, // 生效时间
-    pub to_ts: u64, // 过期时间
+    pub from_ts: u64,    // 生效时间
+    pub to_ts: u64,      // 过期时间
     pub speed: i32,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
@@ -415,6 +415,8 @@ pub struct ValhallaDirectionsInput {
     pub truck_size: Option<String>,
     #[doc = "Indicates the truck weight including trailers and shipped goods in KG, only valid when mode=6w."]
     pub truck_weight: Option<i32>,
+    #[doc = "using shortest route when route_type=shortest."]
+    pub route_type: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
