@@ -373,6 +373,23 @@ pub struct NavigatingOutput {
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct NavigatingProctorOutput {
+    #[doc = "`Ok` for success."]
+    pub status: String,
+    #[doc = "the json result send to Proctor."]
+    pub navigatingres: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "error message when `status` != `Ok`"]
+    pub error_msg: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub country_code: Option<String>,
+    #[doc = "`the value of the share.config.voice_instuction_advance_distance"]
+    pub voice_instruction_advance_distance: Option<i32>,
+    #[doc = "`the value of the share.config.instruction_fork_bearing_lower_bound"]
+    pub instruction_fork_bearing_lower_bound: Option<i32>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct ValhallaDirectionsInput {
     #[doc = "{{location_of_origin}}\n\nFormat: `lat,lng`.\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+$"]
     pub origin: String,
