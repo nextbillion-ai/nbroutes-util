@@ -377,7 +377,7 @@ pub struct NavigatingProctorOutput {
     #[doc = "`Ok` for success."]
     pub status: String,
     #[doc = "the json result send to Proctor."]
-    pub navigatingres: String,
+    pub navigating_res: ProctorRouteResult,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "error message when `status` != `Ok`"]
     pub error_msg: Option<String>,
@@ -387,6 +387,73 @@ pub struct NavigatingProctorOutput {
     pub voice_instruction_advance_distance: Option<i32>,
     #[doc = "`the value of the share.config.instruction_fork_bearing_lower_bound"]
     pub instruction_fork_bearing_lower_bound: Option<i32>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Apiv2Schema)]
+pub struct ProctorRouteResult {
+    pub code: Option<String>,
+    pub message: Option<String>,
+    pub routes: Vec<ProctorRoute>,
+}
+#[derive(Debug, Serialize, Deserialize, Apiv2Schema)]
+pub struct ProctorRoute {
+    pub duration: f64,
+    pub distance: f64,
+    pub weight_name: Option<String>,
+    pub weight: f64,
+    pub geometry: Option<String>,
+    pub legs: Vec<ProctorLeg>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Apiv2Schema)]
+pub struct ProctorLeg {
+    pub annotation: Option<Annotation>,
+    pub duration: f64,
+    pub summary: Option<String>,
+    pub weight: f64,
+    pub distance: f64,
+    pub steps: Vec<ProctorStep>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Apiv2Schema)]
+pub struct ProctorStep {
+    pub distance: f64,
+    pub duration: f64,
+    pub geometry: Option<String>,
+    pub weight: f64,
+    pub name: Option<String>,
+    pub reference: Option<String>,
+    pub pronunciation: Option<String>,
+    pub destinations: Option<String>,
+    pub exits: Option<String>,
+    pub mode: Option<String>,
+    pub metadata: Option<ProctorManeuver>,
+    pub intersections: Vec<ProctorIntersections>,
+    pub rotary_name: Option<String>,
+    pub rotary_pronunciation: Option<String>,
+    pub driving_side: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Clone, Apiv2Schema)]
+pub struct ProctorManeuver {
+    pub bearing_before: i32,
+    pub bearing_after: i32,
+    pub coordinate: Coordinate,
+    pub maneuver_type: String,
+    pub modifier: Option<String>,
+    pub exit: i32,
+}
+
+
+#[derive(Serialize, Deserialize, Debug, Clone, Apiv2Schema)]
+pub struct ProctorIntersections {
+    pub location: Coordinate,
+    pub bearings: Vec<i32>,
+    pub classes: Vec<String>,
+    pub entry: Vec<bool>,
+    pub intersection_in: i32,
+    pub intersection_out: i32,
+    pub lanes: Vec<Lane>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
