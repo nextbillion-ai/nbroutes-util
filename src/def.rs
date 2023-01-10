@@ -135,12 +135,19 @@ pub struct VehicleCosts {
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct OptimizationOptions {
     pub objective: Option<ObjectiveOption>,
+    pub constraint: Option<OptimizationConstraint>
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct ObjectiveOption {
     pub travel_cost: Option<String>,
     pub minimise_num_depots: Option<bool>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct OptimizationConstraint {
+    pub max_vehicle_overtime: Option<u64>,
+    pub max_visit_lateness: Option<u64>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
