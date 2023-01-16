@@ -121,7 +121,7 @@ pub struct Vehicle {
     pub time_window: Option<Vec<f64>>,
     pub skills: Option<Vec<i64>>,
     pub breaks: Option<Vec<Break>>,  // not used anymore
-    pub break: Option<Break>,
+    pub r#break: Option<Break>,
     pub max_tasks: Option<u64>,
     pub costs: Option<VehicleCosts>,
     pub depot: Option<u64>,
