@@ -279,6 +279,7 @@ pub struct UpdateRRTSimpleInput {
     pub to_way_id: u64,
     pub to_way_nodes: String,
     pub status: i32,
+    pub opening_hours: Option<String>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
 }
@@ -287,6 +288,7 @@ pub struct UpdateRRTSimpleInput {
 pub struct UpdateRRTSegmentInput {
     pub segment: String,
     pub status: i32,
+    pub opening_hours: Option<String>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
 }
@@ -295,9 +297,10 @@ pub struct UpdateRRTSegmentInput {
 pub struct UpdateRRTFixedSpeedInput {
     pub way_id: u64,
     pub segment: String, // 路段纬经度, 传入顺序决定方向
-    pub from_ts: u64,    // 生效时间
-    pub to_ts: u64,      // 过期时间
+    pub from_ts: u64,    // 生效时间. Deprecated. Use `opening_hours` instead.
+    pub to_ts: u64,      // 过期时间. Deprecated. Use `opening_hours` instead.
     pub speed: i32,
+    pub opening_hours: Option<String>, 
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
 }
