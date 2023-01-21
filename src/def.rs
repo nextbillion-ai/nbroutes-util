@@ -120,7 +120,7 @@ pub struct Vehicle {
     pub capacity: Option<Vec<i64>>,
     pub time_window: Option<Vec<f64>>,
     pub skills: Option<Vec<i64>>,
-    pub breaks: Option<Vec<Break>>,  // not used anymore
+    pub breaks: Option<Vec<Break>>, // not used anymore
     pub r#break: Option<Break>,
     pub max_tasks: Option<u64>,
     pub costs: Option<VehicleCosts>,
@@ -136,7 +136,7 @@ pub struct VehicleCosts {
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct OptimizationOptions {
     pub objective: Option<ObjectiveOption>,
-    pub constraint: Option<OptimizationConstraint>
+    pub constraint: Option<OptimizationConstraint>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
@@ -300,7 +300,7 @@ pub struct UpdateRRTFixedSpeedInput {
     pub from_ts: u64,    // 生效时间. Deprecated. Use `opening_hours` instead.
     pub to_ts: u64,      // 过期时间. Deprecated. Use `opening_hours` instead.
     pub speed: i32,
-    pub opening_hours: Option<String>, 
+    pub opening_hours: Option<String>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
 }
@@ -368,6 +368,8 @@ pub struct NavigatingInput {
     pub approaches: Option<String>,
     #[doc = "Limits the search to segments with given bearing in degrees towards true north in clockwise direction. \n\nFormat: `degree,range;degree,range...`. Default:`\"\"`"]
     pub bearings: Option<String>,
+    #[doc = "using shortest route when route_type=shortest."]
+    pub route_type: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -454,7 +456,6 @@ pub struct ProctorManeuver {
     pub modifier: Option<String>,
     pub exit: i32,
 }
-
 
 #[derive(Serialize, Deserialize, Debug, Clone, Apiv2Schema)]
 pub struct ProctorIntersections {
