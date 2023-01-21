@@ -953,6 +953,8 @@ pub struct ValhallaMatrixInput {
     pub context: Option<String>,
     pub avoid: Option<String>,
     pub approaches: Option<String>,
+    #[doc = "using shortest route when route_type=shortest."]
+    pub route_type: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
