@@ -20,8 +20,8 @@ impl Coord {
         let items: Vec<&str> = input.split(",").collect();
         let point = match items.len() {
             2 => Coord {
-                lat: items[0].parse::<f64>()?,
-                lng: items[1].parse::<f64>()?,
+                lat: items[0].trim().parse::<f64>()?,
+                lng: items[1].trim().parse::<f64>()?,
             },
             _ => bail!("need 2 float for coordinate"),
         };
@@ -33,6 +33,7 @@ impl Coord {
     }
 
     pub fn coords(input: &str) -> Result<Vec<Coord>> {
+        let input = input.trim().trim_matches('|').trim();
         let mut r: Vec<Coord> = Vec::new();
         let items = input.split("|");
         for item in items {
