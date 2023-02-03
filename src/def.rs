@@ -955,6 +955,10 @@ pub struct ValhallaMatrixInput {
     pub approaches: Option<String>,
     #[doc = "using shortest route when route_type=shortest."]
     pub route_type: Option<String>,
+    #[doc = "Indicates the truck size in CM, only valid when mode=6w. \n\nFormat: `height,width,length`."]
+    pub truck_size: Option<String>,
+    #[doc = "Indicates the truck weight including trailers and shipped goods in KG, only valid when mode=6w."]
+    pub truck_weight: Option<i32>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
