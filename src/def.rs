@@ -933,7 +933,7 @@ pub struct NearbyResult {
     pub distance: u64,
 }
 
-#[derive(Serialize, Deserialize, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
 pub struct ValhallaMatrixInput {
     #[doc = "locations of origins \n\nFormat: lat0,lng0|lat1,lng1|...\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$"]
     pub origins: String,
