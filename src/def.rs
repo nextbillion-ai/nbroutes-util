@@ -770,6 +770,7 @@ pub struct Annotation {
     pub nodes: Vec<i64>,
     pub datasources: Vec<i32>,
     pub metadata: Option<MetaData>,
+    pub turn_penalty: Vec<f64>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
