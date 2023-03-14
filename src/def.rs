@@ -890,6 +890,7 @@ pub struct ValhallaAnnotation {
     pub speed: Vec<f64>,
     pub metadata: Vec<String>,
     pub intersection_node: Vec<Vec<f64>>,
+    pub datasources: Vec<i64>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Apiv2Schema, Clone)]
