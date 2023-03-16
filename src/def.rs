@@ -691,6 +691,25 @@ pub struct DirectionsOutput {
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
+pub struct ValhallaDirectionsOutput {
+    #[doc = "`Ok` for success."]
+    pub status: String,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "service mode used.\n\nValues:`4w|3w|2w...`."]
+    pub mode: Option<String>,
+    #[doc = "`routes` calculated."]
+    pub routes: Vec<ValhallaRoute>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "special geospatial objects found from all `routes`.\n\nNote: this is super collection of `special_objects` from individual `route`"]
+    pub global_special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
+    #[serde(rename = "errorMessage", skip_serializing_if = "Option::is_none")]
+    #[doc = "error message when `status` != `Ok`"]
+    pub error_msg: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub country_code: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
 pub struct DirectionsTableOutput {
     #[doc = "`Ok` for success."]
     pub status: String,
@@ -755,6 +774,43 @@ pub struct Route {
     pub geojson: Option<Geojson>,
 }
 
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct ValhallaRoute {
+    #[doc = "encoded geometry value in `polyline` or `polyline6`.\n\nFormat: [Link: Polyline](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)"]
+    pub geometry: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`Debug Only!` encoded geometry value in `polyline` or `polyline6`.\n\nNote: might contains `raw` geometry before filtering.\n\nFormat: [Link: Polyline](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)"]
+    pub geometry_full: Option<String>,
+    #[doc = "route driving distance.\n\nUnit: `meters`"]
+    pub distance: f64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub distance_full: Option<f64>,
+    #[doc = "route driving duration.\n\nUnit: `seconds`"]
+    pub duration: f64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "route weight.\n\n"]
+    pub weight: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "start location of route"]
+    pub start_location: Option<Location>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "end location of route"]
+    pub end_location: Option<Location>,
+    #[doc = "legs of route.\n\nNote: `waypoints` split `route` into `legs`"]
+    pub legs: Option<Vec<ValhallaLeg>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "route driving duration before adjusting.\n\nNote: debug only."]
+    pub raw_duration: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "route driving duration after adjusting.\n\nNote: debug only."]
+    pub predicted_duration: Option<f64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "special geospatial objects crossed along the trip."]
+    pub special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub geojson: Option<Geojson>,
+}
+
 #[derive(Serialize, Deserialize, Clone, Debug, Apiv2Schema)]
 pub struct Location {
     pub latitude: f64,
@@ -799,6 +855,54 @@ pub struct Leg {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "`deprecated`"]
     pub annotation: Option<Annotation>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct ValhallaLeg {
+    #[doc = "leg driving distance.\n\nUnit: `meters`"]
+    pub distance: IntValue,
+    #[doc = "leg driving duration.\n\nUnit: `seconds`"]
+    pub duration: IntValue,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "leg driving duration before adjusting.\n\nNote: debug only."]
+    pub raw_duration: Option<IntValue>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "start location of `leg`"]
+    pub start_location: Option<Location>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "end location of `leg`"]
+    pub end_location: Option<Location>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`steps` of `leg`"]
+    pub steps: Option<Vec<Step>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`deprecated`"]
+    pub annotation: Option<ValhallaAnnotation>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct ValhallaAnnotation {
+    pub seg_info: Vec<SegInfo>,
+    pub node_info: Vec<NodeInfo>,
+    pub duration: Vec<f64>,
+    pub distance: Vec<f64>,
+    pub node: Vec<Vec<f64>>,
+    pub speed: Vec<f64>,
+    pub metadata: Vec<String>,
+    pub intersection_node: Vec<Vec<f64>>,
+    pub datasources: Vec<i64>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Apiv2Schema, Clone)]
+pub struct SegInfo {
+    pub weight: f64,
+    pub duration: f64,
+}
+
+#[derive(Debug, Serialize, Deserialize, Apiv2Schema, Clone)]
+pub struct NodeInfo {
+    pub turn_weight: f64,
+    pub turn_duration: f64,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
