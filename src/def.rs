@@ -99,6 +99,12 @@ pub struct Locations {
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct LocationsV2 {
+    pub id: u64,
+    pub location: Vec<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct Job {
     pub id: u64,
     pub location_index: i32,
@@ -609,6 +615,19 @@ pub struct OptimizationPostInput {
     pub key: Option<String>,
     pub description: Option<String>,
     pub locations: Locations,
+    pub jobs: Option<Vec<Job>>,
+    pub vehicles: Vec<Vehicle>,
+    pub shipments: Option<Vec<Shipment>>,
+    pub mode: Option<String>,
+    pub options: Option<OptimizationOptions>,
+    pub depots: Option<Vec<Depot>>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct OptimizationV2PostInput {
+    pub key: Option<String>,
+    pub description: Option<String>,
+    pub locations: LocationsV2,
     pub jobs: Option<Vec<Job>>,
     pub vehicles: Vec<Vehicle>,
     pub shipments: Option<Vec<Shipment>>,
