@@ -492,7 +492,7 @@ pub struct ValhallaDirectionsInput {
     pub arrive_time: Option<i64>,
     #[doc = "unique session id for trip identification.\n\nNote: Help to reuse cached trip characteritics when set. \n\nDefault: `\"\"`"]
     pub session: Option<String>,
-    #[doc = "output format of geometry.\n\nDefault: `polyline`"]
+    #[doc = "Sets the output format of the route geometry in the response. Available values are `polyline`, `polyline6`, or `geojson`. If `geojson` is selected, the response will include `geometry` in `polyline6` format and will also include a `geojson` object that defines the route polyline.\n\nNOTE that the `geojson` object is a simplified version, which only keeps the `coordinates` field of a `LineString` geojson type`"]
     pub geometry: Option<GeometryInput>,
     #[doc = "output verbosity of overview (whole trip) geometry.\n\nDefault: `full`"]
     pub overview: Option<OverviewInput>,
