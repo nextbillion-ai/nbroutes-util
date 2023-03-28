@@ -88,8 +88,48 @@ pub enum OverviewInput {
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
-pub struct Geojson {
+pub enum GeoJSONType {
+    Point,
+    MultiPoint,
+    LineString,
+    MultiLineString,
+    Polygon,
+    MultiPolygon,
+    GeometryCollection,
+    Feature,
+    FeatureCollection,
+    Link,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct GeoJSONLineString {
+    #[serde(rename = "type")]
+    pub geojson_type: GeoJSONType,
+    // in longitude, latitude order
     pub coordinates: Vec<Vec<f64>>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct GeoJSONMultiLineString {
+    #[serde(rename = "type")]
+    pub geojson_type: GeoJSONType,
+    // in longitude, latitude order
+    pub coordinates: Vec<Vec<Vec<f64>>>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+#[serde(untagged)]
+pub enum GeoJSONObject {
+    LineString(GeoJSONLineString),
+    MultiLineString(GeoJSONMultiLineString),
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct GeoJSONFeature {
+    #[serde(rename = "type")]
+    pub geojson_type: GeoJSONType,
+    pub geometry: GeoJSONObject,
+    pub properties: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
@@ -492,7 +532,7 @@ pub struct ValhallaDirectionsInput {
     pub arrive_time: Option<i64>,
     #[doc = "unique session id for trip identification.\n\nNote: Help to reuse cached trip characteritics when set. \n\nDefault: `\"\"`"]
     pub session: Option<String>,
-    #[doc = "Sets the output format of the route geometry in the response. Available values are `polyline`, `polyline6`, or `geojson`. If `geojson` is selected, the response will include `geometry` in `polyline6` format and will also include a `geojson` object that defines the route polyline.\n\nNOTE that the `geojson` object is a simplified version, which only keeps the `coordinates` field of a `LineString` geojson type`"]
+    #[doc = "output format of geometry.\n\nValue: `geojson|polyline|polyline6`.\n\nDefault: `polyline`"]
     pub geometry: Option<GeometryInput>,
     #[doc = "output verbosity of overview (whole trip) geometry.\n\nDefault: `full`"]
     pub overview: Option<OverviewInput>,
@@ -669,7 +709,7 @@ pub struct OptimizationTrip {
     pub duration: f64,
     pub distance: f64,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub geojson: Option<Geojson>,
+    pub geojson: Option<GeoJSONFeature>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
@@ -687,7 +727,7 @@ pub struct OptimizationStep {
     pub duration: f64,
     pub geometry: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub geojson: Option<Geojson>,
+    pub geojson: Option<GeoJSONFeature>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
@@ -790,7 +830,7 @@ pub struct Route {
     #[doc = "special geospatial objects crossed along the trip."]
     pub special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub geojson: Option<Geojson>,
+    pub geojson: Option<GeoJSONFeature>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
@@ -827,7 +867,7 @@ pub struct ValhallaRoute {
     #[doc = "special geospatial objects crossed along the trip."]
     pub special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub geojson: Option<Geojson>,
+    pub geojson: Option<GeoJSONFeature>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Apiv2Schema)]
@@ -957,7 +997,7 @@ pub struct Step {
     #[doc = "step intersections"]
     pub intersections: Option<Vec<Intersection>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub geojson: Option<Geojson>,
+    pub geojson: Option<GeoJSONFeature>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "step reference"]
     pub reference: Option<String>,
@@ -1208,7 +1248,7 @@ pub struct SnapOutput {
     #[doc = "encoded geometry value in `polyline` or `polyline6`.\n\nFormat: [Link: Polyline](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)"]
     pub geometry: Option<Vec<Option<String>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub geojson: Option<Vec<Option<Geojson>>>,
+    pub geojson: Option<GeoJSONFeature>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
