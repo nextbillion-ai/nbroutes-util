@@ -1303,6 +1303,7 @@ pub struct ConfigCluster {
 pub struct ClusteringPostInputPartial {
     pub options: Option<ClusteringOptionPartial>,
     pub locations: Vec<String>,
+    pub jobs: Vec<ClusteringJobPartial>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -1319,6 +1320,10 @@ pub struct ClusteringRoutingOptionPartial {
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct ClusteringRoutingObjectivePartial {
     pub travel_cost: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct ClusteringJobPartial {
 }
 
 #[derive(Serialize, Deserialize, Debug)]
