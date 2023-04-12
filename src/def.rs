@@ -1308,11 +1308,17 @@ pub struct ClusteringPostInputPartial {
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct ClusteringOptionPartial {
     pub routing: Option<ClusteringRoutingOptionPartial>,
+    pub objective: Option<ClusteringRoutingObjectivePartial>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct ClusteringRoutingOptionPartial {
     pub mode: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct ClusteringRoutingObjectivePartial {
+    pub travel_cost: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
