@@ -1299,6 +1299,22 @@ pub struct ConfigCluster {
     pub features: Option<HashMap<String, HashMap<String, Vec<ConfigKeyValue>>>>,
 }
 
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct ClusteringPostInputPartial {
+    pub options: Option<ClusteringOptionPartial>,
+    pub locations: Vec<String>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct ClusteringOptionPartial {
+    pub routing: Option<ClusteringRoutingOptionPartial>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct ClusteringRoutingOptionPartial {
+    pub mode: Option<String>,
+}
+
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ConfigKeyValue {
     pub name: String,
