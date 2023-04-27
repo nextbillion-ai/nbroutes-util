@@ -416,6 +416,8 @@ pub struct NavigatingInput {
     pub bearings: Option<String>,
     #[doc = "using shortest route when route_type=shortest."]
     pub route_type: Option<String>,
+    #[doc = "enable to show debug information.\n\nDefault: `false`"]
+    pub debug: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
