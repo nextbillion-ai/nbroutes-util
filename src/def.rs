@@ -381,10 +381,12 @@ pub struct OptimizationInput {
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct NavigatingInput {
-    #[doc = "geometry input, if this is given, other params will not be considered except `geometry_type` & `lang` & `key`."]
+    #[doc = "geometry input, if this is given, other params will not be considered except `original_route_geometry_type` & `lang` & `key`."]
+    pub original_route_geometry: Option<String>,
+    #[doc = "format of geometry.\n\nDefault: `polyline`"]
+    pub original_route_geometry_type: Option<String>,
+    #[doc = "output format of geometry.\n\nValue: `geojson|polyline|polyline6`.\n\nDefault: `polyline`"]
     pub geometry: Option<String>,
-    #[doc = "format of geometry.\n\nDefault: `polyline6`"]
-    pub geometry_type: Option<String>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
     #[doc = "{{location_of_origin}}\n\nFormat: `lat,lng`.\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+$"]
