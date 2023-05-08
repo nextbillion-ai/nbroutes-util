@@ -329,6 +329,7 @@ pub fn find_area<'a>(
     let mut best_area = None;
     let mut best_coord_index = vec![];
     let mut mapped_mode: Option<String> = None;
+    let mut best_missing_coords = vec![];
 
     for area in areas.iter() {
         let vs = polygons.get(area.name.as_str());
@@ -377,6 +378,10 @@ pub fn find_area<'a>(
             area.name, missing_coords, &request_id
         );
 
+        if best_missing_coords.len() == 0 || best_missing_coords.len() > missing_coords.len() {
+            best_missing_coords = missing_coords
+        }
+
         if !tolerate_outlier {
             continue;
         }
@@ -399,7 +404,7 @@ pub fn find_area<'a>(
         ));
     }
 
-    bail!("no area found")
+    bail!("{:?}", best_missing_coords)
 }
 
 pub fn find_service<'a>(
