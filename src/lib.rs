@@ -329,7 +329,11 @@ pub fn find_area<'a>(
     let mut best_area = None;
     let mut best_coord_index = vec![];
     let mut mapped_mode: Option<String> = None;
-    let mut best_missing_coords = vec![];
+
+    // the following two vars are used to keep track of the most likely areas
+    //  in case there is no perfect match; so we can help user identify what coordinate is invalid
+    let mut best_missing_coords = None;
+    let mut best_number_of_coords = 0;
 
     for area in areas.iter() {
         let vs = polygons.get(area.name.as_str());
@@ -378,8 +382,9 @@ pub fn find_area<'a>(
             area.name, missing_coords, &request_id
         );
 
-        if best_missing_coords.len() == 0 || best_missing_coords.len() > missing_coords.len() {
-            best_missing_coords = missing_coords
+        if best_number_of_coords == 0 || coord_index.len() > best_number_of_coords {
+            best_missing_coords = Some(missing_coords[0]);
+            best_number_of_coords = coord_index.len();
         }
 
         if !tolerate_outlier {
@@ -404,7 +409,12 @@ pub fn find_area<'a>(
         ));
     }
 
-    bail!("{:?}", best_missing_coords)
+    if best_missing_coords.is_some() {
+        let best_missing_coords = best_missing_coords.unwrap();
+        bail!("({},{})", best_missing_coords.lat(), best_missing_coords.lng());
+    }
+
+    bail!("")
 }
 
 pub fn find_service<'a>(
