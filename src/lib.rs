@@ -361,10 +361,6 @@ pub fn find_area<'a>(
             continue;
         }
 
-        if coord_index.len() == 0 {
-            continue;
-        }
-
         if coord_index.len() == coords.len() {
             //     return here since we found an area that contains all points
             //      with the highest priority
@@ -377,15 +373,19 @@ pub fn find_area<'a>(
             continue;
         }
 
-        warn!(
-            "some coordinates are not in area {:?}, coords: {:?}, request_id: {:?}",
-            area.name, missing_coords, &request_id
-        );
-
         if best_number_of_coords == 0 || coord_index.len() > best_number_of_coords {
             best_missing_coords = Some(missing_coords[0]);
             best_number_of_coords = coord_index.len();
         }
+
+        if coord_index.len() == 0 {
+            continue;
+        }
+
+        warn!(
+            "some coordinates are not in area {:?}, coords: {:?}, request_id: {:?}",
+            area.name, missing_coords, &request_id
+        );
 
         if !tolerate_outlier {
             continue;
