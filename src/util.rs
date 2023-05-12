@@ -72,9 +72,19 @@ pub struct Area {
     pub mappings: BTreeMap<String, String>,
     pub allowed_context: Option<BTreeMap<String, Vec<String>>>,
     pub time_dependant: Option<BTreeMap<String, BTreeMap<String, bool>>>,
+    // deprecated
     pub flexible: Option<BTreeMap<String, BTreeMap<String, bool>>>,
     #[serde(skip_deserializing, skip_serializing)]
     pub time_dependant_settings: Option<BTreeMap<String, BTreeMap<String, TimeDependantSetting>>>,
+    pub flexible_setting: Option<AreaFlexible>,
+}
+
+
+#[derive(Serialize, Deserialize, Clone, Debug)]
+pub struct AreaFlexible {
+    pub default_service: String,
+    pub mappings: BTreeMap<String, String>,
+    pub allowed_context: Option<BTreeMap<String, Vec<String>>>,
 }
 
 //uncomment following testcase to ensure gsutil function works as expected

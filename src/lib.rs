@@ -325,6 +325,7 @@ pub fn find_area<'a>(
     areas: &'a Vec<Area>,
     tolerate_outlier: bool,
     request_id: Option<&str>,
+    is_flexible_request: bool,
 ) -> Result<(&'a Area, String, Option<Vec<usize>>)> {
     let mut best_area = None;
     let mut best_coord_index = vec![];
@@ -366,7 +367,7 @@ pub fn find_area<'a>(
             //      with the highest priority
             //      no need to return coord indexes since they're all in the area
 
-            let mapped_mode_result = map_mode(mode, area.default_service.clone(), area);
+            let mapped_mode_result = map_mode(mode, area, is_flexible_request);
             if mapped_mode_result.is_ok() {
                 return Ok((area, mapped_mode_result.unwrap(), None));
             }
@@ -392,7 +393,7 @@ pub fn find_area<'a>(
         }
 
         if coord_index.len() > best_coord_index.len() {
-            let mapped_mode_result = map_mode(mode, area.default_service.clone(), area);
+            let mapped_mode_result = map_mode(mode, area, is_flexible_request);
             if mapped_mode_result.is_ok() {
                 best_area = Some(area);
                 best_coord_index = coord_index;
@@ -424,9 +425,10 @@ pub fn find_service<'a>(
     areas: &Vec<Area>,
     tolerate_outlier: bool,
     request_id: Option<&str>,
+    is_flexible_request: bool,
 ) -> Result<(Service, Option<Vec<usize>>)> {
     let (detected_area, mode, coord_index) =
-        find_area(mode, coords, polygons, areas, tolerate_outlier, request_id)?;
+        find_area(mode, coords, polygons, areas, tolerate_outlier, request_id, is_flexible_request)?;
 
     let r = Service {
         area: detected_area.clone(),
@@ -436,13 +438,26 @@ pub fn find_service<'a>(
     Ok((r, coord_index))
 }
 
-pub fn map_mode(mode: &Option<String>, default_mode: String, area: &Area) -> Result<String> {
-    if mode.is_some() {
-        match area.mappings.get(mode.as_ref().unwrap()) {
+pub fn map_mode(mode: &Option<String>, area: &Area, is_flexible_request: bool) -> Result<String> {
+    let mut default_mode = area.default_service.as_str();
+    let mut mappings = &area.mappings;
+
+    if is_flexible_request {
+        if area.flexible_setting.is_none() {
+            bail!("option=flexible not supported for this area")
+        }
+        
+        let flexible_setting = area.flexible_setting.as_ref().unwrap();
+        default_mode = flexible_setting.default_service.as_str();
+        mappings = &flexible_setting.mappings;
+    }
+
+    if mode.is_some() && mode.as_ref().unwrap() != "" {
+        match mappings.get(mode.as_ref().unwrap()) {
             Some(v) => return Ok(v.clone()),
             _ => {
-                if mode.as_ref().unwrap().as_str() == default_mode.as_str() {
-                    return Ok(default_mode);
+                if mode.as_ref().unwrap().as_str() == default_mode {
+                    return Ok(default_mode.to_string());
                 } else {
                     warn!(
                         "map_mode failed due to unknown mode: {}",
@@ -454,7 +469,11 @@ pub fn map_mode(mode: &Option<String>, default_mode: String, area: &Area) -> Res
         }
     }
 
-    Ok(default_mode)
+    if default_mode == "" {
+        bail!("area not supported")
+    }
+
+    Ok(default_mode.to_string())
 }
 
 pub async fn load_polygons(
