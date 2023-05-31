@@ -387,6 +387,8 @@ pub struct NavigatingInput {
     pub original_shape_type: Option<String>,
     #[doc = "output format of geometry.\n\nValue: `geojson|polyline|polyline6`.\n\nDefault: `polyline`"]
     pub geometry: Option<String>,
+    #[doc = "output format of geometryType for old version.\n\nValue: `geojson|polyline|polyline6`.\n\nDefault: `polyline`"]
+    pub geometry_type: Option<String>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
     #[doc = "{{location_of_origin}}\n\nFormat: `lat,lng`.\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+$"]
