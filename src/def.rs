@@ -418,8 +418,6 @@ pub struct NavigatingInput {
     pub bearings: Option<String>,
     #[doc = "using shortest route when route_type=shortest."]
     pub route_type: Option<String>,
-    #[doc = "enable to show debug information.\n\nDefault: `false`"]
-    pub debug: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -544,8 +542,6 @@ pub struct ValhallaDirectionsInput {
     pub altcount: Option<i32>,
     #[doc = "enable to return alternative routes.\n\nNote: `altcount` will default to `3` if this is enabled.\n\nDefault: `false`"]
     pub alternatives: Option<bool>,
-    #[doc = "enable to show debug information.\n\nDefault: `false`"]
-    pub debug: Option<bool>,
     #[doc = "`deprecated`"]
     pub context: Option<String>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
@@ -589,8 +585,6 @@ pub struct DirectionsInput {
     pub altcount: Option<i32>,
     #[doc = "enable to return alternative routes.\n\nNote: `altcount` will default to `3` if this is enabled.\n\nDefault: `false`"]
     pub alternatives: Option<bool>,
-    #[doc = "enable to show debug information.\n\nDefault: `false`"]
-    pub debug: Option<bool>,
     #[doc = "`deprecated`"]
     pub context: Option<String>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
@@ -620,8 +614,6 @@ pub struct PostTripRouteInput {
     pub special_object_types: Option<Vec<String>>,
     #[doc = "mode of service.\n\nValues:`car|auto|bike|escooter|4w|2w...`.\n\nDefault: \"\""]
     pub mode: Option<String>,
-    #[doc = "enable to show debug information.\n\nDefault: `false`"]
-    pub debug: Option<bool>,
     #[doc = "`deprecated`"]
     pub context: Option<String>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
@@ -1113,8 +1105,6 @@ pub struct ValhallaMatrixInput {
     pub departure_time: Option<i64>,
     #[doc = "arrive time, conflict with departure_time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
     pub arrive_time: Option<i64>,
-    #[doc = "enable to show debug information.\n\nDefault: `false`"]
-    pub debug: Option<bool>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
     #[doc = "`deprecated`"]
@@ -1139,8 +1129,6 @@ pub struct MatrixInput {
     pub mode: Option<String>,
     #[doc = "departure time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
     pub departure_time: Option<i64>,
-    #[doc = "enable to show debug information.\n\nDefault: `false`"]
-    pub debug: Option<bool>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
     #[doc = "`deprecated`"]
