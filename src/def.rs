@@ -395,6 +395,10 @@ pub struct NavigatingInput {
     pub waypoints: Option<String>,
     #[doc = "mode of service.\n\nValues:`car|auto|bike|escooter|4w|2w...`.\n\nDefault: `\"\"`"]
     pub mode: Option<String>,
+    #[doc = "Indicates the truck size in CM, only valid when mode=6w. \n\nFormat: `height,width,length`."]
+    pub truck_size: Option<String>,
+    #[doc = "Indicates the truck weight including trailers and shipped goods in KG, only valid when mode=6w."]
+    pub truck_weight: Option<i32>,
     #[doc = "departure time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
     #[doc = "`deprecated`"]
     pub context: Option<String>,
