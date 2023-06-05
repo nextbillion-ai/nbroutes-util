@@ -1309,6 +1309,7 @@ pub struct ClusteringOptionPartial {
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct ClusteringRoutingOptionPartial {
     pub mode: Option<String>,
+    pub option: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
