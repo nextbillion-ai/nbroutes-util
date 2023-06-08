@@ -970,12 +970,15 @@ pub struct ValhallaAnnotation {
 pub struct SegInfo {
     pub weight: f64,
     pub duration: f64,
+    pub offset: u64,
+    pub length: u64,
 }
 
 #[derive(Debug, Serialize, Deserialize, Apiv2Schema, Clone)]
 pub struct NodeInfo {
     pub turn_weight: f64,
     pub turn_duration: f64,
+    pub offset: u64,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
