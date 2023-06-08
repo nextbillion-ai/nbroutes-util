@@ -561,6 +561,8 @@ pub struct ValhallaDirectionsInput {
     pub truck_weight: Option<i32>,
     #[doc = "using shortest route when route_type=shortest."]
     pub route_type: Option<String>,
+    #[doc = "road info objects to include in response.\n\nFormat: `type1|type2,...`.\n\nDefault:`\"\"`"]
+    pub road_info: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -935,6 +937,21 @@ pub struct ValhallaLeg {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "`deprecated`"]
     pub annotation: Option<ValhallaAnnotation>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`road info objects crossed along the trip.`"]
+    pub road_info: Option<RoadInfo>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct RoadInfo {
+    pub maxspeed: Option<Vec<RoadSegInfo>>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Apiv2Schema, Clone)]
+pub struct RoadSegInfo {
+    pub offset: u64,
+    pub length: u64,
+    pub value: String,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
@@ -946,7 +963,6 @@ pub struct ValhallaAnnotation {
     pub node: Vec<Vec<f64>>,
     pub speed: Vec<f64>,
     pub metadata: Vec<String>,
-    pub intersection_node: Vec<Vec<f64>>,
     pub datasources: Vec<i64>,
 }
 
