@@ -868,6 +868,9 @@ pub struct ValhallaRoute {
     pub special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub geojson: Option<GeoJSONFeature>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`road info objects crossed along the trip.`"]
+    pub road_info: Option<RoadInfo>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Apiv2Schema)]
@@ -937,9 +940,6 @@ pub struct ValhallaLeg {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "`deprecated`"]
     pub annotation: Option<ValhallaAnnotation>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[doc = "`road info objects crossed along the trip.`"]
-    pub road_info: Option<RoadInfo>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
