@@ -944,14 +944,14 @@ pub struct ValhallaLeg {
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct RoadInfo {
-    pub maxspeed: Option<Vec<RoadSegInfo>>,
+    pub max_speed: Option<Vec<RoadSegInfo>>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Apiv2Schema, Clone)]
 pub struct RoadSegInfo {
     pub offset: u64,
     pub length: u64,
-    pub value: String,
+    pub value: f64,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
@@ -1337,8 +1337,7 @@ pub struct ClusteringRoutingObjectivePartial {
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
-pub struct ClusteringJobPartial {
-}
+pub struct ClusteringJobPartial {}
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ConfigKeyValue {
