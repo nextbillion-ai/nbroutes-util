@@ -1269,9 +1269,6 @@ pub struct SnapOutput {
     pub geometry: Option<Vec<Option<String>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub geojson: Option<GeoJSONFeature>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[doc = "`road info objects crossed along the trip.`"]
-    pub road_info: Option<RoadInfo>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
@@ -1286,6 +1283,9 @@ pub struct SnappedPoint {
     pub name: String,
     #[doc = "bearing angle of the snapped point.\n\nUnit: `radian`"]
     pub bearing: f64,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`road info objects crossed along the trip.`"]
+    pub road_info: Option<RoadInfo>,
 }
 
 #[derive(Serialize, Deserialize, Debug)]
