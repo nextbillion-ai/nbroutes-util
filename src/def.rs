@@ -1271,7 +1271,7 @@ pub struct SnapOutput {
     pub geojson: Option<GeoJSONFeature>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "`road info objects crossed along the trip.`"]
-    pub road_info: Option<RoadInfo>,
+    pub road_info: Option<Vec<Option<RoadInfo>>>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
