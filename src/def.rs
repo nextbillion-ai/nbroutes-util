@@ -420,6 +420,8 @@ pub struct NavigatingInput {
     pub bearings: Option<String>,
     #[doc = "using shortest route when route_type=shortest."]
     pub route_type: Option<String>,
+    #[doc = "road info objects to include in response.\n\nFormat: `type1|type2,...`.\n\nDefault:`\"\"`"]
+    pub road_info: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -466,6 +468,9 @@ pub struct ProctorRoute {
     pub weight: Option<f64>,
     pub geometry: Option<String>,
     pub legs: Vec<ProctorLeg>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`road info objects crossed along the trip.`"]
+    pub road_info: Option<RoadInfo>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Apiv2Schema)]
@@ -1248,6 +1253,8 @@ pub struct SnapInput {
     pub approaches: Option<String>,
     #[doc = "only supports for polyline and geojson"]
     pub geometry: Option<String>,
+    #[doc = "road info objects to include in response.\n\nFormat: `type1|type2,...`.\n\nDefault:`\"\"`"]
+    pub road_info: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
@@ -1262,6 +1269,9 @@ pub struct SnapOutput {
     pub geometry: Option<Vec<Option<String>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub geojson: Option<GeoJSONFeature>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`road info objects crossed along the trip.`"]
+    pub road_info: Option<Vec<Option<RoadInfo>>>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
