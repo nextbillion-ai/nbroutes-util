@@ -399,6 +399,10 @@ pub struct NavigatingInput {
     pub waypoints: Option<String>,
     #[doc = "mode of service.\n\nValues:`car|auto|bike|escooter|4w|2w...`.\n\nDefault: `\"\"`"]
     pub mode: Option<String>,
+    #[doc = "Indicates the truck size in CM, only valid when mode=6w. \n\nFormat: `height,width,length`."]
+    pub truck_size: Option<String>,
+    #[doc = "Indicates the truck weight including trailers and shipped goods in KG, only valid when mode=6w."]
+    pub truck_weight: Option<i32>,
     #[doc = "departure time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
     #[doc = "`deprecated`"]
     pub context: Option<String>,
@@ -420,6 +424,8 @@ pub struct NavigatingInput {
     pub bearings: Option<String>,
     #[doc = "using shortest route when route_type=shortest."]
     pub route_type: Option<String>,
+    #[doc = "road info objects to include in response.\n\nFormat: `type1|type2,...`.\n\nDefault:`\"\"`"]
+    pub road_info: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -466,6 +472,9 @@ pub struct ProctorRoute {
     pub weight: Option<f64>,
     pub geometry: Option<String>,
     pub legs: Vec<ProctorLeg>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`road info objects crossed along the trip.`"]
+    pub road_info: Option<RoadInfo>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Apiv2Schema)]
@@ -561,6 +570,8 @@ pub struct ValhallaDirectionsInput {
     pub truck_weight: Option<i32>,
     #[doc = "using shortest route when route_type=shortest."]
     pub route_type: Option<String>,
+    #[doc = "road info objects to include in response.\n\nFormat: `type1|type2,...`.\n\nDefault:`\"\"`"]
+    pub road_info: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -866,6 +877,9 @@ pub struct ValhallaRoute {
     pub special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub geojson: Option<GeoJSONFeature>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`road info objects crossed along the trip.`"]
+    pub road_info: Option<RoadInfo>,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Apiv2Schema)]
@@ -938,6 +952,18 @@ pub struct ValhallaLeg {
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct RoadInfo {
+    pub max_speed: Option<Vec<RoadSegInfo>>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Apiv2Schema, Clone)]
+pub struct RoadSegInfo {
+    pub offset: u64,
+    pub length: u64,
+    pub value: f64,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct ValhallaAnnotation {
     pub seg_info: Vec<SegInfo>,
     pub node_info: Vec<NodeInfo>,
@@ -946,7 +972,6 @@ pub struct ValhallaAnnotation {
     pub node: Vec<Vec<f64>>,
     pub speed: Vec<f64>,
     pub metadata: Vec<String>,
-    pub intersection_node: Vec<Vec<f64>>,
     pub datasources: Vec<i64>,
 }
 
@@ -954,12 +979,15 @@ pub struct ValhallaAnnotation {
 pub struct SegInfo {
     pub weight: f64,
     pub duration: f64,
+    pub offset: u64,
+    pub length: u64,
 }
 
 #[derive(Debug, Serialize, Deserialize, Apiv2Schema, Clone)]
 pub struct NodeInfo {
     pub turn_weight: f64,
     pub turn_duration: f64,
+    pub offset: u64,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
@@ -1229,6 +1257,8 @@ pub struct SnapInput {
     pub approaches: Option<String>,
     #[doc = "only supports for polyline and geojson"]
     pub geometry: Option<String>,
+    #[doc = "road info objects to include in response.\n\nFormat: `type1|type2,...`.\n\nDefault:`\"\"`"]
+    pub road_info: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
@@ -1243,6 +1273,9 @@ pub struct SnapOutput {
     pub geometry: Option<Vec<Option<String>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub geojson: Option<GeoJSONFeature>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`road info objects crossed along the trip.`"]
+    pub road_info: Option<Vec<Option<RoadInfo>>>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
@@ -1309,6 +1342,7 @@ pub struct ClusteringOptionPartial {
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct ClusteringRoutingOptionPartial {
     pub mode: Option<String>,
+    pub option: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -1317,8 +1351,7 @@ pub struct ClusteringRoutingObjectivePartial {
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
-pub struct ClusteringJobPartial {
-}
+pub struct ClusteringJobPartial {}
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ConfigKeyValue {
