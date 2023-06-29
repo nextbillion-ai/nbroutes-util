@@ -750,6 +750,9 @@ pub struct DirectionsOutput {
     #[serde(rename = "errorMessage", skip_serializing_if = "Option::is_none")]
     #[doc = "error message when `status` != `Ok`"]
     pub error_msg: Option<String>,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
 }
@@ -1171,6 +1174,9 @@ pub struct MatrixOutput {
     pub status: String,
     #[doc = "matrix output.\n\nNote: each row in following format\n\nRow[i]: `Element`(o[i]d[0]),`Element`(o[i]d[1]),`Element`(o[i]d[2])..."]
     pub rows: Vec<Row>,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -1187,6 +1193,9 @@ e(xy) eta for origins[x] to dest[y]\n
 d(xy) distance for origins[x] to dest[y]\n
 "]
     pub rows: Vec<Vec<Vec<u64>>>,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -1261,6 +1270,9 @@ pub struct SnapInput {
 pub struct SnapOutput {
     #[doc = "`Ok` for success."]
     pub status: String,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<String>,
     #[serde(rename = "snappedPoints")]
     pub snapped_points: Vec<SnappedPoint>,
     #[doc = "total travel distance of the snapped path\n\nUnit: `meters`"]
