@@ -774,6 +774,9 @@ pub struct ValhallaDirectionsOutput {
     pub error_msg: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
