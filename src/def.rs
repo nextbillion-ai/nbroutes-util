@@ -1166,6 +1166,10 @@ pub struct MatrixInput {
     pub approaches: Option<String>,
     #[doc = "Limits the search to segments with given bearing in degrees towards true north in clockwise direction. \n\nFormat: `degree,range;degree,range...`. Default:`\"\"`"]
     pub bearings: Option<String>,
+    #[doc = "won't work with osrm, just for extract"]
+    pub truck_size: Option<String>,
+    #[doc = "won't work with osrm, just for extract"]
+    pub truck_weight: Option<i32>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
