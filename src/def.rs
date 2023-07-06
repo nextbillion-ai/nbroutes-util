@@ -882,6 +882,72 @@ pub struct ValhallaRoute {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "`road info objects crossed along the trip.`"]
     pub road_info: Option<RoadInfo>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`debug related information.`"]
+    pub debug_info: Option<DebugInfo>,
+}
+
+
+#[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
+pub struct DebugInfo {
+    pub node_info: Vec<NodeInfo>,
+    pub edge_info: Vec<EdgeInfo>,
+}
+
+#[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
+pub struct EdgeInfo {
+    pub lanes: Vec<String>,
+    pub length: i64,
+    pub classification: Classification,
+    pub speed_sources: String,
+    pub special_property: HashMap<String,bool>,
+    pub offset: i64,
+    pub edge_id: i64,
+    pub duration: f64,
+    pub distance: i64,
+    pub speed: f64,
+    pub access_restriction: AccessRestriction,
+    pub speed_limit: i64,
+    pub way_id: i64,
+    pub weight: f64,
+    pub geo_attributes: GeoAttributes,
+    pub raw_speed: RawSpeed,
+}
+
+#[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
+pub struct Classification {
+    pub link: bool,
+    pub internal: bool,
+    pub surface: String,
+    pub use_field: String,
+    pub classification: String,
+}
+
+#[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
+pub struct AccessRestriction {
+
+    pub part_of_complex_restriction: bool,
+    pub end_restriction: HashMap<String,bool>,
+    pub start_restriction: HashMap<String,bool>,
+    pub access_restriction: bool,
+    pub access: HashMap<String,bool>,
+}
+
+#[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
+pub struct GeoAttributes {
+    pub curvature: i64,
+    pub max_down_slope: f64,
+    pub max_up_slope: f64,
+    pub weighted_grade: f64,
+    pub length: i64,
+}
+
+#[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
+pub struct RawSpeed {
+    pub predicted: bool,
+    pub constrained_flow: i64,
+    pub free_flow: i64,
+    pub default: i64,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Apiv2Schema)]
