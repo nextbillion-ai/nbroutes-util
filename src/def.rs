@@ -916,6 +916,7 @@ pub struct Classification {
     pub link: bool,
     pub internal: bool,
     pub surface: String,
+    #[serde(rename = "use")]
     pub use_field: String,
     pub classification: String,
 }
