@@ -754,6 +754,9 @@ pub struct DirectionsOutput {
     #[serde(rename = "errorMessage", skip_serializing_if = "Option::is_none")]
     #[doc = "error message when `status` != `Ok`"]
     pub error_msg: Option<String>,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
 }
@@ -775,6 +778,9 @@ pub struct ValhallaDirectionsOutput {
     pub error_msg: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
@@ -880,6 +886,73 @@ pub struct ValhallaRoute {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "`road info objects crossed along the trip.`"]
     pub road_info: Option<RoadInfo>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`debug related information.`"]
+    pub debug_info: Option<DebugInfo>,
+}
+
+
+#[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
+pub struct DebugInfo {
+    pub node_info: Vec<NodeInfo>,
+    pub edge_info: Vec<EdgeInfo>,
+}
+
+#[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
+pub struct EdgeInfo {
+    pub lanes: Vec<String>,
+    pub length: i64,
+    pub classification: Classification,
+    pub speed_sources: String,
+    pub special_property: HashMap<String,bool>,
+    pub offset: i64,
+    pub edge_id: i64,
+    pub duration: f64,
+    pub distance: i64,
+    pub speed: f64,
+    pub access_restriction: AccessRestriction,
+    pub speed_limit: i64,
+    pub way_id: i64,
+    pub weight: f64,
+    pub geo_attributes: GeoAttributes,
+    pub raw_speed: RawSpeed,
+}
+
+#[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
+pub struct Classification {
+    pub link: bool,
+    pub internal: bool,
+    pub surface: String,
+    #[serde(rename = "use")]
+    pub use_field: String,
+    pub classification: String,
+}
+
+#[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
+pub struct AccessRestriction {
+
+    pub part_of_complex_restriction: bool,
+    pub end_restriction: HashMap<String,bool>,
+    pub start_restriction: HashMap<String,bool>,
+    pub access_restriction: bool,
+    pub access: HashMap<String,bool>,
+}
+
+#[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
+pub struct GeoAttributes {
+    pub curvature: i64,
+    pub max_down_slope: f64,
+    pub max_up_slope: f64,
+    pub weighted_grade: f64,
+    pub length: i64,
+}
+
+#[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
+pub struct RawSpeed {
+    pub predicted: bool,
+    pub constrained_flow: i64,
+    pub free_flow: i64,
+    pub default: i64,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Apiv2Schema)]
@@ -1167,6 +1240,10 @@ pub struct MatrixInput {
     pub approaches: Option<String>,
     #[doc = "Limits the search to segments with given bearing in degrees towards true north in clockwise direction. \n\nFormat: `degree,range;degree,range...`. Default:`\"\"`"]
     pub bearings: Option<String>,
+    #[doc = "won't work with osrm, just for extract"]
+    pub truck_size: Option<String>,
+    #[doc = "won't work with osrm, just for extract"]
+    pub truck_weight: Option<i32>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -1175,6 +1252,9 @@ pub struct MatrixOutput {
     pub status: String,
     #[doc = "matrix output.\n\nNote: each row in following format\n\nRow[i]: `Element`(o[i]d[0]),`Element`(o[i]d[1]),`Element`(o[i]d[2])..."]
     pub rows: Vec<Row>,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -1191,6 +1271,9 @@ e(xy) eta for origins[x] to dest[y]\n
 d(xy) distance for origins[x] to dest[y]\n
 "]
     pub rows: Vec<Vec<Vec<u64>>>,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -1265,6 +1348,9 @@ pub struct SnapInput {
 pub struct SnapOutput {
     #[doc = "`Ok` for success."]
     pub status: String,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
     #[serde(rename = "snappedPoints")]
     pub snapped_points: Vec<SnappedPoint>,
     #[doc = "total travel distance of the snapped path\n\nUnit: `meters`"]
