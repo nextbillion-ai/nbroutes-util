@@ -385,7 +385,7 @@ pub struct NavigatingInput {
     pub original_shape: Option<String>,
     #[doc = "format of geometry.\n\nDefault: `polyline`"]
     pub original_shape_type: Option<String>,
-    #[doc = "output format of geometry.\n\nValue: `geojson|polyline|polyline6`.\n\nDefault: `polyline`"]
+    #[doc = "output format of geometry. indicates geometry input in old version\n\nValue: `geojson|polyline|polyline6`.\n\nDefault: `polyline`"]
     pub geometry: Option<String>,
     #[doc = "output format of geometryType for old version.\n\nValue: `geojson|polyline|polyline6`.\n\nDefault: `polyline`"]
     pub geometry_type: Option<String>,
