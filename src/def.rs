@@ -680,9 +680,19 @@ pub struct OptimizationV2PostInput {
     pub jobs: Option<Vec<Job>>,
     pub vehicles: Vec<Vehicle>,
     pub shipments: Option<Vec<Shipment>>,
-    pub mode: Option<String>,
+    pub options: Option<OptimizationV2Options>,
     pub options: Option<OptimizationOptions>,
     pub depots: Option<Vec<Depot>>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct OptimizationV2RoutingOptions {
+    pub mode: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct OptimizationV2Options {
+    pub routing: Option<OptimizationV2RoutingOptions>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
