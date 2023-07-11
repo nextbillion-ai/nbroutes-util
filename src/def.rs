@@ -681,7 +681,6 @@ pub struct OptimizationV2PostInput {
     pub vehicles: Vec<Vehicle>,
     pub shipments: Option<Vec<Shipment>>,
     pub options: Option<OptimizationV2Options>,
-    pub options: Option<OptimizationOptions>,
     pub depots: Option<Vec<Depot>>,
 }
 
