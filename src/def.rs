@@ -672,7 +672,7 @@ pub struct OptimizationPostInput {
     pub depots: Option<Vec<Depot>>,
 }
 
-#[derive(Serialize, Deserialize, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct OptimizationV2PostInput {
     pub key: Option<String>,
     pub description: Option<String>,
@@ -684,12 +684,12 @@ pub struct OptimizationV2PostInput {
     pub depots: Option<Vec<Depot>>,
 }
 
-#[derive(Serialize, Deserialize, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct OptimizationV2RoutingOptions {
     pub mode: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct OptimizationV2Options {
     pub routing: Option<OptimizationV2RoutingOptions>,
 }
