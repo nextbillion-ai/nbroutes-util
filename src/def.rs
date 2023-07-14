@@ -1351,6 +1351,8 @@ pub struct SnapInput {
     pub geometry: Option<String>,
     #[doc = "road info objects to include in response.\n\nFormat: `type1|type2,...`.\n\nDefault:`\"\"`"]
     pub road_info: Option<String>,
+    #[doc = "is input geometry from flexible output\n\nDefault: `false`"]
+    pub is_flexible_geometry: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
