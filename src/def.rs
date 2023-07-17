@@ -381,12 +381,14 @@ pub struct OptimizationInput {
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct NavigatingInput {
-    #[doc = "geometry input, if this is given, other params will not be considered except `original_route_geometry_type` & `lang` & `key`."]
-    pub original_route_geometry: Option<String>,
+    #[doc = "geometry input, if this is given, other params will not be considered except `original_shape_type` & `lang` & `key`."]
+    pub original_shape: Option<String>,
     #[doc = "format of geometry.\n\nDefault: `polyline`"]
-    pub original_route_geometry_type: Option<String>,
-    #[doc = "output format of geometry.\n\nValue: `geojson|polyline|polyline6`.\n\nDefault: `polyline`"]
+    pub original_shape_type: Option<String>,
+    #[doc = "output format of geometry, alse indicates geometry input in the old version\n\nValue: `geojson|polyline|polyline6`.\n\nDefault: `polyline`"]
     pub geometry: Option<String>,
+    #[doc = "format of geometry in the old version.\n\nDefault: `polyline6`"]
+    pub geometry_type: Option<String>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
     #[doc = "{{location_of_origin}}\n\nFormat: `lat,lng`.\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+$"]
@@ -397,6 +399,10 @@ pub struct NavigatingInput {
     pub waypoints: Option<String>,
     #[doc = "mode of service.\n\nValues:`car|auto|bike|escooter|4w|2w...`.\n\nDefault: `\"\"`"]
     pub mode: Option<String>,
+    #[doc = "Indicates the truck size in CM, only valid when mode=6w. \n\nFormat: `height,width,length`."]
+    pub truck_size: Option<String>,
+    #[doc = "Indicates the truck weight including trailers and shipped goods in KG, only valid when mode=6w."]
+    pub truck_weight: Option<i32>,
     #[doc = "departure time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
     #[doc = "`deprecated`"]
     pub context: Option<String>,
@@ -418,6 +424,8 @@ pub struct NavigatingInput {
     pub bearings: Option<String>,
     #[doc = "using shortest route when route_type=shortest."]
     pub route_type: Option<String>,
+    #[doc = "road info objects to include in response.\n\nFormat: `type1|type2,...`.\n\nDefault:`\"\"`"]
+    pub road_info: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -464,6 +472,9 @@ pub struct ProctorRoute {
     pub weight: Option<f64>,
     pub geometry: Option<String>,
     pub legs: Vec<ProctorLeg>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`road info objects crossed along the trip.`"]
+    pub road_info: Option<RoadInfo>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Apiv2Schema)]
@@ -559,6 +570,8 @@ pub struct ValhallaDirectionsInput {
     pub truck_weight: Option<i32>,
     #[doc = "using shortest route when route_type=shortest."]
     pub route_type: Option<String>,
+    #[doc = "road info objects to include in response.\n\nFormat: `type1|type2,...`.\n\nDefault:`\"\"`"]
+    pub road_info: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -659,7 +672,7 @@ pub struct OptimizationPostInput {
     pub depots: Option<Vec<Depot>>,
 }
 
-#[derive(Serialize, Deserialize, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct OptimizationV2PostInput {
     pub key: Option<String>,
     pub description: Option<String>,
@@ -667,9 +680,18 @@ pub struct OptimizationV2PostInput {
     pub jobs: Option<Vec<Job>>,
     pub vehicles: Vec<Vehicle>,
     pub shipments: Option<Vec<Shipment>>,
-    pub mode: Option<String>,
-    pub options: Option<OptimizationOptions>,
+    pub options: Option<OptimizationV2Options>,
     pub depots: Option<Vec<Depot>>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct OptimizationV2RoutingOptions {
+    pub mode: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct OptimizationV2Options {
+    pub routing: Option<OptimizationV2RoutingOptions>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -741,6 +763,9 @@ pub struct DirectionsOutput {
     #[serde(rename = "errorMessage", skip_serializing_if = "Option::is_none")]
     #[doc = "error message when `status` != `Ok`"]
     pub error_msg: Option<String>,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
 }
@@ -762,6 +787,9 @@ pub struct ValhallaDirectionsOutput {
     pub error_msg: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
@@ -864,6 +892,76 @@ pub struct ValhallaRoute {
     pub special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub geojson: Option<GeoJSONFeature>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`road info objects crossed along the trip.`"]
+    pub road_info: Option<RoadInfo>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`debug related information.`"]
+    pub debug_info: Option<DebugInfo>,
+}
+
+
+#[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
+pub struct DebugInfo {
+    pub node_info: Vec<NodeInfo>,
+    pub edge_info: Vec<EdgeInfo>,
+}
+
+#[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
+pub struct EdgeInfo {
+    pub lanes: Vec<String>,
+    pub length: i64,
+    pub classification: Classification,
+    pub speed_sources: String,
+    pub special_property: HashMap<String,bool>,
+    pub offset: i64,
+    pub edge_id: i64,
+    pub duration: f64,
+    pub distance: i64,
+    pub speed: f64,
+    pub access_restriction: AccessRestriction,
+    pub speed_limit: i64,
+    pub way_id: i64,
+    pub weight: f64,
+    pub geo_attributes: GeoAttributes,
+    pub raw_speed: RawSpeed,
+}
+
+#[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
+pub struct Classification {
+    pub link: bool,
+    pub internal: bool,
+    pub surface: String,
+    #[serde(rename = "use")]
+    pub use_field: String,
+    pub classification: String,
+}
+
+#[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
+pub struct AccessRestriction {
+
+    pub part_of_complex_restriction: bool,
+    pub end_restriction: HashMap<String,bool>,
+    pub start_restriction: HashMap<String,bool>,
+    pub access_restriction: bool,
+    pub access: HashMap<String,bool>,
+}
+
+#[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
+pub struct GeoAttributes {
+    pub curvature: i64,
+    pub max_down_slope: f64,
+    pub max_up_slope: f64,
+    pub weighted_grade: f64,
+    pub length: i64,
+}
+
+#[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
+pub struct RawSpeed {
+    pub predicted: bool,
+    pub constrained_flow: i64,
+    pub free_flow: i64,
+    pub default: i64,
 }
 
 #[derive(Serialize, Deserialize, Clone, Debug, Apiv2Schema)]
@@ -936,6 +1034,18 @@ pub struct ValhallaLeg {
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct RoadInfo {
+    pub max_speed: Option<Vec<RoadSegInfo>>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Apiv2Schema, Clone)]
+pub struct RoadSegInfo {
+    pub offset: u64,
+    pub length: u64,
+    pub value: f64,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct ValhallaAnnotation {
     pub seg_info: Vec<SegInfo>,
     pub node_info: Vec<NodeInfo>,
@@ -944,7 +1054,6 @@ pub struct ValhallaAnnotation {
     pub node: Vec<Vec<f64>>,
     pub speed: Vec<f64>,
     pub metadata: Vec<String>,
-    pub intersection_node: Vec<Vec<f64>>,
     pub datasources: Vec<i64>,
 }
 
@@ -952,12 +1061,15 @@ pub struct ValhallaAnnotation {
 pub struct SegInfo {
     pub weight: f64,
     pub duration: f64,
+    pub offset: u64,
+    pub length: u64,
 }
 
 #[derive(Debug, Serialize, Deserialize, Apiv2Schema, Clone)]
 pub struct NodeInfo {
     pub turn_weight: f64,
     pub turn_duration: f64,
+    pub offset: u64,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
@@ -1137,6 +1249,10 @@ pub struct MatrixInput {
     pub approaches: Option<String>,
     #[doc = "Limits the search to segments with given bearing in degrees towards true north in clockwise direction. \n\nFormat: `degree,range;degree,range...`. Default:`\"\"`"]
     pub bearings: Option<String>,
+    #[doc = "won't work with osrm, just for extract"]
+    pub truck_size: Option<String>,
+    #[doc = "won't work with osrm, just for extract"]
+    pub truck_weight: Option<i32>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -1145,6 +1261,9 @@ pub struct MatrixOutput {
     pub status: String,
     #[doc = "matrix output.\n\nNote: each row in following format\n\nRow[i]: `Element`(o[i]d[0]),`Element`(o[i]d[1]),`Element`(o[i]d[2])..."]
     pub rows: Vec<Row>,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -1161,6 +1280,9 @@ e(xy) eta for origins[x] to dest[y]\n
 d(xy) distance for origins[x] to dest[y]\n
 "]
     pub rows: Vec<Vec<Vec<u64>>>,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -1227,12 +1349,19 @@ pub struct SnapInput {
     pub approaches: Option<String>,
     #[doc = "only supports for polyline and geojson"]
     pub geometry: Option<String>,
+    #[doc = "road info objects to include in response.\n\nFormat: `type1|type2,...`.\n\nDefault:`\"\"`"]
+    pub road_info: Option<String>,
+    #[doc = "is input geometry from flexible output\n\nDefault: `false`"]
+    pub is_flexible_geometry: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
 pub struct SnapOutput {
     #[doc = "`Ok` for success."]
     pub status: String,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
     #[serde(rename = "snappedPoints")]
     pub snapped_points: Vec<SnappedPoint>,
     #[doc = "total travel distance of the snapped path\n\nUnit: `meters`"]
@@ -1241,6 +1370,9 @@ pub struct SnapOutput {
     pub geometry: Option<Vec<Option<String>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub geojson: Option<GeoJSONFeature>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`road info objects crossed along the trip.`"]
+    pub road_info: Option<Vec<Option<RoadInfo>>>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
@@ -1316,8 +1448,7 @@ pub struct ClusteringRoutingObjectivePartial {
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
-pub struct ClusteringJobPartial {
-}
+pub struct ClusteringJobPartial {}
 
 #[derive(Serialize, Deserialize, Debug)]
 pub struct ConfigKeyValue {
