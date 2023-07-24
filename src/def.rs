@@ -1034,6 +1034,17 @@ pub struct ValhallaLeg {
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct SnapNodeInfo {
+    pub max_speed: Option<Vec<SnapNodeInfoItem>>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Apiv2Schema, Clone)]
+pub struct SnapNodeInfoItem {
+    pub index: u64,
+    pub value: f64,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct RoadInfo {
     pub max_speed: Option<Vec<RoadSegInfo>>,
 }
@@ -1373,6 +1384,9 @@ pub struct SnapOutput {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "`road info objects crossed along the trip.`"]
     pub road_info: Option<Vec<Option<RoadInfo>>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`snap node info objects crossed along the snap trip.`"]
+    pub snap_node_info: Option<Vec<Option<SnapNodeInfo>>>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
