@@ -1385,7 +1385,7 @@ pub struct SnapOutput {
     #[doc = "`road info objects crossed along the trip.`"]
     pub road_info: Option<Vec<Option<RoadInfo>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    #[doc = "`road info objects crossed along the trip.`"]
+    #[doc = "`snap node info objects crossed along the snap trip.`"]
     pub snap_node_info: Option<Vec<Option<SnapNodeInfo>>>,
 }
 
