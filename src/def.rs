@@ -339,6 +339,21 @@ pub struct UpdateRRTSegmentInput {
     pub key: Option<String>,
 }
 
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct UpdateRRTDimensionInput {
+    pub way_id: u64,
+    pub segment: String,
+    pub height: f64,
+    pub length: f64,
+    pub weight: f64,
+    pub width: f64,
+    pub is_remove: bool,
+    #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
+    pub key: Option<String>,
+}
+
+
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct UpdateRRTFixedSpeedInput {
     pub way_id: u64,
