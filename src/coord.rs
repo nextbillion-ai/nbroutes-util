@@ -5,7 +5,7 @@ use geo::prelude::BoundingRect;
 use geo::{Point, Polygon};
 use std::collections::HashMap;
 
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub struct Coord {
     lat: f64,
     lng: f64,
