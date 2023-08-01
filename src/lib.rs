@@ -8,6 +8,7 @@ pub mod statsd;
 pub mod util;
 
 use chrono::prelude::*;
+use def::{Engine, ValhallaError, OsrmError};
 
 use crate::coord::{Coord, Locatable};
 use crate::osrm_path::get_data_root;
@@ -17,6 +18,7 @@ use geo::Polygon;
 use reqwest;
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashMap, HashSet};
+use std::string;
 use std::time::{SystemTime, UNIX_EPOCH};
 use util::Area;
 
@@ -510,4 +512,133 @@ pub async fn load_polygons(
         info!("loaded poly file for {}", &area_name);
     }
     Some(polygons)
+}
+
+pub fn handle_error_message(
+    engine: &str,
+    code: &str,
+    message: &str
+) -> String {
+    match engine_mode_input(engine) {
+        Engine::OSRM => error_handle_osrm(code, message),
+        Engine::Valhalla => error_handle_valhalla(code, message),
+    }
+}
+
+fn engine_mode_input(engine: &str) -> Engine {
+    match engine {
+        "osrm" => Engine::OSRM,
+        _ => Engine::Valhalla,
+    }
+}
+
+
+fn error_handle_valhalla(code: &str, message: &str) -> String{
+    let error_type = match code {
+        "Bad Request" => ValhallaError::BadRequest,
+        "Not Implemented" => ValhallaError::NotImplemented,
+        "Not Found" => ValhallaError::NotFound,
+        "Method Not Allowed" => ValhallaError::MethodNotAllowed,
+        "Internal Server Error" => ValhallaError::InternalServerError,
+        "InvalidUrl" => ValhallaError::InvalidUrl,
+        "InvalidService" =>  ValhallaError::InvalidService,
+        "InvalidOptions" => ValhallaError::InvalidOptions,
+        "InvalidValue" => ValhallaError::InvalidValue,
+        "NoRoute" => ValhallaError::NoRoute,
+        "NoSegment" => ValhallaError::NoSegment,
+        "ServiceUnavailable" => ValhallaError::ServiceUnavailable, 
+        "DistanceExceeded" => ValhallaError::DistanceExceeded,
+        "PerimeterExceeded" => ValhallaError::PerimeterExceeded,
+        "BreakageDistanceExceeded" => ValhallaError::BreakageDistanceExceeded,
+        _ => ValhallaError::UnknownError,
+    };
+    handle_valhalla_err_message(error_type, message).to_string()
+}
+
+fn error_handle_osrm(code: &str, message: &str) -> String{
+    let error_type = match code {
+        "TooBig" => OsrmError::TooBig,
+        "NotImplemented" => OsrmError::NotImplemented,
+        "InvalidOptions" => OsrmError::InvalidOptions,
+        "NoSegment" => OsrmError::NoSegment,
+        "NoTable" => OsrmError::NoTable,
+        "InvalidValue" => OsrmError::InvalidValue,
+        "NoMatch" => OsrmError::NoMatch,
+        "NoTrips" => OsrmError::NoTrips,
+        "NoRoute" => OsrmError::NoRoute,
+        _ => OsrmError::UnknownError,
+    };
+    handle_osrm_err_message(error_type, message).to_string()
+}
+
+fn handle_valhalla_err_message(error_type: ValhallaError, message: &str) -> &str{
+    match error_type {
+        ValhallaError::BadRequest => match message{
+            // TODO
+            def::INPUT_NO_PATH => def::OUTPUT_ROUTE_FAILED,
+            _ => def::OUTPUT_UNCLASSIFIED_ERROR,
+        },
+        ValhallaError::NotImplemented => match message{
+            // TODO
+            _ => def::OUTPUT_NOT_IMPLEMENTED,
+        },
+        ValhallaError::MethodNotAllowed => def::OUTPUT_METHOD_NOT_ALLOWED,
+        ValhallaError::InternalServerError => def::OUTPUT_INTERNAL_SERVER_ERROR,
+        ValhallaError::InvalidUrl => match message{
+            // TODO
+            _ => def::OUTPUT_INVALID_URL,
+        },
+        ValhallaError::NoSegment => def::OUTPUT_NO_SEGMENT,
+        ValhallaError::InvalidOptions => match message{
+            // TODO
+            _ => def::OUTPUT_INVALID_OPTION,
+        },
+        ValhallaError::NoRoute => def::OUTPUT_ROUTE_FAILED,
+        ValhallaError::InvalidValue => match message{
+            def::INPUT_LOCATION_PARSE_FAILED | def::INPUT_SOURCE_PARSE_FAILED | def::INPUT_TARGET_PARSE_FAILED | def::INPUT_INSUFFICIENT_LOCATIONS |
+            def::INPUT_INSUFFICIENT_LOCATIONS_OR_SOURCES_TARGETS | def::INPUT_INSUFFICIENT_LOCATIONS_PROVIDED | def::INPUT_INSUFFICIENT_SOURCES_PROVIDED |
+            def::INPUT_INSUFFICIENT_TARGETS_PROVIDED => def::OUTPUT_INVALID_LOCATION,
+            // TODO
+            _ => def::OUTPUT_INVALID_VALUE,
+        },
+        ValhallaError::DistanceExceeded | ValhallaError::PerimeterExceeded | ValhallaError::BreakageDistanceExceeded => def::OUTPUT_TOO_BIG,
+        _ => def::OUTPUT_UNCLASSIFIED_ERROR,
+    }
+}
+
+fn handle_osrm_err_message(error_type: OsrmError, message: &str) -> &str{
+    match error_type {
+        OsrmError::NoRoute => def::OUTPUT_ROUTE_FAILED,
+        OsrmError::InvalidOptions => match message{
+            // TODO
+            def::INPUT_COORDINATES_INVALID => def::OUTPUT_COORDINATES_INVALID,
+            _ => def::OUTPUT_INVALID_OPTION,
+        },
+        OsrmError::TooBig => match message{
+            // TODO
+            _ => def::OUTPUT_TOO_BIG,
+        },
+        OsrmError::NotImplemented => match message{
+            // TODO
+            _ => def::OUTPUT_NOT_IMPLEMENTED
+        },
+        OsrmError::NoSegment => match message{
+            // TODO
+            _ => def::OUTPUT_NO_SEGMENT,
+        },
+        OsrmError::NoTable => match message{
+            def::INPUT_INVALID_INPUT_TABLE => def::OUTPUT_NO_TABLE_NODE,
+            _ => def::OUTPUT_NO_TABLE,
+        },
+        OsrmError::InvalidValue => match message{
+            // TODO
+            _ => def::OUTPUT_INVALID_VALUE,
+        },
+        OsrmError::NoMatch => match message{
+            // TODO
+            _ => def::OUTPUT_NO_MATCH,
+        },
+        OsrmError::NoTrips => def::OUTPUT_NO_TRIPS,
+        _ => def::OUTPUT_UNCLASSIFIED_ERROR,
+    }
 }
