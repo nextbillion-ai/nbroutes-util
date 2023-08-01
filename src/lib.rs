@@ -8,7 +8,7 @@ pub mod statsd;
 pub mod util;
 
 use chrono::prelude::*;
-use def::{Engine, ValhallaError, OsrmError};
+use def::{Engine, ValhallaError, OsrmError, AdaptError, EngineError};
 
 use crate::coord::{Coord, Locatable};
 use crate::osrm_path::get_data_root;
@@ -18,7 +18,6 @@ use geo::Polygon;
 use reqwest;
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashMap, HashSet};
-use std::string;
 use std::time::{SystemTime, UNIX_EPOCH};
 use util::Area;
 
@@ -532,7 +531,6 @@ fn engine_mode_input(engine: &str) -> Engine {
     }
 }
 
-
 fn error_handle_valhalla(code: &str, message: &str) -> String{
     let error_type = match code {
         "Bad Request" => ValhallaError::BadRequest,
@@ -552,7 +550,7 @@ fn error_handle_valhalla(code: &str, message: &str) -> String{
         "BreakageDistanceExceeded" => ValhallaError::BreakageDistanceExceeded,
         _ => ValhallaError::UnknownError,
     };
-    handle_valhalla_err_message(error_type, message).to_string()
+    handle_valhalla_err_message(error_type, message)
 }
 
 fn error_handle_osrm(code: &str, message: &str) -> String{
@@ -571,74 +569,85 @@ fn error_handle_osrm(code: &str, message: &str) -> String{
     handle_osrm_err_message(error_type, message).to_string()
 }
 
-fn handle_valhalla_err_message(error_type: ValhallaError, message: &str) -> &str{
-    match error_type {
-        ValhallaError::BadRequest => match message{
-            // TODO
-            def::INPUT_NO_PATH => def::OUTPUT_ROUTE_FAILED,
-            _ => def::OUTPUT_UNCLASSIFIED_ERROR,
+fn handle_valhalla_err_message(error_type: ValhallaError, message: &str) -> String{
+    // TODO: @Youzhi specific error
+    let msg = match error_type {
+        ValhallaError::BadRequest => match adapt_err_message(message){
+            EngineError::InputNoPath => AdaptError::OutputRouteFailed,
+            _ => AdaptError::OutputUnclassifiedError,
         },
-        ValhallaError::NotImplemented => match message{
-            // TODO
-            _ => def::OUTPUT_NOT_IMPLEMENTED,
+        ValhallaError::NotImplemented => match adapt_err_message(message){
+            _ => AdaptError::OutputNotImplemented,
         },
-        ValhallaError::MethodNotAllowed => def::OUTPUT_METHOD_NOT_ALLOWED,
-        ValhallaError::InternalServerError => def::OUTPUT_INTERNAL_SERVER_ERROR,
-        ValhallaError::InvalidUrl => match message{
-            // TODO
-            _ => def::OUTPUT_INVALID_URL,
+        ValhallaError::MethodNotAllowed => AdaptError::OutputMethodNotAllowed,
+        ValhallaError::InternalServerError => AdaptError::OutputInternalServerError,
+        ValhallaError::InvalidUrl => match adapt_err_message(message){
+            _ => AdaptError::OutputInvalidUrl,
         },
-        ValhallaError::NoSegment => def::OUTPUT_NO_SEGMENT,
-        ValhallaError::InvalidOptions => match message{
-            // TODO
-            _ => def::OUTPUT_INVALID_OPTION,
+        ValhallaError::NoSegment => AdaptError::OutputNoSegment,
+        ValhallaError::InvalidOptions => match adapt_err_message(message){
+            _ => AdaptError::OutputInvalidOption,
         },
-        ValhallaError::NoRoute => def::OUTPUT_ROUTE_FAILED,
-        ValhallaError::InvalidValue => match message{
-            def::INPUT_LOCATION_PARSE_FAILED | def::INPUT_SOURCE_PARSE_FAILED | def::INPUT_TARGET_PARSE_FAILED | def::INPUT_INSUFFICIENT_LOCATIONS |
-            def::INPUT_INSUFFICIENT_LOCATIONS_OR_SOURCES_TARGETS | def::INPUT_INSUFFICIENT_LOCATIONS_PROVIDED | def::INPUT_INSUFFICIENT_SOURCES_PROVIDED |
-            def::INPUT_INSUFFICIENT_TARGETS_PROVIDED => def::OUTPUT_INVALID_LOCATION,
-            // TODO
-            _ => def::OUTPUT_INVALID_VALUE,
+        ValhallaError::NoRoute => AdaptError::OutputRouteFailed,
+        ValhallaError::InvalidValue => match adapt_err_message(message){
+            EngineError::InputFailedToParseLocation | EngineError::InputFailedToParseSource | EngineError::InputFailedToParseTarget | 
+            EngineError::InputInsufficientLocations |  EngineError::InputInsufficientLocationsOrSourcesTargets | EngineError::InputInsufficientLocationsProvided |  
+            EngineError::InputInsufficientSourcesProvided | EngineError::InputInsufficientTargetsProvided => AdaptError::OutputInvalidLocation,
+            _ => AdaptError::OutputInvalidValue,
         },
-        ValhallaError::DistanceExceeded | ValhallaError::PerimeterExceeded | ValhallaError::BreakageDistanceExceeded => def::OUTPUT_TOO_BIG,
-        _ => def::OUTPUT_UNCLASSIFIED_ERROR,
-    }
+        ValhallaError::DistanceExceeded | ValhallaError::PerimeterExceeded | ValhallaError::BreakageDistanceExceeded => AdaptError::OutputTooBig,
+        _ => AdaptError::OutputUnclassifiedError,
+    };
+    msg.to_string()
 }
 
-fn handle_osrm_err_message(error_type: OsrmError, message: &str) -> &str{
-    match error_type {
-        OsrmError::NoRoute => def::OUTPUT_ROUTE_FAILED,
-        OsrmError::InvalidOptions => match message{
-            // TODO
-            def::INPUT_COORDINATES_INVALID => def::OUTPUT_COORDINATES_INVALID,
-            _ => def::OUTPUT_INVALID_OPTION,
+fn handle_osrm_err_message(error_type: OsrmError, message: &str) -> String{
+    // TODO: @Youzhi specific error
+    let msg = match error_type {
+        OsrmError::NoRoute => AdaptError::OutputRouteFailed,
+        OsrmError::InvalidOptions => match adapt_err_message(message) {
+            EngineError::InputCoordinatesInvalid => AdaptError::OutputCoordinatesInvalid,
+            _ => AdaptError::OutputInvalidOption,
         },
-        OsrmError::TooBig => match message{
-            // TODO
-            _ => def::OUTPUT_TOO_BIG,
+        OsrmError::TooBig => match adapt_err_message(message){
+            _ => AdaptError::OutputTooBig,
         },
-        OsrmError::NotImplemented => match message{
-            // TODO
-            _ => def::OUTPUT_NOT_IMPLEMENTED
+        OsrmError::NotImplemented => match adapt_err_message(message){
+            _ => AdaptError::OutputNotImplemented
         },
-        OsrmError::NoSegment => match message{
-            // TODO
-            _ => def::OUTPUT_NO_SEGMENT,
+        OsrmError::NoSegment => match adapt_err_message(message){
+            _ => AdaptError::OutputNoSegment,
         },
-        OsrmError::NoTable => match message{
-            def::INPUT_INVALID_INPUT_TABLE => def::OUTPUT_NO_TABLE_NODE,
-            _ => def::OUTPUT_NO_TABLE,
+        OsrmError::NoTable => match adapt_err_message(message){
+            EngineError::InputInvalidInputTable => AdaptError::OutputNoTableNode,
+            _ => AdaptError::OutputNoTable,
         },
-        OsrmError::InvalidValue => match message{
-            // TODO
-            _ => def::OUTPUT_INVALID_VALUE,
+        OsrmError::InvalidValue => match adapt_err_message(message){
+            _ => AdaptError::OutputInvalidValue,
         },
-        OsrmError::NoMatch => match message{
-            // TODO
-            _ => def::OUTPUT_NO_MATCH,
+        OsrmError::NoMatch => match adapt_err_message(message){
+            _ => AdaptError::OutputNoMatch,
         },
-        OsrmError::NoTrips => def::OUTPUT_NO_TRIPS,
-        _ => def::OUTPUT_UNCLASSIFIED_ERROR,
+        OsrmError::NoTrips => def::AdaptError::OutputNoTrips,
+        _ => AdaptError::OutputUnclassifiedError,
+    };
+    msg.to_string()
+}
+
+fn adapt_err_message(message: &str) -> EngineError {
+    // TODO: @Youzhi specific error
+    match message{
+        "Failed to parse json request" => EngineError::InputFailedToParseJsonRequest,
+        "No path could be found for input" => EngineError::InputNoPath,
+        "Failed to parse location" => EngineError::InputFailedToParseLocation,
+        "Failed to parse source" => EngineError::InputFailedToParseSource,
+        "Failed to parse target" => EngineError::InputFailedToParseTarget,
+        "Insufficiently specified required parameter 'locations'" => EngineError::InputInsufficientLocations,
+        "Insufficiently specified required parameter 'locations' or 'sources & targets'" => EngineError::InputInsufficientLocationsOrSourcesTargets,
+        "Insufficient number of locations provided" => EngineError::InputInsufficientLocationsProvided,
+        "Insufficient number of sources provided" => EngineError::InputInsufficientSourcesProvided,
+        "Insufficient number of targets provided" => EngineError::InputInsufficientTargetsProvided,
+        "No table found, no valid input node" => EngineError::InputInvalidInputTable,
+        _ => EngineError::InputUnknown,
     }
 }

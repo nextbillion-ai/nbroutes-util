@@ -8,118 +8,142 @@ use std::collections::HashMap;
 pub const STATUS_OK: &str = "Ok";
 pub const STATUS_FAILED: &str = "Failed";
 
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub enum EngineError {
+    InputFailedToParseJsonRequest, 
+    InputTryAPostOrGetRequestInstead, 
+    InputTheServiceIsShuttingDown, 
+    InputFailedToParsePbfRequest, 
+    InputTryAnyOf, 
+    InputNotImplemented, 
+    InputInsufficientLocations, 
+    InputInsufficientTime, 
+    InputInsufficientLocationsOrSourcesTargets, 
+    InputInsufficientContours, 
+    InputInsufficientShapeOrEncodedPolyline, 
+    InputInsufficientAction, 
+    InputInsufficientLocationsProvided, 
+    InputInsufficientSourcesProvided, 
+    InputInsufficientTargetsProvided, 
+    InputInsufficientShapeProvided, 
+    InputNoEdgeNodeCostingProvided, 
+    InputNoCostingMethodFound, 
+    InputNoShapeProvided, 
+    InputRecostingsRequireCostingParameter, 
+    InputRecostingsRequireUniqueNames, 
+    InputLocationParseFailed, 
+    InputSourceParseFailed, 
+    InputTargetParseFailed, 
+    InputAvoidParseFailed, 
+    InputShapeParseFailed, 
+    InputTraceParseFailed, 
+    InputTraceDurationMismatch, 
+    InputPolygonParseFailed, 
+    InputActionNotSupportMultimodalCosting, 
+    InputNoArriveByForMultimodal, 
+    InputNoArriveByForIsochrones, 
+    InputClosuresConflict, 
+    InputNoActionForExpansion, 
+    InputTooManyLocations, 
+    InputTooLargeTime, 
+    InputTooManyContours, 
+    InputTooLargeShape, 
+    InputTooLargeDistance, 
+    InputTooLargeFirstLastWalkingDistance, 
+    InputTooLargeInBetweenWalkingDistance, 
+    InputTooManyAvoids, 
+    InputTraceOptionInvalid, 
+    InputMissingTimestamps, 
+    InputMissingDepartDate, 
+    InputMissingArriveDate, 
+    InputDateParseFailed, 
+    InputWrongDateType, 
+    InputWrongShapeFormat, 
+    InputMissingInvariantDate, 
+    InputTooLargePolygon, 
+    InputInvalidExpansionProperty, 
+    InputImpossibleRoute, 
+    InputNoEdgesNearLocation, 
+    InputTooLargeBreakageDistance, 
+    InputUnknown, 
+    InputFailedToParseIntermediateRequestFormat, 
+    InputFailedToParseTripLeg, 
+    InputCouldNotBuildDirectionsForTripLeg, 
+    InputTripPathHasNoNodes, 
+    InputTripPathHasOnlyOneNode, 
+    InputTripMustHaveAtLeast2Locations, 
+    InputErrorNoShapeOrInvalidNodeCount, 
+    InputTurnDegreeOutOfRange, 
+    InputWrongManeuverFormTurn, 
+    InputWrongManeuverFormRelativeTwo, 
+    InputWrongManeuverFormRelativeThree, 
+    InputUnknownError, 
+    InputInsufficientShapeOrEncodedPolyline2, 
+    InputResampleDistanceOutOfBounds, 
+    InputTooManyShapePoints, 
+    InputFailedToParseOptions, 
+    InputServiceShuttingDown, 
+    InputFailedToParseCorrelatedLocation, 
+    InputFailedToParseLocation, 
+    InputFailedToParseSource,
+    InputFailedToParseTarget, 
+    InputFailedToParseShape, 
+    InputTooManyIterationsCostMatrix, 
+    InputTransitUnreachable, 
+    InputMatrixElementUnreachable,
+    InputNoPath, 
+    InputShapeMatchFailed, 
+    InputMapMatchFailed, 
+    InputWrongMatchType,  
+    InputLegCountMismatch,
+    InputCoordinatesInvalid, 
+    InputInvalidInputTable,
+}
 
-pub const INPUT_FAILED_TO_PARSE_JSON_REQUEST: &str = "Failed to parse json request";
-pub const INPUT_TRY_A_POST_OR_GET_REQUEST_INSTEAD: &str = "Try a POST or GET request instead";
-pub const INPUT_THE_SERVICE_IS_SHUTTING_DOWN: &str = "The service is shutting down";
-pub const INPUT_FAILED_TO_PARSE_PBF_REQUEST: &str = "Failed to parse pbf request";
-pub const INPUT_TRY_ANY_OF: &str = "Try any of";
-pub const INPUT_NOT_IMPLEMENTED: &str = "Not Implemented";
-pub const INPUT_INSUFFICIENT_LOCATIONS: &str = "Insufficiently specified required parameter 'locations'";
-pub const INPUT_INSUFFICIENT_TIME: &str = "Insufficiently specified required parameter 'time'";
-pub const INPUT_INSUFFICIENT_LOCATIONS_OR_SOURCES_TARGETS: &str = "Insufficiently specified required parameter 'locations' or 'sources & targets'";
-pub const INPUT_INSUFFICIENT_CONTOURS: &str = "Insufficiently specified required parameter 'contours'";
-pub const INPUT_INSUFFICIENT_SHAPE_OR_ENCODED_POLYLINE: &str = "Insufficiently specified required parameter 'shape' or 'encoded_polyline'";
-pub const INPUT_INSUFFICIENT_ACTION: &str = "Insufficiently specified required parameter 'action'";
-pub const INPUT_INSUFFICIENT_LOCATIONS_PROVIDED: &str = "Insufficient number of locations provided";
-pub const INPUT_INSUFFICIENT_SOURCES_PROVIDED: &str = "Insufficient number of sources provided";
-pub const INPUT_INSUFFICIENT_TARGETS_PROVIDED: &str = "Insufficient number of targets provided";
-pub const INPUT_INSUFFICIENT_SHAPE_PROVIDED: &str = "Insufficient shape provided";
-pub const INPUT_NO_EDGE_NODE_COSTING_PROVIDED: &str = "No edge/node costing provided";
-pub const INPUT_NO_COSTING_METHOD_FOUND: &str = "No costing method found";
-pub const INPUT_NO_SHAPE_PROVIDED: &str = "No shape provided";
-pub const INPUT_RECOSTINGS_REQUIRE_COSTING_PARAMETER: &str = "Recostings require a valid costing parameter";
-pub const INPUT_RECOSTINGS_REQUIRE_UNIQUE_NAMES: &str = "Recostings require a unique 'name' field for each recosting";
-pub const INPUT_LOCATION_PARSE_FAILED: &str = "Failed to parse location";
-pub const INPUT_SOURCE_PARSE_FAILED: &str = "Failed to parse source";
-pub const INPUT_TARGET_PARSE_FAILED: &str = "Failed to parse target";
-pub const INPUT_AVOID_PARSE_FAILED: &str = "Failed to parse avoid";
-pub const INPUT_SHAPE_PARSE_FAILED: &str = "Failed to parse shape";
-pub const INPUT_TRACE_PARSE_FAILED: &str = "Failed to parse trace";
-pub const INPUT_TRACE_DURATION_MISMATCH: &str = "durations size not compatible with trace size";
-pub const INPUT_POLYGON_PARSE_FAILED: &str = "Failed to parse polygon";
-pub const INPUT_ACTION_NOT_SUPPORT_MULTIMODAL_COSTING: &str = "Action does not support multimodal costing";
-pub const INPUT_NO_ARRIVE_BY_FOR_MULTIMODAL: &str = "Arrive by for multimodal not implemented yet";
-pub const INPUT_NO_ARRIVE_BY_FOR_ISOLINES: &str = "Arrive by not implemented for isochrones";
-pub const INPUT_CLOSURES_CONFLICT: &str = "ignore_closures in costing and exclude_closures in search_filter cannot both be specified";
-pub const INPUT_NO_ACTION_FOR_EXPANSION: &str = "Action does not support expansion";
-pub const INPUT_TOO_MANY_LOCATIONS: &str = "Exceeded max locations";
-pub const INPUT_TOO_LARGE_TIME: &str = "Exceeded max time";
-pub const INPUT_TOO_MANY_CONTOURS: &str = "Exceeded max contours";
-pub const INPUT_TOO_LARGE_SHAPE: &str = "Too many shape points";
-pub const INPUT_TOO_LARGE_DISTANCE: &str = "Path distance exceeds the max distance limit";
-pub const INPUT_TOO_LARGE_FIRST_LAST_WALKING_DISTANCE: &str = "Outside the valid walking distance at the beginning or end of a multimodal route";
-pub const INPUT_TOO_LARGE_IN_BETWEEN_WALKING_DISTANCE: &str = "Outside the valid walking distance between stops of a multimodal route";
-pub const INPUT_TOO_MANY_AVOIDS: &str = "Exceeded max avoid locations";
-pub const INPUT_TRACE_OPTION_INVALID: &str = "Input trace option is out of bounds";
-pub const INPUT_MISSING_TIMESTAMPS: &str = "use_timestamps set with no timestamps present";
-pub const INPUT_MISSING_DEPART_DATE: &str = "Date and time required for origin for date_type of depart at";
-pub const INPUT_MISSING_ARRIVE_DATE: &str = "Date and time required for destination for date_type of arrive by";
-pub const INPUT_DATE_PARSE_FAILED: &str = "Date and time is invalid. Format is YYYY-MM-DDTHH:MM";
-pub const INPUT_WRONG_DATE_TYPE: &str = "Invalid date_type";
-pub const INPUT_WRONG_SHAPE_FORMAT: &str = "Invalid shape format";
-pub const INPUT_MISSING_INVARIANT_DATE: &str = "Date and time required for destination for date_type of invariant";
-pub const INPUT_TOO_LARGE_POLYGON: &str = "Exceeded maximum circumference for exclude_polygons";
-pub const INPUT_INVALID_EXPANSION_PROPERTY: &str = "Invalid expansion property type";
-pub const INPUT_IMPOSSIBLE_ROUTE: &str = "Locations are in unconnected regions. Go check/edit the map at osm.org";
-pub const INPUT_NO_EDGES_NEAR_LOCATION: &str = "No suitable edges near location";
-pub const INPUT_TOO_LARGE_BREAKAGE_DISTANCE: &str = "Exceeded breakage distance for all pairs";
-pub const INPUT_UNKNOWN: &str = "Unknown";
-pub const INPUT_FAILED_TO_PARSE_INTERMEDIATE_REQUEST_FORMAT: &str = "Failed to parse intermediate request format";
-pub const INPUT_FAILED_TO_PARSE_TRIP_LEG: &str = "Failed to parse TripLeg";
-pub const INPUT_COULD_NOT_BUILD_DIRECTIONS_FOR_TRIP_LEG: &str = "Could not build directions for TripLeg";
-pub const INPUT_TRIP_PATH_HAS_NO_NODES: &str = "Trip path does not have any nodes";
-pub const INPUT_TRIP_PATH_HAS_ONLY_ONE_NODE: &str = "Trip path has only one node";
-pub const INPUT_TRIP_MUST_HAVE_AT_LEAST_2_LOCATIONS: &str = "Trip must have at least 2 locations";
-pub const INPUT_ERROR_NO_SHAPE_OR_INVALID_NODE_COUNT: &str = "Error - No shape or invalid node count";
-pub const INPUT_TURN_DEGREE_OUT_OF_RANGE: &str = "Turn degree out of range for cardinal direction";
-pub const INPUT_WRONG_MANEUVER_FORM_TURN: &str = "Invalid DirectionsLeg_Maneuver_Type in method FormTurnInstruction";
-pub const INPUT_WRONG_MANEUVER_FORM_RELATIVE_TWO: &str = "Invalid DirectionsLeg_Maneuver_Type in method FormRelativeTwoDirection";
-pub const INPUT_WRONG_MANEUVER_FORM_RELATIVE_THREE: &str = "Invalid DirectionsLeg_Maneuver_Type in method FormRelativeThreeDirection";
-pub const INPUT_UNKNOWN_ERROR: &str = "Unknown";
-pub const INPUT_INSUFFICIENT_SHAPE_OR_ENCODED_POLYLINE_2: &str = "Insufficiently specified required parameter 'shape' or 'encoded_polyline'";
-pub const INPUT_RESAMPLE_DISTANCE_OUT_OF_BOUNDS: &str = "'resample_distance' must be >= ";
-pub const INPUT_TOO_MANY_SHAPE_POINTS: &str = "Too many shape points";
-pub const INPUT_UNKNOWN_ACTION: &str = "Unknown action";
-pub const INPUT_FAILED_TO_PARSE_OPTIONS: &str = "Failed to parse intermediate request format";
-pub const INPUT_SERVICE_SHUTTING_DOWN: &str = "The service is shutting down";
-pub const INPUT_FAILED_TO_PARSE_CORRELATED_LOCATION: &str = "Failed to parse correlated location";
-pub const INPUT_FAILED_TO_PARSE_LOCATION: &str = "Failed to parse location";
-pub const INPUT_FAILED_TO_PARSE_SOURCE: &str = "Failed to parse source";
-pub const INPUT_FAILED_TO_PARSE_TARGET: &str = "Failed to parse target";
-pub const INPUT_FAILED_TO_PARSE_SHAPE: &str = "Failed to parse shape";
-pub const INPUT_TOO_MANY_ITERATIONS_COST_MATRIX: &str = "Exceeded max iterations in CostMatrix::SourceToTarget";
-pub const INPUT_TRANSIT_UNREACHABLE: &str = "Cannot reach destination - too far from a transit stop";
-pub const INPUT_MATRIX_ELEMENT_UNREACHABLE: &str = "Location is unreachable";
-pub const INPUT_NO_PATH: &str = "No path could be found for input";
-pub const INPUT_SHAPE_MATCH_FAILED: &str = "Exact route match algorithm failed to find path";
-pub const INPUT_MAP_MATCH_FAILED: &str = "Map Match algorithm failed to find path";
-pub const INPUT_WRONG_MATCH_TYPE: &str = "Shape match algorithm specification in api request is incorrect. Please see documentation for valid shape_match input.";
-pub const INPUT_UNKNOWN_ERROR_2: &str = "Unknown";
-pub const INPUT_LEG_COUNT_MISMATCH: &str = "Leg count mismatch";
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub enum AdaptError{
+    OutputRouteFailed,
+    OutputInvalidOption,
+    OutputUnclassifiedError,
+    OutputCoordinatesInvalid,
+    OutputTooBig,
+    OutputNotImplemented,
+    OutputNoSegment,
+    OutputNoTable,
+    OutputNoTableNode,
+    OutputInvalidValue,
+    OutputNoMatch,
+    OutputNoTrips,
+    OutputMethodNotAllowed,
+    OutputInternalServerError,
+    OutputInvalidUrl,
+    OutputDistanceExceeded,
+    OutputInvalidLocation,
+}
 
-
-pub const INPUT_COORDINATES_INVALID: &str = "Coordinates are invalid";
-pub const INPUT_INVALID_INPUT_TABLE: &str = "No table found, no valid input node";
-
-pub const OUTPUT_ROUTE_FAILED: &str = "There is no route for input";
-pub const OUTPUT_INVALID_OPTION: &str = "Wrong parameters or lack required parameters";
-pub const OUTPUT_UNCLASSIFIED_ERROR: &str = "Unclassified error";
-pub const OUTPUT_COORDINATES_INVALID: &str ="Invalid coordinates";
-pub const OUTPUT_TOO_BIG: &str = "Request exceeds the max limit";
-pub const OUTPUT_NOT_IMPLEMENTED: &str = "request is not supported";
-pub const OUTPUT_NO_SEGMENT: &str = "There is at least one coordinate can not be snapped to the street";
-pub const OUTPUT_NO_TABLE: &str = "No table found";
-pub const OUTPUT_NO_TABLE_NODE: &str = "invalid origins or destination input for table";
-pub const OUTPUT_INVALID_VALUE: &str = "Invalid value for input";
-pub const OUTPUT_NO_MATCH: &str = "Could not match the trace";
-pub const OUTPUT_NO_TRIPS: &str = "No trip visiting all destinations possible";
-pub const OUTPUT_METHOD_NOT_ALLOWED: &str = "only support post&get methods";
-pub const OUTPUT_INTERNAL_SERVER_ERROR : &str = "internal server error";
-pub const OUTPUT_INVALID_URL: &str = "URL string is invalid";
-pub const OUTPUT_DISTANCE_EXCEEDED: &str = "Exceeds the max distance limit";
-pub const OUTPUT_INVALID_LOCATION: &str = "Invalid location";
-
+impl ToString for AdaptError {
+    fn to_string(&self) -> String {
+        match self {
+            AdaptError::OutputRouteFailed => String::from("There is no route for input"),
+            AdaptError::OutputInvalidOption => String::from("Wrong parameters or lack required parameters"),
+            AdaptError::OutputUnclassifiedError => String::from("Failed, unclassified error"),
+            AdaptError::OutputCoordinatesInvalid => String::from("Invalid coordinates"),
+            AdaptError::OutputTooBig => String::from("Request exceeds the max limit"),
+            AdaptError::OutputNotImplemented => String::from("request is not supported"),
+            AdaptError::OutputNoSegment => String::from("There is at least one coordinate can not be snapped to the street"),
+            AdaptError::OutputNoTable => String::from("No table found"),
+            AdaptError::OutputNoTableNode => String::from("Invalid origins or destination input for table"),
+            AdaptError::OutputInvalidValue => String::from("Invalid value for input"),
+            AdaptError::OutputNoMatch => String::from("Could not match the trace"),
+            AdaptError::OutputNoTrips => String::from("No trip visiting all destinations possible"),
+            AdaptError::OutputMethodNotAllowed => String::from("only support post&get methods"),
+            AdaptError::OutputInternalServerError => String::from("internal server error"),
+            AdaptError::OutputInvalidUrl => String::from("URL string is invalid"),
+            AdaptError::OutputDistanceExceeded => String::from("Exceeds the max distance limit"),
+            AdaptError::OutputInvalidLocation => String::from("Invalid location"),
+        }
+    }
+}
 
 #[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
 pub enum ValhallaError{
@@ -141,6 +165,7 @@ pub enum ValhallaError{
     InternalServerError,
     UnknownError,
 }
+
 #[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
 pub enum OsrmError{
     TooBig,
@@ -162,8 +187,6 @@ pub enum Engine{
     #[serde(rename = "valhalla")]
     Valhalla,
 }
-
-
 
 #[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
 pub struct ISOChroneValhallaInput {
