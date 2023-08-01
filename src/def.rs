@@ -340,6 +340,19 @@ pub struct UpdateRRTSegmentInput {
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct UpdateRRTDimensionInput {
+    pub way_id: u64,
+    pub segment: String,
+    pub height: f64,
+    pub length: f64,
+    pub weight: f64,
+    pub width: f64,
+    pub is_remove: bool,
+    #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
+    pub key: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct UpdateRRTFixedSpeedInput {
     pub way_id: u64,
     pub segment: String, // 路段纬经度, 传入顺序决定方向
@@ -633,6 +646,8 @@ pub struct PostTripRouteInput {
     pub key: Option<String>,
     #[doc = "enable to ignore location not found in service boundary.\n\nNote: enable this to ignore outliers, otherwise an error will be thrown.\n\nDefault: `false`"]
     pub tolerate_outlier: Option<bool>,
+    #[doc = "indicate whether we need to connect the last&first point using directions api\n\nDefault: `false`"]
+    pub round_trip: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
@@ -900,7 +915,6 @@ pub struct ValhallaRoute {
     pub debug_info: Option<DebugInfo>,
 }
 
-
 #[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
 pub struct DebugInfo {
     pub node_info: Vec<NodeInfo>,
@@ -913,7 +927,7 @@ pub struct EdgeInfo {
     pub length: i64,
     pub classification: Classification,
     pub speed_sources: String,
-    pub special_property: HashMap<String,bool>,
+    pub special_property: HashMap<String, bool>,
     pub offset: i64,
     pub edge_id: i64,
     pub duration: f64,
@@ -939,12 +953,11 @@ pub struct Classification {
 
 #[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
 pub struct AccessRestriction {
-
     pub part_of_complex_restriction: bool,
-    pub end_restriction: HashMap<String,bool>,
-    pub start_restriction: HashMap<String,bool>,
+    pub end_restriction: HashMap<String, bool>,
+    pub start_restriction: HashMap<String, bool>,
     pub access_restriction: bool,
-    pub access: HashMap<String,bool>,
+    pub access: HashMap<String, bool>,
 }
 
 #[derive(Default, Debug, Clone, Serialize, Apiv2Schema, Deserialize)]
@@ -1031,6 +1044,17 @@ pub struct ValhallaLeg {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "`deprecated`"]
     pub annotation: Option<ValhallaAnnotation>,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub struct SnapNodeInfo {
+    pub max_speed: Option<Vec<SnapNodeInfoItem>>,
+}
+
+#[derive(Debug, Serialize, Deserialize, Apiv2Schema, Clone)]
+pub struct SnapNodeInfoItem {
+    pub index: u64,
+    pub value: f64,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
@@ -1373,6 +1397,9 @@ pub struct SnapOutput {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "`road info objects crossed along the trip.`"]
     pub road_info: Option<Vec<Option<RoadInfo>>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`snap node info objects crossed along the snap trip.`"]
+    pub snap_node_info: Option<Vec<Option<SnapNodeInfo>>>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
