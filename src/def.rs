@@ -8,6 +8,186 @@ use std::collections::HashMap;
 pub const STATUS_OK: &str = "Ok";
 pub const STATUS_FAILED: &str = "Failed";
 
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub enum EngineError {
+    InputFailedToParseJsonRequest, 
+    InputTryAPostOrGetRequestInstead, 
+    InputTheServiceIsShuttingDown, 
+    InputFailedToParsePbfRequest, 
+    InputTryAnyOf, 
+    InputNotImplemented, 
+    InputInsufficientLocations, 
+    InputInsufficientTime, 
+    InputInsufficientLocationsOrSourcesTargets, 
+    InputInsufficientContours, 
+    InputInsufficientShapeOrEncodedPolyline, 
+    InputInsufficientAction, 
+    InputInsufficientLocationsProvided, 
+    InputInsufficientSourcesProvided, 
+    InputInsufficientTargetsProvided, 
+    InputInsufficientShapeProvided, 
+    InputNoEdgeNodeCostingProvided, 
+    InputNoCostingMethodFound, 
+    InputNoShapeProvided, 
+    InputRecostingsRequireCostingParameter, 
+    InputRecostingsRequireUniqueNames, 
+    InputLocationParseFailed, 
+    InputSourceParseFailed, 
+    InputTargetParseFailed, 
+    InputAvoidParseFailed, 
+    InputShapeParseFailed, 
+    InputTraceParseFailed, 
+    InputTraceDurationMismatch, 
+    InputPolygonParseFailed, 
+    InputActionNotSupportMultimodalCosting, 
+    InputNoArriveByForMultimodal, 
+    InputNoArriveByForIsochrones, 
+    InputClosuresConflict, 
+    InputNoActionForExpansion, 
+    InputTooManyLocations, 
+    InputTooLargeTime, 
+    InputTooManyContours, 
+    InputTooLargeShape, 
+    InputTooLargeDistance, 
+    InputTooLargeFirstLastWalkingDistance, 
+    InputTooLargeInBetweenWalkingDistance, 
+    InputTooManyAvoids, 
+    InputTraceOptionInvalid, 
+    InputMissingTimestamps, 
+    InputMissingDepartDate, 
+    InputMissingArriveDate, 
+    InputDateParseFailed, 
+    InputWrongDateType, 
+    InputWrongShapeFormat, 
+    InputMissingInvariantDate, 
+    InputTooLargePolygon, 
+    InputInvalidExpansionProperty, 
+    InputImpossibleRoute, 
+    InputNoEdgesNearLocation, 
+    InputTooLargeBreakageDistance, 
+    InputUnknown, 
+    InputFailedToParseIntermediateRequestFormat, 
+    InputFailedToParseTripLeg, 
+    InputCouldNotBuildDirectionsForTripLeg, 
+    InputTripPathHasNoNodes, 
+    InputTripPathHasOnlyOneNode, 
+    InputTripMustHaveAtLeast2Locations, 
+    InputErrorNoShapeOrInvalidNodeCount, 
+    InputTurnDegreeOutOfRange, 
+    InputWrongManeuverFormTurn, 
+    InputWrongManeuverFormRelativeTwo, 
+    InputWrongManeuverFormRelativeThree, 
+    InputUnknownError, 
+    InputInsufficientShapeOrEncodedPolyline2, 
+    InputResampleDistanceOutOfBounds, 
+    InputTooManyShapePoints, 
+    InputFailedToParseOptions, 
+    InputServiceShuttingDown, 
+    InputFailedToParseCorrelatedLocation, 
+    InputFailedToParseLocation, 
+    InputFailedToParseSource,
+    InputFailedToParseTarget, 
+    InputFailedToParseShape, 
+    InputTooManyIterationsCostMatrix, 
+    InputTransitUnreachable, 
+    InputMatrixElementUnreachable,
+    InputNoPath, 
+    InputShapeMatchFailed, 
+    InputMapMatchFailed, 
+    InputWrongMatchType,  
+    InputLegCountMismatch,
+    InputCoordinatesInvalid, 
+    InputInvalidInputTable,
+}
+
+#[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
+pub enum AdaptError{
+    OutputRouteFailed,
+    OutputInvalidOption,
+    OutputUnclassifiedError,
+    OutputCoordinatesInvalid,
+    OutputTooBig,
+    OutputNotImplemented,
+    OutputNoSegment,
+    OutputNoTable,
+    OutputNoTableNode,
+    OutputInvalidValue,
+    OutputNoMatch,
+    OutputNoTrips,
+    OutputMethodNotAllowed,
+    OutputInternalServerError,
+    OutputInvalidUrl,
+    OutputDistanceExceeded,
+    OutputInvalidLocation,
+}
+
+impl ToString for AdaptError {
+    fn to_string(&self) -> String {
+        match self {
+            AdaptError::OutputRouteFailed => String::from("There is no route for input"),
+            AdaptError::OutputInvalidOption => String::from("Wrong parameters or lack required parameters"),
+            AdaptError::OutputUnclassifiedError => String::from("Failed, unclassified error"),
+            AdaptError::OutputCoordinatesInvalid => String::from("Invalid coordinates"),
+            AdaptError::OutputTooBig => String::from("Request exceeds the max limit"),
+            AdaptError::OutputNotImplemented => String::from("request is not supported"),
+            AdaptError::OutputNoSegment => String::from("There is at least one coordinate can not be snapped to the street"),
+            AdaptError::OutputNoTable => String::from("No table found"),
+            AdaptError::OutputNoTableNode => String::from("Invalid origins or destination input for table"),
+            AdaptError::OutputInvalidValue => String::from("Invalid value for input"),
+            AdaptError::OutputNoMatch => String::from("Could not match the trace"),
+            AdaptError::OutputNoTrips => String::from("No trip visiting all destinations possible"),
+            AdaptError::OutputMethodNotAllowed => String::from("only support post&get methods"),
+            AdaptError::OutputInternalServerError => String::from("internal server error"),
+            AdaptError::OutputInvalidUrl => String::from("URL string is invalid"),
+            AdaptError::OutputDistanceExceeded => String::from("Exceeds the max distance limit"),
+            AdaptError::OutputInvalidLocation => String::from("Invalid location"),
+        }
+    }
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
+pub enum ValhallaError{
+    NotImplemented,
+    InvalidUrl,
+    InvalidService,
+    InvalidOptions,
+    InvalidValue,
+    NoRoute,
+    NoSegment,
+    ServiceUnavailable,
+    DistanceExceeded,
+    PerimeterExceeded,
+    BreakageDistanceExceeded,
+    BadRequest,
+    NotFound,
+    MethodNotAllowed,
+    // internal 500
+    InternalServerError,
+    UnknownError,
+}
+
+#[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
+pub enum OsrmError{
+    TooBig,
+    NotImplemented,
+    InvalidOptions,
+    NoSegment,
+    NoTable,
+    InvalidValue,
+    NoMatch,
+    NoTrips,
+    NoRoute,
+    UnknownError,
+}
+
+#[derive(Serialize, Deserialize, Clone, Apiv2Schema, PartialEq)]
+pub enum Engine{
+    #[serde(rename = "osrm")]
+    OSRM,
+    #[serde(rename = "valhalla")]
+    Valhalla,
+}
+
 #[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
 pub struct ISOChroneValhallaInput {
     #[doc = "mode of service.\n\nValues:`car`.\n\nDefault: `\"4w\"`"]
