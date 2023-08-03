@@ -1459,6 +1459,19 @@ pub struct MatrixInput {
     pub truck_weight: Option<i32>,
 }
 
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct MassiveMatrixInput {
+    #[doc = "locations of origins \n\nFormat: lat0,lng0|lat1,lng1|...\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$"]
+    pub origins: String,
+    #[doc = "locations of destinations\n\nFormat: lat0,lng0|lat1,lng1|...\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$"]
+    pub destinations: String,
+    #[doc = "mode of service.\n\nValues:`car|auto|bike|escooter|4w|2w...`.\n\nDefault: `\"\"`"]
+    pub mode: Option<String>,
+    #[doc = "area of service.\n\nValues:`usa|...`.\n\nDefault: `\"\"`"]
+    pub area: String,
+}
+
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct MatrixOutput {
     #[doc = "`Ok` for success."]
