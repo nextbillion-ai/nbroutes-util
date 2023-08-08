@@ -10,98 +10,98 @@ pub const STATUS_FAILED: &str = "Failed";
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub enum EngineError {
-    InputFailedToParseJsonRequest, 
-    InputTryAPostOrGetRequestInstead, 
-    InputTheServiceIsShuttingDown, 
-    InputFailedToParsePbfRequest, 
-    InputTryAnyOf, 
-    InputNotImplemented, 
-    InputInsufficientLocations, 
-    InputInsufficientTime, 
-    InputInsufficientLocationsOrSourcesTargets, 
-    InputInsufficientContours, 
-    InputInsufficientShapeOrEncodedPolyline, 
-    InputInsufficientAction, 
-    InputInsufficientLocationsProvided, 
-    InputInsufficientSourcesProvided, 
-    InputInsufficientTargetsProvided, 
-    InputInsufficientShapeProvided, 
-    InputNoEdgeNodeCostingProvided, 
-    InputNoCostingMethodFound, 
-    InputNoShapeProvided, 
-    InputRecostingsRequireCostingParameter, 
-    InputRecostingsRequireUniqueNames, 
-    InputLocationParseFailed, 
-    InputSourceParseFailed, 
-    InputTargetParseFailed, 
-    InputAvoidParseFailed, 
-    InputShapeParseFailed, 
-    InputTraceParseFailed, 
-    InputTraceDurationMismatch, 
-    InputPolygonParseFailed, 
-    InputActionNotSupportMultimodalCosting, 
-    InputNoArriveByForMultimodal, 
-    InputNoArriveByForIsochrones, 
-    InputClosuresConflict, 
-    InputNoActionForExpansion, 
-    InputTooManyLocations, 
-    InputTooLargeTime, 
-    InputTooManyContours, 
-    InputTooLargeShape, 
-    InputTooLargeDistance, 
-    InputTooLargeFirstLastWalkingDistance, 
-    InputTooLargeInBetweenWalkingDistance, 
-    InputTooManyAvoids, 
-    InputTraceOptionInvalid, 
-    InputMissingTimestamps, 
-    InputMissingDepartDate, 
-    InputMissingArriveDate, 
-    InputDateParseFailed, 
-    InputWrongDateType, 
-    InputWrongShapeFormat, 
-    InputMissingInvariantDate, 
-    InputTooLargePolygon, 
-    InputInvalidExpansionProperty, 
-    InputImpossibleRoute, 
-    InputNoEdgesNearLocation, 
-    InputTooLargeBreakageDistance, 
-    InputUnknown, 
-    InputFailedToParseIntermediateRequestFormat, 
-    InputFailedToParseTripLeg, 
-    InputCouldNotBuildDirectionsForTripLeg, 
-    InputTripPathHasNoNodes, 
-    InputTripPathHasOnlyOneNode, 
-    InputTripMustHaveAtLeast2Locations, 
-    InputErrorNoShapeOrInvalidNodeCount, 
-    InputTurnDegreeOutOfRange, 
-    InputWrongManeuverFormTurn, 
-    InputWrongManeuverFormRelativeTwo, 
-    InputWrongManeuverFormRelativeThree, 
-    InputUnknownError, 
-    InputInsufficientShapeOrEncodedPolyline2, 
-    InputResampleDistanceOutOfBounds, 
-    InputTooManyShapePoints, 
-    InputFailedToParseOptions, 
-    InputServiceShuttingDown, 
-    InputFailedToParseCorrelatedLocation, 
-    InputFailedToParseLocation, 
+    InputFailedToParseJsonRequest,
+    InputTryAPostOrGetRequestInstead,
+    InputTheServiceIsShuttingDown,
+    InputFailedToParsePbfRequest,
+    InputTryAnyOf,
+    InputNotImplemented,
+    InputInsufficientLocations,
+    InputInsufficientTime,
+    InputInsufficientLocationsOrSourcesTargets,
+    InputInsufficientContours,
+    InputInsufficientShapeOrEncodedPolyline,
+    InputInsufficientAction,
+    InputInsufficientLocationsProvided,
+    InputInsufficientSourcesProvided,
+    InputInsufficientTargetsProvided,
+    InputInsufficientShapeProvided,
+    InputNoEdgeNodeCostingProvided,
+    InputNoCostingMethodFound,
+    InputNoShapeProvided,
+    InputRecostingsRequireCostingParameter,
+    InputRecostingsRequireUniqueNames,
+    InputLocationParseFailed,
+    InputSourceParseFailed,
+    InputTargetParseFailed,
+    InputAvoidParseFailed,
+    InputShapeParseFailed,
+    InputTraceParseFailed,
+    InputTraceDurationMismatch,
+    InputPolygonParseFailed,
+    InputActionNotSupportMultimodalCosting,
+    InputNoArriveByForMultimodal,
+    InputNoArriveByForIsochrones,
+    InputClosuresConflict,
+    InputNoActionForExpansion,
+    InputTooManyLocations,
+    InputTooLargeTime,
+    InputTooManyContours,
+    InputTooLargeShape,
+    InputTooLargeDistance,
+    InputTooLargeFirstLastWalkingDistance,
+    InputTooLargeInBetweenWalkingDistance,
+    InputTooManyAvoids,
+    InputTraceOptionInvalid,
+    InputMissingTimestamps,
+    InputMissingDepartDate,
+    InputMissingArriveDate,
+    InputDateParseFailed,
+    InputWrongDateType,
+    InputWrongShapeFormat,
+    InputMissingInvariantDate,
+    InputTooLargePolygon,
+    InputInvalidExpansionProperty,
+    InputImpossibleRoute,
+    InputNoEdgesNearLocation,
+    InputTooLargeBreakageDistance,
+    InputUnknown,
+    InputFailedToParseIntermediateRequestFormat,
+    InputFailedToParseTripLeg,
+    InputCouldNotBuildDirectionsForTripLeg,
+    InputTripPathHasNoNodes,
+    InputTripPathHasOnlyOneNode,
+    InputTripMustHaveAtLeast2Locations,
+    InputErrorNoShapeOrInvalidNodeCount,
+    InputTurnDegreeOutOfRange,
+    InputWrongManeuverFormTurn,
+    InputWrongManeuverFormRelativeTwo,
+    InputWrongManeuverFormRelativeThree,
+    InputUnknownError,
+    InputInsufficientShapeOrEncodedPolyline2,
+    InputResampleDistanceOutOfBounds,
+    InputTooManyShapePoints,
+    InputFailedToParseOptions,
+    InputServiceShuttingDown,
+    InputFailedToParseCorrelatedLocation,
+    InputFailedToParseLocation,
     InputFailedToParseSource,
-    InputFailedToParseTarget, 
-    InputFailedToParseShape, 
-    InputTooManyIterationsCostMatrix, 
-    InputTransitUnreachable, 
+    InputFailedToParseTarget,
+    InputFailedToParseShape,
+    InputTooManyIterationsCostMatrix,
+    InputTransitUnreachable,
     InputMatrixElementUnreachable,
-    InputNoPath, 
-    InputShapeMatchFailed, 
-    InputMapMatchFailed, 
-    InputWrongMatchType,  
+    InputNoPath,
+    InputShapeMatchFailed,
+    InputMapMatchFailed,
+    InputWrongMatchType,
     InputLegCountMismatch,
-    InputCoordinatesInvalid, 
+    InputCoordinatesInvalid,
     InputInvalidInputTable,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
-pub enum AdaptError{
+pub enum AdaptError {
     OutputRouteFailed,
     OutputInvalidOption,
     OutputUnclassifiedError,
@@ -125,14 +125,20 @@ impl ToString for AdaptError {
     fn to_string(&self) -> String {
         match self {
             AdaptError::OutputRouteFailed => String::from("There is no route for input"),
-            AdaptError::OutputInvalidOption => String::from("Wrong parameters or lack required parameters"),
+            AdaptError::OutputInvalidOption => {
+                String::from("Wrong parameters or lack required parameters")
+            }
             AdaptError::OutputUnclassifiedError => String::from("Failed, unclassified error"),
             AdaptError::OutputCoordinatesInvalid => String::from("Invalid coordinates"),
             AdaptError::OutputTooBig => String::from("Request exceeds the max limit"),
             AdaptError::OutputNotImplemented => String::from("request is not supported"),
-            AdaptError::OutputNoSegment => String::from("There is at least one coordinate can not be snapped to the street"),
+            AdaptError::OutputNoSegment => {
+                String::from("There is at least one coordinate can not be snapped to the street")
+            }
             AdaptError::OutputNoTable => String::from("No table found"),
-            AdaptError::OutputNoTableNode => String::from("Invalid origins or destination input for table"),
+            AdaptError::OutputNoTableNode => {
+                String::from("Invalid origins or destination input for table")
+            }
             AdaptError::OutputInvalidValue => String::from("Invalid value for input"),
             AdaptError::OutputNoMatch => String::from("Could not match the trace"),
             AdaptError::OutputNoTrips => String::from("No trip visiting all destinations possible"),
@@ -146,7 +152,7 @@ impl ToString for AdaptError {
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
-pub enum ValhallaError{
+pub enum ValhallaError {
     NotImplemented,
     InvalidUrl,
     InvalidService,
@@ -167,7 +173,7 @@ pub enum ValhallaError{
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
-pub enum OsrmError{
+pub enum OsrmError {
     TooBig,
     NotImplemented,
     InvalidOptions,
@@ -181,7 +187,7 @@ pub enum OsrmError{
 }
 
 #[derive(Serialize, Deserialize, Clone, Apiv2Schema, PartialEq)]
-pub enum Engine{
+pub enum Engine {
     #[serde(rename = "osrm")]
     OSRM,
     #[serde(rename = "valhalla")]
@@ -211,6 +217,9 @@ pub struct ISOChroneValhallaOutput {
     pub features: Vec<ISOChroneFeature>,
     #[serde(rename = "type")]
     pub r#type: String,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
@@ -1458,7 +1467,6 @@ pub struct MatrixInput {
     #[doc = "won't work with osrm, just for extract"]
     pub truck_weight: Option<i32>,
 }
-
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct MassiveMatrixInput {
