@@ -1604,6 +1604,9 @@ pub struct SnapOutput {
     #[doc = "legs of route.\n\nNote: `waypoints` split `route` into `legs`"]
     #[serde(skip_serializing_if = "Option::is_none")]
     pub legs: Option<Vec<Leg>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`debug related information.`"]
+    pub debug_info: Option<Vec<Option<DebugInfo>>>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
