@@ -658,6 +658,8 @@ pub struct NavigatingProctorOutput {
     pub voice_instruction_advance_distance: Option<i32>,
     #[doc = "`the value of the share.config.instruction_fork_bearing_lower_bound"]
     pub instruction_fork_bearing_lower_bound: Option<i32>,
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Apiv2Schema)]
