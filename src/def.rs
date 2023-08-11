@@ -619,7 +619,7 @@ pub struct NavigatingInput {
     pub route_type: Option<String>,
     #[doc = "road info objects to include in response.\n\nFormat: `type1|type2,...`.\n\nDefault:`\"\"`"]
     pub road_info: Option<String>,
-    #[doc = "location(s) of waypoint(s) along the trip.\n\nFormat: `lat0,lng0|lat1,lng1|...`.\n\nRegex: (^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$)"]
+    #[doc = "help reroute, the history trace will be added to snap\n\nFormat: `lat0,lng0|lat1,lng1|...`.\n\nRegex: (^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$)"]
     pub travelled_raw_locations: Option<String>,
 }
 
