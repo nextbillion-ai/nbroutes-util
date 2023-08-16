@@ -1475,11 +1475,11 @@ pub struct MassiveMatrixInput {
     #[doc = "locations of origins \n\nFormat: lat0,lng0|lat1,lng1|...\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$"]
     pub origins: String,
     #[doc = "locations of destinations\n\nFormat: lat0,lng0|lat1,lng1|...\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$"]
-    pub destinations: String,
+    pub destinations: Option<String>,
     #[doc = "mode of service.\n\nValues:`car|auto|bike|escooter|4w|2w...`.\n\nDefault: `\"\"`"]
     pub mode: Option<String>,
     #[doc = "area of service.\n\nValues:`usa|...`.\n\nDefault: `\"\"`"]
-    pub area: String,
+    pub area: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
