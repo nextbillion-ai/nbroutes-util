@@ -647,19 +647,20 @@ pub struct NavigatingOutput {
 pub struct NavigatingProctorOutput {
     #[doc = "`Ok` for success."]
     pub status: String,
-    #[doc = "the json result send to Proctor."]
-    pub navigating_res: ProctorRouteResult,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "error message when `status` != `Ok`"]
     pub error_msg: Option<String>,
+    #[doc = "the json result send to Proctor."]
+    pub navigating_res: ProctorRouteResult,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
     #[doc = "`the value of the share.config.voice_instuction_advance_distance"]
     pub voice_instruction_advance_distance: Option<i32>,
     #[doc = "`the value of the share.config.instruction_fork_bearing_lower_bound"]
     pub instruction_fork_bearing_lower_bound: Option<i32>,
-    #[doc = "warning when facing unexpected behaviour"]
-    pub warning: Option<Vec<String>>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Apiv2Schema)]
@@ -958,6 +959,12 @@ pub struct OptimizationStep {
 pub struct DirectionsOutput {
     #[doc = "`Ok` for success."]
     pub status: String,
+    #[serde(rename = "errorMessage", skip_serializing_if = "Option::is_none")]
+    #[doc = "error message when `status` != `Ok`"]
+    pub error_msg: Option<String>,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "service mode used.\n\nValues:`4w|3w|2w...`."]
     pub mode: Option<String>,
@@ -966,12 +973,6 @@ pub struct DirectionsOutput {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "special geospatial objects found from all `routes`.\n\nNote: this is super collection of `special_objects` from individual `route`"]
     pub global_special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
-    #[serde(rename = "errorMessage", skip_serializing_if = "Option::is_none")]
-    #[doc = "error message when `status` != `Ok`"]
-    pub error_msg: Option<String>,
-    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
-    #[doc = "warning when facing unexpected behaviour"]
-    pub warning: Option<Vec<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
 }
@@ -980,6 +981,12 @@ pub struct DirectionsOutput {
 pub struct ValhallaDirectionsOutput {
     #[doc = "`Ok` for success."]
     pub status: String,
+    #[serde(rename = "errorMessage", skip_serializing_if = "Option::is_none")]
+    #[doc = "error message when `status` != `Ok`"]
+    pub error_msg: Option<String>,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "service mode used.\n\nValues:`4w|3w|2w...`."]
     pub mode: Option<String>,
@@ -988,14 +995,8 @@ pub struct ValhallaDirectionsOutput {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "special geospatial objects found from all `routes`.\n\nNote: this is super collection of `special_objects` from individual `route`"]
     pub global_special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
-    #[serde(rename = "errorMessage", skip_serializing_if = "Option::is_none")]
-    #[doc = "error message when `status` != `Ok`"]
-    pub error_msg: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
-    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
-    #[doc = "warning when facing unexpected behaviour"]
-    pub warning: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
@@ -1486,11 +1487,11 @@ pub struct MassiveMatrixInput {
 pub struct MatrixOutput {
     #[doc = "`Ok` for success."]
     pub status: String,
-    #[doc = "matrix output.\n\nNote: each row in following format\n\nRow[i]: `Element`(o[i]d[0]),`Element`(o[i]d[1]),`Element`(o[i]d[2])..."]
-    pub rows: Vec<Row>,
     #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
     #[doc = "warning when facing unexpected behaviour"]
     pub warning: Option<Vec<String>>,
+    #[doc = "matrix output.\n\nNote: each row in following format\n\nRow[i]: `Element`(o[i]d[0]),`Element`(o[i]d[1]),`Element`(o[i]d[2])..."]
+    pub rows: Vec<Row>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
