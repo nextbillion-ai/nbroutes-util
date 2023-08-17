@@ -650,11 +650,11 @@ pub struct NavigatingProctorOutput {
     #[doc = "`Ok` for success."]
     pub status: String,
     #[serde(skip_serializing_if = "Option::is_none")]
-    #[doc = "warning when facing unexpected behaviour"]
-    pub warning: Option<Vec<String>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "error message when `status` != `Ok`"]
     pub error_msg: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
     #[doc = "the json result send to Proctor."]
     pub navigating_res: ProctorRouteResult,
     #[serde(skip_serializing_if = "Option::is_none")]
