@@ -119,6 +119,7 @@ pub enum AdaptError {
     OutputInvalidUrl,
     OutputDistanceExceeded,
     OutputInvalidLocation,
+    OutputFailed,
 }
 
 impl ToString for AdaptError {
@@ -147,6 +148,7 @@ impl ToString for AdaptError {
             AdaptError::OutputInvalidUrl => String::from("URL string is invalid"),
             AdaptError::OutputDistanceExceeded => String::from("Exceeds the max distance limit"),
             AdaptError::OutputInvalidLocation => String::from("Invalid location"),
+            AdaptError::OutputFailed => String::from("failed"),
         }
     }
 }
