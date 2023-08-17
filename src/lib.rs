@@ -619,8 +619,7 @@ fn handle_osrm_err_message(error_type: OsrmError, message: &str) -> String{
             _ => AdaptError::OutputNoSegment,
         },
         OsrmError::NoTable => match adapt_err_message(message){
-            EngineError::InputInvalidInputTable => AdaptError::OutputNoTableNode,
-            _ => AdaptError::OutputNoTable,
+            _ => AdaptError::OutputFailed,
         },
         OsrmError::InvalidValue => match adapt_err_message(message){
             _ => AdaptError::OutputInvalidValue,
