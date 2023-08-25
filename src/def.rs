@@ -10,98 +10,98 @@ pub const STATUS_FAILED: &str = "Failed";
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub enum EngineError {
-    InputFailedToParseJsonRequest, 
-    InputTryAPostOrGetRequestInstead, 
-    InputTheServiceIsShuttingDown, 
-    InputFailedToParsePbfRequest, 
-    InputTryAnyOf, 
-    InputNotImplemented, 
-    InputInsufficientLocations, 
-    InputInsufficientTime, 
-    InputInsufficientLocationsOrSourcesTargets, 
-    InputInsufficientContours, 
-    InputInsufficientShapeOrEncodedPolyline, 
-    InputInsufficientAction, 
-    InputInsufficientLocationsProvided, 
-    InputInsufficientSourcesProvided, 
-    InputInsufficientTargetsProvided, 
-    InputInsufficientShapeProvided, 
-    InputNoEdgeNodeCostingProvided, 
-    InputNoCostingMethodFound, 
-    InputNoShapeProvided, 
-    InputRecostingsRequireCostingParameter, 
-    InputRecostingsRequireUniqueNames, 
-    InputLocationParseFailed, 
-    InputSourceParseFailed, 
-    InputTargetParseFailed, 
-    InputAvoidParseFailed, 
-    InputShapeParseFailed, 
-    InputTraceParseFailed, 
-    InputTraceDurationMismatch, 
-    InputPolygonParseFailed, 
-    InputActionNotSupportMultimodalCosting, 
-    InputNoArriveByForMultimodal, 
-    InputNoArriveByForIsochrones, 
-    InputClosuresConflict, 
-    InputNoActionForExpansion, 
-    InputTooManyLocations, 
-    InputTooLargeTime, 
-    InputTooManyContours, 
-    InputTooLargeShape, 
-    InputTooLargeDistance, 
-    InputTooLargeFirstLastWalkingDistance, 
-    InputTooLargeInBetweenWalkingDistance, 
-    InputTooManyAvoids, 
-    InputTraceOptionInvalid, 
-    InputMissingTimestamps, 
-    InputMissingDepartDate, 
-    InputMissingArriveDate, 
-    InputDateParseFailed, 
-    InputWrongDateType, 
-    InputWrongShapeFormat, 
-    InputMissingInvariantDate, 
-    InputTooLargePolygon, 
-    InputInvalidExpansionProperty, 
-    InputImpossibleRoute, 
-    InputNoEdgesNearLocation, 
-    InputTooLargeBreakageDistance, 
-    InputUnknown, 
-    InputFailedToParseIntermediateRequestFormat, 
-    InputFailedToParseTripLeg, 
-    InputCouldNotBuildDirectionsForTripLeg, 
-    InputTripPathHasNoNodes, 
-    InputTripPathHasOnlyOneNode, 
-    InputTripMustHaveAtLeast2Locations, 
-    InputErrorNoShapeOrInvalidNodeCount, 
-    InputTurnDegreeOutOfRange, 
-    InputWrongManeuverFormTurn, 
-    InputWrongManeuverFormRelativeTwo, 
-    InputWrongManeuverFormRelativeThree, 
-    InputUnknownError, 
-    InputInsufficientShapeOrEncodedPolyline2, 
-    InputResampleDistanceOutOfBounds, 
-    InputTooManyShapePoints, 
-    InputFailedToParseOptions, 
-    InputServiceShuttingDown, 
-    InputFailedToParseCorrelatedLocation, 
-    InputFailedToParseLocation, 
+    InputFailedToParseJsonRequest,
+    InputTryAPostOrGetRequestInstead,
+    InputTheServiceIsShuttingDown,
+    InputFailedToParsePbfRequest,
+    InputTryAnyOf,
+    InputNotImplemented,
+    InputInsufficientLocations,
+    InputInsufficientTime,
+    InputInsufficientLocationsOrSourcesTargets,
+    InputInsufficientContours,
+    InputInsufficientShapeOrEncodedPolyline,
+    InputInsufficientAction,
+    InputInsufficientLocationsProvided,
+    InputInsufficientSourcesProvided,
+    InputInsufficientTargetsProvided,
+    InputInsufficientShapeProvided,
+    InputNoEdgeNodeCostingProvided,
+    InputNoCostingMethodFound,
+    InputNoShapeProvided,
+    InputRecostingsRequireCostingParameter,
+    InputRecostingsRequireUniqueNames,
+    InputLocationParseFailed,
+    InputSourceParseFailed,
+    InputTargetParseFailed,
+    InputAvoidParseFailed,
+    InputShapeParseFailed,
+    InputTraceParseFailed,
+    InputTraceDurationMismatch,
+    InputPolygonParseFailed,
+    InputActionNotSupportMultimodalCosting,
+    InputNoArriveByForMultimodal,
+    InputNoArriveByForIsochrones,
+    InputClosuresConflict,
+    InputNoActionForExpansion,
+    InputTooManyLocations,
+    InputTooLargeTime,
+    InputTooManyContours,
+    InputTooLargeShape,
+    InputTooLargeDistance,
+    InputTooLargeFirstLastWalkingDistance,
+    InputTooLargeInBetweenWalkingDistance,
+    InputTooManyAvoids,
+    InputTraceOptionInvalid,
+    InputMissingTimestamps,
+    InputMissingDepartDate,
+    InputMissingArriveDate,
+    InputDateParseFailed,
+    InputWrongDateType,
+    InputWrongShapeFormat,
+    InputMissingInvariantDate,
+    InputTooLargePolygon,
+    InputInvalidExpansionProperty,
+    InputImpossibleRoute,
+    InputNoEdgesNearLocation,
+    InputTooLargeBreakageDistance,
+    InputUnknown,
+    InputFailedToParseIntermediateRequestFormat,
+    InputFailedToParseTripLeg,
+    InputCouldNotBuildDirectionsForTripLeg,
+    InputTripPathHasNoNodes,
+    InputTripPathHasOnlyOneNode,
+    InputTripMustHaveAtLeast2Locations,
+    InputErrorNoShapeOrInvalidNodeCount,
+    InputTurnDegreeOutOfRange,
+    InputWrongManeuverFormTurn,
+    InputWrongManeuverFormRelativeTwo,
+    InputWrongManeuverFormRelativeThree,
+    InputUnknownError,
+    InputInsufficientShapeOrEncodedPolyline2,
+    InputResampleDistanceOutOfBounds,
+    InputTooManyShapePoints,
+    InputFailedToParseOptions,
+    InputServiceShuttingDown,
+    InputFailedToParseCorrelatedLocation,
+    InputFailedToParseLocation,
     InputFailedToParseSource,
-    InputFailedToParseTarget, 
-    InputFailedToParseShape, 
-    InputTooManyIterationsCostMatrix, 
-    InputTransitUnreachable, 
+    InputFailedToParseTarget,
+    InputFailedToParseShape,
+    InputTooManyIterationsCostMatrix,
+    InputTransitUnreachable,
     InputMatrixElementUnreachable,
-    InputNoPath, 
-    InputShapeMatchFailed, 
-    InputMapMatchFailed, 
-    InputWrongMatchType,  
+    InputNoPath,
+    InputShapeMatchFailed,
+    InputMapMatchFailed,
+    InputWrongMatchType,
     InputLegCountMismatch,
-    InputCoordinatesInvalid, 
+    InputCoordinatesInvalid,
     InputInvalidInputTable,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
-pub enum AdaptError{
+pub enum AdaptError {
     OutputRouteFailed,
     OutputInvalidOption,
     OutputUnclassifiedError,
@@ -119,20 +119,27 @@ pub enum AdaptError{
     OutputInvalidUrl,
     OutputDistanceExceeded,
     OutputInvalidLocation,
+    OutputFailed,
 }
 
 impl ToString for AdaptError {
     fn to_string(&self) -> String {
         match self {
             AdaptError::OutputRouteFailed => String::from("There is no route for input"),
-            AdaptError::OutputInvalidOption => String::from("Wrong parameters or lack required parameters"),
+            AdaptError::OutputInvalidOption => {
+                String::from("Wrong parameters or lack required parameters")
+            }
             AdaptError::OutputUnclassifiedError => String::from("Failed, unclassified error"),
             AdaptError::OutputCoordinatesInvalid => String::from("Invalid coordinates"),
             AdaptError::OutputTooBig => String::from("Request exceeds the max limit"),
             AdaptError::OutputNotImplemented => String::from("request is not supported"),
-            AdaptError::OutputNoSegment => String::from("There is at least one coordinate can not be snapped to the street"),
+            AdaptError::OutputNoSegment => {
+                String::from("There is at least one coordinate can not be snapped to the street")
+            }
             AdaptError::OutputNoTable => String::from("No table found"),
-            AdaptError::OutputNoTableNode => String::from("Invalid origins or destination input for table"),
+            AdaptError::OutputNoTableNode => {
+                String::from("Invalid origins or destination input for table")
+            }
             AdaptError::OutputInvalidValue => String::from("Invalid value for input"),
             AdaptError::OutputNoMatch => String::from("Could not match the trace"),
             AdaptError::OutputNoTrips => String::from("No trip visiting all destinations possible"),
@@ -141,12 +148,13 @@ impl ToString for AdaptError {
             AdaptError::OutputInvalidUrl => String::from("URL string is invalid"),
             AdaptError::OutputDistanceExceeded => String::from("Exceeds the max distance limit"),
             AdaptError::OutputInvalidLocation => String::from("Invalid location"),
+            AdaptError::OutputFailed => String::from("failed"),
         }
     }
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
-pub enum ValhallaError{
+pub enum ValhallaError {
     NotImplemented,
     InvalidUrl,
     InvalidService,
@@ -167,7 +175,7 @@ pub enum ValhallaError{
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
-pub enum OsrmError{
+pub enum OsrmError {
     TooBig,
     NotImplemented,
     InvalidOptions,
@@ -181,7 +189,7 @@ pub enum OsrmError{
 }
 
 #[derive(Serialize, Deserialize, Clone, Apiv2Schema, PartialEq)]
-pub enum Engine{
+pub enum Engine {
     #[serde(rename = "osrm")]
     OSRM,
     #[serde(rename = "valhalla")]
@@ -211,6 +219,9 @@ pub struct ISOChroneValhallaOutput {
     pub features: Vec<ISOChroneFeature>,
     #[serde(rename = "type")]
     pub r#type: String,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
 }
 
 #[derive(Debug, Serialize, Deserialize, Clone, Apiv2Schema)]
@@ -640,11 +651,14 @@ pub struct NavigatingOutput {
 pub struct NavigatingProctorOutput {
     #[doc = "`Ok` for success."]
     pub status: String,
-    #[doc = "the json result send to Proctor."]
-    pub navigating_res: ProctorRouteResult,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "error message when `status` != `Ok`"]
     pub error_msg: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
+    #[doc = "the json result send to Proctor."]
+    pub navigating_res: ProctorRouteResult,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
     #[doc = "`the value of the share.config.voice_instuction_advance_distance"]
@@ -949,6 +963,12 @@ pub struct OptimizationStep {
 pub struct DirectionsOutput {
     #[doc = "`Ok` for success."]
     pub status: String,
+    #[serde(rename = "errorMessage", skip_serializing_if = "Option::is_none")]
+    #[doc = "error message when `status` != `Ok`"]
+    pub error_msg: Option<String>,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "service mode used.\n\nValues:`4w|3w|2w...`."]
     pub mode: Option<String>,
@@ -957,12 +977,6 @@ pub struct DirectionsOutput {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "special geospatial objects found from all `routes`.\n\nNote: this is super collection of `special_objects` from individual `route`"]
     pub global_special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
-    #[serde(rename = "errorMessage", skip_serializing_if = "Option::is_none")]
-    #[doc = "error message when `status` != `Ok`"]
-    pub error_msg: Option<String>,
-    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
-    #[doc = "warning when facing unexpected behaviour"]
-    pub warning: Option<Vec<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
 }
@@ -971,6 +985,12 @@ pub struct DirectionsOutput {
 pub struct ValhallaDirectionsOutput {
     #[doc = "`Ok` for success."]
     pub status: String,
+    #[serde(rename = "errorMessage", skip_serializing_if = "Option::is_none")]
+    #[doc = "error message when `status` != `Ok`"]
+    pub error_msg: Option<String>,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "service mode used.\n\nValues:`4w|3w|2w...`."]
     pub mode: Option<String>,
@@ -979,14 +999,8 @@ pub struct ValhallaDirectionsOutput {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "special geospatial objects found from all `routes`.\n\nNote: this is super collection of `special_objects` from individual `route`"]
     pub global_special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
-    #[serde(rename = "errorMessage", skip_serializing_if = "Option::is_none")]
-    #[doc = "error message when `status` != `Ok`"]
-    pub error_msg: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
-    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
-    #[doc = "warning when facing unexpected behaviour"]
-    pub warning: Option<Vec<String>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
@@ -1461,28 +1475,27 @@ pub struct MatrixInput {
     pub truck_weight: Option<i32>,
 }
 
-
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct MassiveMatrixInput {
     #[doc = "locations of origins \n\nFormat: lat0,lng0|lat1,lng1|...\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$"]
     pub origins: String,
     #[doc = "locations of destinations\n\nFormat: lat0,lng0|lat1,lng1|...\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$"]
-    pub destinations: String,
+    pub destinations: Option<String>,
     #[doc = "mode of service.\n\nValues:`car|auto|bike|escooter|4w|2w...`.\n\nDefault: `\"\"`"]
     pub mode: Option<String>,
     #[doc = "area of service.\n\nValues:`usa|...`.\n\nDefault: `\"\"`"]
-    pub area: String,
+    pub area: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct MatrixOutput {
     #[doc = "`Ok` for success."]
     pub status: String,
-    #[doc = "matrix output.\n\nNote: each row in following format\n\nRow[i]: `Element`(o[i]d[0]),`Element`(o[i]d[1]),`Element`(o[i]d[2])..."]
-    pub rows: Vec<Row>,
     #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
     #[doc = "warning when facing unexpected behaviour"]
     pub warning: Option<Vec<String>>,
+    #[doc = "matrix output.\n\nNote: each row in following format\n\nRow[i]: `Element`(o[i]d[0]),`Element`(o[i]d[1]),`Element`(o[i]d[2])..."]
+    pub rows: Vec<Row>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -1595,6 +1608,12 @@ pub struct SnapOutput {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "`snap node info objects crossed along the snap trip.`"]
     pub snap_node_info: Option<Vec<Option<SnapNodeInfo>>>,
+    #[doc = "legs of route.\n\nNote: `waypoints` split `route` into `legs`"]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub legs: Option<Vec<Leg>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`debug related information.`"]
+    pub debug_info: Option<Vec<Option<DebugInfo>>>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
