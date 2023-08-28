@@ -1449,7 +1449,7 @@ pub struct ValhallaMatrixInput {
     pub truck_weight: Option<i32>,
 }
 
-#[derive(Serialize, Deserialize, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
 pub struct MatrixInput {
     #[doc = "locations of origins \n\nFormat: lat0,lng0|lat1,lng1|...\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$"]
     pub origins: String,
@@ -1471,6 +1471,20 @@ pub struct MatrixInput {
     pub truck_size: Option<String>,
     #[doc = "won't work with osrm, just for extract"]
     pub truck_weight: Option<i32>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
+pub struct ValhallaMassiveDistanceMatrixInput {
+    pub matrix_input: ValhallaMatrixInput,
+    pub task_id: String,
+    pub call_back: String,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
+pub struct MassiveDistanceMatrixInput {
+    pub matrix_input: MatrixInput,
+    pub task_id: String,
+    pub call_back: String,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
