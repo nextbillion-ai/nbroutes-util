@@ -1477,14 +1477,52 @@ pub struct MatrixInput {
 pub struct ValhallaMassiveDistanceMatrixInput {
     pub matrix_input: ValhallaMatrixInput,
     pub task_id: String,
-    pub call_back: String,
+    pub gcs_path: String,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
 pub struct MassiveDistanceMatrixInput {
     pub matrix_input: MatrixInput,
     pub task_id: String,
-    pub call_back: String,
+    pub gcs_path: String,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct MassiveDistanceMatrixOutput {
+    #[doc = "`Ok` for success."]
+    pub status: String,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
+pub struct MassiveDistanceMatrixStatusInput {
+    pub task_id: Option<Vec<String>>,
+    #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
+    pub key: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
+pub struct MassiveDistanceMatrixStatusOutput {
+    pub status: Vec<MassiveDistanceMatrixStatus>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
+pub struct MassiveDistanceMatrixStatus {
+    pub task_id: String,
+    pub status: MassiveDistanceMatrixStatusEnum,
+    pub message: String,
+    #[serde(skip_serializing)]
+    pub start_time: i64,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
+pub enum MassiveDistanceMatrixStatusEnum {
+    Running = 1,
+    Failed,
+    Finish,
+    NoExist,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
