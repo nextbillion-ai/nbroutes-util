@@ -1513,6 +1513,7 @@ pub struct MassiveDistanceMatrixStatus {
     pub task_id: String,
     pub status: MassiveDistanceMatrixStatusEnum,
     pub message: String,
+    pub output: Option<MatrixOutput>,
     #[serde(skip_serializing)]
     pub start_time: i64,
 }
@@ -1537,7 +1538,7 @@ pub struct MassiveMatrixInput {
     pub area: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
 pub struct MatrixOutput {
     #[doc = "`Ok` for success."]
     pub status: String,
@@ -1567,7 +1568,7 @@ d(xy) distance for origins[x] to dest[y]\n
     pub warning: Option<Vec<String>>,
 }
 
-#[derive(Serialize, Deserialize, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
 pub struct Row {
     #[doc = "`elements` for a particular row|origin"]
     pub elements: Vec<Element>,
