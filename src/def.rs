@@ -1487,7 +1487,7 @@ pub struct MatrixInput {
 pub struct ValhallaMassiveDistanceMatrixInput {
     pub matrix_input: ValhallaMatrixInput,
     pub task_id: String,
-    pub gcs_path: String,
+    pub gcs_path: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
