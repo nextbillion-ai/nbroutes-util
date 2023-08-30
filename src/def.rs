@@ -630,6 +630,16 @@ pub struct NavigatingInput {
     pub route_type: Option<String>,
     #[doc = "road info objects to include in response.\n\nFormat: `type1|type2,...`.\n\nDefault:`\"\"`"]
     pub road_info: Option<String>,
+    #[doc = "help reroute, the history trace will be added to snap"]
+    pub travelled_raw_locations: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct TravelledRawLocation {
+    pub bearing: Option<f64>,
+    pub accuracy: Option<f64>,
+    pub lat:  Option<f64>,
+    pub lon:  Option<f64>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
