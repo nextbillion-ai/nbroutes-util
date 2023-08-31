@@ -6,6 +6,7 @@ pub mod poly;
 pub mod protos;
 pub mod statsd;
 pub mod util;
+pub mod mdm_status;
 
 use chrono::prelude::*;
 use def::{Engine, ValhallaError, OsrmError, AdaptError, EngineError};
@@ -27,6 +28,8 @@ extern crate log;
 extern crate simple_error;
 #[macro_use]
 extern crate prometheus;
+#[macro_use]
+extern crate lazy_static;
 
 pub type Result<T> = std::result::Result<T, Box<dyn std::error::Error + Send + Sync>>;
 

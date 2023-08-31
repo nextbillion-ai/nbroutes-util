@@ -22,6 +22,8 @@ chrono = "0.4.19"
 async-process = "1.0.2"
 actix-rt = "*"
 jwks-client = "0.1.4"
+byteorder = "1.4.3"
+lazy_static = "1.4.0"
 
 [build-dependencies]
 protobuf-codegen-pure = "2.24.1"

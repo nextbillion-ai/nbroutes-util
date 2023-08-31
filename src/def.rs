@@ -4,6 +4,7 @@ use geo::{LineString, Polygon};
 use paperclip::actix::Apiv2Schema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use byteorder::{ByteOrder, LittleEndian};
 
 pub const STATUS_OK: &str = "Ok";
 pub const STATUS_FAILED: &str = "Failed";
@@ -1558,6 +1559,31 @@ pub struct MatrixOutput {
     #[doc = "matrix output.\n\nNote: each row in following format\n\nRow[i]: `Element`(o[i]d[0]),`Element`(o[i]d[1]),`Element`(o[i]d[2])..."]
     pub rows: Vec<Row>,
 }
+
+impl MatrixOutput {
+    pub fn binary_encode(&self) -> Vec<u8> {
+        let mut res: Vec<u8> = Vec::new();
+        // add header
+        let header = encode(self.rows.len() as u32, self.rows[0].elements.len() as u32);
+        res.extend_from_slice(&header);
+    
+        for row in self.rows.iter() {
+            for e in row.elements.iter() {
+                let chunk = encode(e.duration.value as u32, e.distance.value as u32);
+                res.extend_from_slice(&chunk);
+            }
+        }
+        res
+    }
+}
+
+pub fn encode(duration: u32, distance: u32) -> [u8; 8]{
+    let mut bytes = [0; 8];
+    let numbers_given = [duration, distance];
+    LittleEndian::write_u32_into(&numbers_given, &mut bytes);
+    return bytes;
+}
+
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct MatrixConciseOutput {
