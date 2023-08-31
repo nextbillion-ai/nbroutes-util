@@ -1495,6 +1495,7 @@ pub struct ValhallaMassiveDistanceMatrixInput {
 pub struct MassiveDistanceMatrixInput {
     pub matrix_input: MatrixInput,
     pub task_id: String,
+    pub chunk_id: String,
     pub gcs_path: Option<String>,
 }
 
@@ -1509,7 +1510,8 @@ pub struct MassiveDistanceMatrixOutput {
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
 pub struct MassiveDistanceMatrixStatusInput {
-    pub task_id: Option<Vec<String>>,
+    pub task_id: String,
+    pub chunk_id: String,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
 }
@@ -1522,6 +1524,7 @@ pub struct MassiveDistanceMatrixStatusOutput {
 #[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
 pub struct MassiveDistanceMatrixStatus {
     pub task_id: String,
+    pub chunk_id: String,
     pub status: MassiveDistanceMatrixStatusEnum,
     pub message: String,
     pub output: Option<MatrixOutput>,

@@ -10,18 +10,21 @@ lazy_static! {
 const EXPIRA_TIME_24H: i64 = 24 * 60 * 60 * 1000; // 12h
 // const EXPIRA_TIME_5S: i64 = 10 * 1000; // 10s
 
-pub fn get_status(task_id: String) -> MassiveDistanceMatrixStatus {
+pub fn get_status(task_id: String, chunk_id:String) -> MassiveDistanceMatrixStatus {
     // run in mdm mode no need evict, becase pod will be release after used
     // evict();
+
+    let key = uniq_key(task_id.clone(), chunk_id.clone());
     
     let m = STATUS.lock().unwrap();
-    let status = m.get(&task_id).clone();
+    let status = m.get(&key).clone();
     if status.is_some(){
         return status.unwrap().clone()
     }
 
     return MassiveDistanceMatrixStatus{
         task_id,
+        chunk_id,
         status: MassiveDistanceMatrixStatusEnum::NoExist,
         message: "".to_string(),
         start_time: 0,
@@ -29,8 +32,9 @@ pub fn get_status(task_id: String) -> MassiveDistanceMatrixStatus {
     }
 }
 
-pub fn set_status(task_id: String, status: MassiveDistanceMatrixStatus)  {
-    STATUS.lock().unwrap().insert(task_id, status);
+pub fn set_status(task_id: String, chunk_id:String, status: MassiveDistanceMatrixStatus)  {
+    let key = uniq_key(task_id.clone(), chunk_id.clone());
+    STATUS.lock().unwrap().insert(key, status);
     return
 }
 
@@ -50,6 +54,15 @@ pub fn evict(){
     for key in delete_list{
         STATUS.lock().unwrap().remove(&key);
     }
+}
+
+pub fn uniq_key(task_id: String,chunk_id:String) -> String {
+    return [task_id, chunk_id].join("::");
+}
+
+pub fn parse_uniq_key(key: String) -> (String, String){
+    let items: Vec<&str> = key.split("::").collect();
+    return (items[0].to_string(), items[1].to_string());
 }
 
 
