@@ -1488,6 +1488,7 @@ pub struct MatrixInput {
 pub struct ValhallaMassiveDistanceMatrixInput {
     pub matrix_input: ValhallaMatrixInput,
     pub task_id: String,
+    pub chunk_id: String,
     pub gcs_path: Option<String>,
 }
 
