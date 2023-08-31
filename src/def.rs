@@ -1518,7 +1518,7 @@ pub struct MassiveDistanceMatrixStatusInput {
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
 pub struct MassiveDistanceMatrixStatusOutput {
-    pub status: Vec<MassiveDistanceMatrixStatus>,
+    pub status: MassiveDistanceMatrixStatus,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
