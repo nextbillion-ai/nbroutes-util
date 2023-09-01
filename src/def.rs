@@ -4,6 +4,7 @@ use geo::{LineString, Polygon};
 use paperclip::actix::Apiv2Schema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+use byteorder::{ByteOrder, LittleEndian};
 
 pub const STATUS_OK: &str = "Ok";
 pub const STATUS_FAILED: &str = "Failed";
@@ -1459,7 +1460,7 @@ pub struct ValhallaMatrixInput {
     pub truck_weight: Option<i32>,
 }
 
-#[derive(Serialize, Deserialize, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
 pub struct MatrixInput {
     #[doc = "locations of origins \n\nFormat: lat0,lng0|lat1,lng1|...\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$"]
     pub origins: String,
@@ -1483,6 +1484,63 @@ pub struct MatrixInput {
     pub truck_weight: Option<i32>,
 }
 
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
+pub struct ValhallaMassiveDistanceMatrixInput {
+    pub matrix_input: ValhallaMatrixInput,
+    pub task_id: String,
+    pub chunk_id: String,
+    pub gcs_path: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
+pub struct MassiveDistanceMatrixInput {
+    pub matrix_input: MatrixInput,
+    pub task_id: String,
+    pub chunk_id: String,
+    pub gcs_path: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema)]
+pub struct MassiveDistanceMatrixOutput {
+    #[doc = "`Ok` for success."]
+    pub status: String,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
+pub struct MassiveDistanceMatrixStatusInput {
+    pub task_id: String,
+    pub chunk_id: String,
+    #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
+    pub key: Option<String>,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
+pub struct MassiveDistanceMatrixStatusOutput {
+    pub status: MassiveDistanceMatrixStatus,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
+pub struct MassiveDistanceMatrixStatus {
+    pub task_id: String,
+    pub chunk_id: String,
+    pub status: MassiveDistanceMatrixStatusEnum,
+    pub message: String,
+    pub output: Option<MatrixOutput>,
+    #[serde(skip_serializing)]
+    pub start_time: i64,
+}
+
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
+pub enum MassiveDistanceMatrixStatusEnum {
+    Running = 1,
+    Failed,
+    Finish,
+    NoExist,
+}
+
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct MassiveMatrixInput {
     #[doc = "locations of origins \n\nFormat: lat0,lng0|lat1,lng1|...\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$"]
@@ -1495,7 +1553,7 @@ pub struct MassiveMatrixInput {
     pub area: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
 pub struct MatrixOutput {
     #[doc = "`Ok` for success."]
     pub status: String,
@@ -1505,6 +1563,31 @@ pub struct MatrixOutput {
     #[doc = "matrix output.\n\nNote: each row in following format\n\nRow[i]: `Element`(o[i]d[0]),`Element`(o[i]d[1]),`Element`(o[i]d[2])..."]
     pub rows: Vec<Row>,
 }
+
+impl MatrixOutput {
+    pub fn binary_encode(&self) -> Vec<u8> {
+        let mut res: Vec<u8> = Vec::new();
+        // add header
+        let header = encode(self.rows.len() as u32, self.rows[0].elements.len() as u32);
+        res.extend_from_slice(&header);
+    
+        for row in self.rows.iter() {
+            for e in row.elements.iter() {
+                let chunk = encode(e.duration.value as u32, e.distance.value as u32);
+                res.extend_from_slice(&chunk);
+            }
+        }
+        res
+    }
+}
+
+pub fn encode(duration: u32, distance: u32) -> [u8; 8]{
+    let mut bytes = [0; 8];
+    let numbers_given = [duration, distance];
+    LittleEndian::write_u32_into(&numbers_given, &mut bytes);
+    return bytes;
+}
+
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct MatrixConciseOutput {
@@ -1525,7 +1608,7 @@ d(xy) distance for origins[x] to dest[y]\n
     pub warning: Option<Vec<String>>,
 }
 
-#[derive(Serialize, Deserialize, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
 pub struct Row {
     #[doc = "`elements` for a particular row|origin"]
     pub elements: Vec<Element>,
