@@ -1,10 +1,10 @@
 #![allow(non_snake_case)]
 use crate::util::straight_distance;
+use byteorder::{ByteOrder, LittleEndian};
 use geo::{LineString, Polygon};
 use paperclip::actix::Apiv2Schema;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
-use byteorder::{ByteOrder, LittleEndian};
 
 pub const STATUS_OK: &str = "Ok";
 pub const STATUS_FAILED: &str = "Failed";
@@ -639,8 +639,8 @@ pub struct NavigatingInput {
 pub struct TravelledRawLocation {
     pub bearing: Option<f64>,
     pub accuracy: Option<f64>,
-    pub lat:  Option<f64>,
-    pub lon:  Option<f64>,
+    pub lat: Option<f64>,
+    pub lon: Option<f64>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -1570,7 +1570,7 @@ impl MatrixOutput {
         // add header
         let header = encode(self.rows.len() as u32, self.rows[0].elements.len() as u32);
         res.extend_from_slice(&header);
-    
+
         for row in self.rows.iter() {
             for e in row.elements.iter() {
                 let chunk = encode(e.duration.value as u32, e.distance.value as u32);
@@ -1581,13 +1581,12 @@ impl MatrixOutput {
     }
 }
 
-pub fn encode(duration: u32, distance: u32) -> [u8; 8]{
+pub fn encode(duration: u32, distance: u32) -> [u8; 8] {
     let mut bytes = [0; 8];
     let numbers_given = [duration, distance];
     LittleEndian::write_u32_into(&numbers_given, &mut bytes);
     return bytes;
 }
-
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
 pub struct MatrixConciseOutput {
@@ -1659,8 +1658,6 @@ pub struct SnapInput {
     pub timestamps: Option<String>,
     #[doc = "radiuses of each `location` for performing `snap2road`\n\nUnit: `meters`\n\nFormat: `radius0|radius1|...`\n\nRegex: ^[\\d]+(\\|[\\d]+)*$"]
     pub radiuses: Option<String>,
-    #[doc = "enable to interpolate the path.\n\nNote: might return more points\n\nDefault: `false`"]
-    pub interpolate: Option<bool>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
     #[doc = "`deprecated`"]
