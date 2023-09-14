@@ -625,6 +625,7 @@ pub struct NavigatingInput {
     #[doc = "language of the text instruction"]
     pub lang: Option<String>,
     pub approaches: Option<String>,
+    pub origin_approaches: Option<String>,
     #[doc = "Limits the search to segments with given bearing in degrees towards true north in clockwise direction. \n\nFormat: `degree,range;degree,range...`. Default:`\"\"`"]
     pub bearings: Option<String>,
     #[doc = "using shortest route when route_type=shortest."]
@@ -782,6 +783,7 @@ pub struct ValhallaDirectionsInput {
     #[doc = "Indicates that the calculated route(s) should avoid the indicated features. \n\nFormat: `value1|value2|...`. Default:`\"\"`"]
     pub avoid: Option<String>,
     pub approaches: Option<String>,
+    pub origin_approaches: Option<String>,
     #[doc = "Indicates the truck size in CM, only valid when mode=6w. \n\nFormat: `height,width,length`."]
     pub truck_size: Option<String>,
     #[doc = "Indicates the truck weight including trailers and shipped goods in KG, only valid when mode=6w."]
@@ -827,6 +829,7 @@ pub struct DirectionsInput {
     #[doc = "Indicates that the calculated route(s) should avoid the indicated features. \n\nFormat: `value1|value2|...`. Default:`\"\"`"]
     pub avoid: Option<String>,
     pub approaches: Option<String>,
+    pub origin_approaches: Option<String>,
     #[doc = "Indicates the truck size in CM, only valid when mode=6w. \n\nFormat: `height,width,length`."]
     pub truck_size: Option<String>,
     #[doc = "Indicates the truck weight including trailers and shipped goods in KG, only valid when mode=6w."]
@@ -1452,6 +1455,7 @@ pub struct ValhallaMatrixInput {
     pub context: Option<String>,
     pub avoid: Option<String>,
     pub approaches: Option<String>,
+    pub origin_approaches: Option<String>,
     #[doc = "using shortest route when route_type=shortest."]
     pub route_type: Option<String>,
     #[doc = "Indicates the truck size in CM, only valid when mode=6w. \n\nFormat: `height,width,length`."]
@@ -1476,6 +1480,7 @@ pub struct MatrixInput {
     pub context: Option<String>,
     pub avoid: Option<String>,
     pub approaches: Option<String>,
+    pub origin_approaches: Option<String>,
     #[doc = "Limits the search to segments with given bearing in degrees towards true north in clockwise direction. \n\nFormat: `degree,range;degree,range...`. Default:`\"\"`"]
     pub bearings: Option<String>,
     #[doc = "won't work with osrm, just for extract"]
@@ -1667,6 +1672,7 @@ pub struct SnapInput {
     pub mode: Option<String>,
     pub avoid: Option<String>,
     pub approaches: Option<String>,
+    pub origin_approaches: Option<String>,
     #[doc = "only supports for polyline and geojson"]
     pub geometry: Option<String>,
     #[doc = "road info objects to include in response.\n\nFormat: `type1|type2,...`.\n\nDefault:`\"\"`"]
