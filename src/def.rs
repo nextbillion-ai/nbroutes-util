@@ -1672,7 +1672,6 @@ pub struct SnapInput {
     pub mode: Option<String>,
     pub avoid: Option<String>,
     pub approaches: Option<String>,
-    pub origin_approaches: Option<String>,
     #[doc = "only supports for polyline and geojson"]
     pub geometry: Option<String>,
     #[doc = "road info objects to include in response.\n\nFormat: `type1|type2,...`.\n\nDefault:`\"\"`"]
