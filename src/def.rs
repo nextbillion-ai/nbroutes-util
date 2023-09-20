@@ -1039,8 +1039,6 @@ pub struct MeteredRoute {
     pub geometry: String,
     #[doc = "trip driving distance.\n\nUnit: `meters`"]
     pub distance: f64,
-    #[doc = "special geospatial objects crossed along the trip."]
-    pub special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
