@@ -844,8 +844,6 @@ pub struct PostTripRouteInput {
     pub waypoints: String,
     #[doc = "unix timestamp of each `waypoints`.\n\nUnit: `seconds`\n\nFormat: `ts0|ts1|...`\n\nRegex: ^[\\d]+(\\|[\\d]+)*$"]
     pub timestamps: Option<String>,
-    #[doc = "special geospatial objects to include in response.\n\nDefault: `[\"traffic_signals\"]`"]
-    pub special_object_types: Option<Vec<String>>,
     #[doc = "mode of service.\n\nValues:`car|auto|bike|escooter|4w|2w...`.\n\nDefault: \"\""]
     pub mode: Option<String>,
     #[doc = "`deprecated`"]
