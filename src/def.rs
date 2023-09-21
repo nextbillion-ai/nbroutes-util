@@ -855,7 +855,7 @@ pub struct PostTripRouteInput {
     #[doc = "indicate whether we need to connect the last&first point using directions api\n\nDefault: `false`"]
     pub round_trip: Option<bool>,
     #[doc = "output format of geometry.\n\nValue: `geojson|polyline|polyline6`.\n\nDefault: `polyline`"]
-    pub geometry: Option<GeometryInput>,
+    pub geometry: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
