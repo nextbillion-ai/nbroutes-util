@@ -776,8 +776,6 @@ pub struct ValhallaDirectionsInput {
     pub context: Option<String>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
-    #[doc = "special geospatial objects to include in response.\n\nFormat: `type1,type2,...`.\n\nDefault:`\"\"`"]
-    pub special_object_types: Option<String>,
     #[doc = "`deprecated`"]
     pub annotations: Option<bool>,
     #[doc = "Indicates that the calculated route(s) should avoid the indicated features. \n\nFormat: `value1|value2|...`. Default:`\"\"`"]
@@ -822,8 +820,6 @@ pub struct DirectionsInput {
     pub context: Option<String>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
-    #[doc = "special geospatial objects to include in response.\n\nFormat: `type1,type2,...`.\n\nDefault:`\"\"`"]
-    pub special_object_types: Option<String>,
     #[doc = "`deprecated`"]
     pub annotations: Option<bool>,
     #[doc = "Indicates that the calculated route(s) should avoid the indicated features. \n\nFormat: `value1|value2|...`. Default:`\"\"`"]
@@ -987,9 +983,6 @@ pub struct DirectionsOutput {
     #[doc = "`routes` calculated."]
     pub routes: Vec<Route>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    #[doc = "special geospatial objects found from all `routes`.\n\nNote: this is super collection of `special_objects` from individual `route`"]
-    pub global_special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
 }
 
@@ -1008,9 +1001,6 @@ pub struct ValhallaDirectionsOutput {
     pub mode: Option<String>,
     #[doc = "`routes` calculated."]
     pub routes: Vec<ValhallaRoute>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[doc = "special geospatial objects found from all `routes`.\n\nNote: this is super collection of `special_objects` from individual `route`"]
-    pub global_special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub country_code: Option<String>,
 }
@@ -1074,9 +1064,6 @@ pub struct Route {
     #[doc = "route driving duration after adjusting.\n\nNote: debug only."]
     pub predicted_duration: Option<f64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    #[doc = "special geospatial objects crossed along the trip."]
-    pub special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
-    #[serde(skip_serializing_if = "Option::is_none")]
     pub geojson: Option<GeoJSONFeature>,
 }
 
@@ -1110,9 +1097,6 @@ pub struct ValhallaRoute {
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "route driving duration after adjusting.\n\nNote: debug only."]
     pub predicted_duration: Option<f64>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[doc = "special geospatial objects crossed along the trip."]
-    pub special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub geojson: Option<GeoJSONFeature>,
     #[serde(skip_serializing_if = "Option::is_none")]
