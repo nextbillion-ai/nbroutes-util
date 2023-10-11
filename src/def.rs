@@ -840,8 +840,6 @@ pub struct PostTripRouteInput {
     pub waypoints: String,
     #[doc = "unix timestamp of each `waypoints`.\n\nUnit: `seconds`\n\nFormat: `ts0|ts1|...`\n\nRegex: ^[\\d]+(\\|[\\d]+)*$"]
     pub timestamps: Option<String>,
-    #[doc = "special geospatial objects to include in response.\n\nDefault: `[\"traffic_signals\"]`"]
-    pub special_object_types: Option<Vec<String>>,
     #[doc = "mode of service.\n\nValues:`car|auto|bike|escooter|4w|2w...`.\n\nDefault: \"\""]
     pub mode: Option<String>,
     #[doc = "`deprecated`"]
@@ -852,6 +850,8 @@ pub struct PostTripRouteInput {
     pub tolerate_outlier: Option<bool>,
     #[doc = "indicate whether we need to connect the last&first point using directions api\n\nDefault: `false`"]
     pub round_trip: Option<bool>,
+    #[doc = "output format of geometry.\n\nValue: `geojson|polyline|polyline6`.\n\nDefault: `polyline`"]
+    pub geometry: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema)]
@@ -1029,8 +1029,6 @@ pub struct MeteredRoute {
     pub geometry: String,
     #[doc = "trip driving distance.\n\nUnit: `meters`"]
     pub distance: f64,
-    #[doc = "special geospatial objects crossed along the trip."]
-    pub special_objects: Option<HashMap<String, Vec<SpecialObject>>>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
