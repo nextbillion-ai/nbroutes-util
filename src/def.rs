@@ -1437,7 +1437,12 @@ pub struct ValhallaMatrixInput {
     pub context: Option<String>,
     pub avoid: Option<String>,
     pub approaches: Option<String>,
+    // NOTE: for normal dm request use, control origins approaches
     pub origin_approaches: Option<String>,
+    // NOTE: for mdm use, control all origins's approach
+    pub origins_approach: Option<String>,
+    // NOTE: for mdm use, control all destinations's approach
+    pub destinations_approach: Option<String>,
     #[doc = "using shortest route when route_type=shortest."]
     pub route_type: Option<String>,
     #[doc = "Indicates the truck size in CM, only valid when mode=6w. \n\nFormat: `height,width,length`."]
