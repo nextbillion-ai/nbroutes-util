@@ -1467,7 +1467,12 @@ pub struct MatrixInput {
     pub context: Option<String>,
     pub avoid: Option<String>,
     pub approaches: Option<String>,
+    // NOTE: for normal dm request use, control origins approaches
     pub origin_approaches: Option<String>,
+    // NOTE: for mdm use, control all origins's approach
+    pub origins_approach: Option<String>,
+    // NOTE: for mdm use, control all destinations's approach
+    pub destinations_approach: Option<String>,
     #[doc = "Limits the search to segments with given bearing in degrees towards true north in clockwise direction. \n\nFormat: `degree,range;degree,range...`. Default:`\"\"`"]
     pub bearings: Option<String>,
     #[doc = "won't work with osrm, just for extract"]
