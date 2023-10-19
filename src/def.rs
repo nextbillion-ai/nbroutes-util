@@ -790,6 +790,7 @@ pub struct ValhallaDirectionsInput {
     pub route_type: Option<String>,
     #[doc = "road info objects to include in response.\n\nFormat: `type1|type2,...`.\n\nDefault:`\"\"`"]
     pub road_info: Option<String>,
+    pub hazmat: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -1449,6 +1450,7 @@ pub struct ValhallaMatrixInput {
     pub truck_size: Option<String>,
     #[doc = "Indicates the truck weight including trailers and shipped goods in KG, only valid when mode=6w."]
     pub truck_weight: Option<i32>,
+    pub hazmat: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
