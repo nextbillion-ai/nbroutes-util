@@ -790,6 +790,9 @@ pub struct ValhallaDirectionsInput {
     pub route_type: Option<String>,
     #[doc = "road info objects to include in response.\n\nFormat: `type1|type2,...`.\n\nDefault:`\"\"`"]
     pub road_info: Option<String>,
+    pub truck_axle_count: Option<u32>,
+    // in metric tons
+    pub truck_axle_load: Option<f64>,
     pub hazmat: Option<bool>,
 }
 
@@ -1450,6 +1453,9 @@ pub struct ValhallaMatrixInput {
     pub truck_size: Option<String>,
     #[doc = "Indicates the truck weight including trailers and shipped goods in KG, only valid when mode=6w."]
     pub truck_weight: Option<i32>,
+    pub truck_axle_count: Option<u32>,
+    // in metric tons
+    pub truck_axle_load: Option<f64>,
     pub hazmat: Option<bool>,
 }
 
