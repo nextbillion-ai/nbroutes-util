@@ -634,6 +634,10 @@ pub struct NavigatingInput {
     pub road_info: Option<String>,
     #[doc = "help reroute, the history trace will be added to snap"]
     pub travelled_raw_locations: Option<String>,
+    pub hazmat: Option<bool>,
+    pub truck_axle_count: Option<u32>,
+    // in metric tons
+    pub truck_axle_load: Option<f64>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
