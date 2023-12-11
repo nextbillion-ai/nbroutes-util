@@ -638,6 +638,7 @@ pub struct NavigatingInput {
     pub truck_axle_count: Option<u32>,
     // in metric tons
     pub truck_axle_load: Option<f64>,
+    pub hazmat_category: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -798,6 +799,7 @@ pub struct ValhallaDirectionsInput {
     // in metric tons
     pub truck_axle_load: Option<f64>,
     pub hazmat: Option<bool>,
+    pub hazmat_category: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -1461,6 +1463,7 @@ pub struct ValhallaMatrixInput {
     // in metric tons
     pub truck_axle_load: Option<f64>,
     pub hazmat: Option<bool>,
+    pub hazmat_category: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
