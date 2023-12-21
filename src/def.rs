@@ -639,6 +639,7 @@ pub struct NavigatingInput {
     // in metric tons
     pub truck_axle_load: Option<f64>,
     pub hazmat_category: Option<String>,
+    pub cross_border: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -799,6 +800,7 @@ pub struct ValhallaDirectionsInput {
     // in metric tons
     pub truck_axle_load: Option<f64>,
     pub hazmat: Option<bool>,
+    pub cross_border: Option<bool>,
     pub hazmat_category: Option<String>,
 }
 
