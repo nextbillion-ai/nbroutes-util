@@ -1132,7 +1132,7 @@ pub struct EdgeInfo {
     pub special_property: HashMap<String, bool>,
     pub offset: i64,
     pub edge_id: i64,
-    pub region: String,
+    pub region: Option<String>,
     pub duration: f64,
     pub distance: i64,
     pub speed: f64,
