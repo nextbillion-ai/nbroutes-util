@@ -1714,7 +1714,7 @@ pub struct ValhallaSnapOutput {
     pub snap_node_info: Option<Vec<Option<SnapNodeInfo>>>,
     #[doc = "legs of route.\n\nNote: `waypoints` split `route` into `legs`"]
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub routes: Option<ValhallaRoute>,
+    pub routes: Option<Vec<ValhallaRoute>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     #[doc = "`debug related information.`"]
     pub debug_info: Option<Vec<Option<DebugInfo>>>,
