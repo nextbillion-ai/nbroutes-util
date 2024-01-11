@@ -1467,6 +1467,7 @@ pub struct ValhallaMatrixInput {
     pub truck_axle_load: Option<f64>,
     pub hazmat: Option<bool>,
     pub hazmat_category: Option<String>,
+    pub cross_border: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
