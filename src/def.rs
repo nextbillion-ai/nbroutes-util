@@ -634,11 +634,10 @@ pub struct NavigatingInput {
     pub road_info: Option<String>,
     #[doc = "help reroute, the history trace will be added to snap"]
     pub travelled_raw_locations: Option<String>,
-    pub hazmat: Option<bool>,
     pub truck_axle_count: Option<u32>,
     // in metric tons
     pub truck_axle_load: Option<f64>,
-    pub hazmat_category: Option<String>,
+    pub hazmat_type: Option<String>,
     pub cross_border: Option<bool>,
 }
 
@@ -799,9 +798,8 @@ pub struct ValhallaDirectionsInput {
     pub truck_axle_count: Option<u32>,
     // in metric tons
     pub truck_axle_load: Option<f64>,
-    pub hazmat: Option<bool>,
-    pub cross_border: Option<bool>,
-    pub hazmat_category: Option<String>,
+    pub cross_border: Option<bool>, 
+    pub hazmat_type: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -1464,9 +1462,8 @@ pub struct ValhallaMatrixInput {
     pub truck_weight: Option<i32>,
     pub truck_axle_count: Option<u32>,
     // in metric tons
-    pub truck_axle_load: Option<f64>,
-    pub hazmat: Option<bool>,
-    pub hazmat_category: Option<String>,
+    pub truck_axle_load: Option<f64>,    
+    pub hazmat_type: Option<String>,
     pub cross_border: Option<bool>,
 }
 
