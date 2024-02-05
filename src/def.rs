@@ -842,6 +842,7 @@ pub struct DirectionsInput {
     pub truck_weight: Option<i32>,
     #[doc = "Limits the search to segments with given bearing in degrees towards true north in clockwise direction. \n\nFormat: `degree,range;degree,range...`. Default:`\"\"`"]
     pub bearings: Option<String>,
+    pub snap_avoid: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -1495,6 +1496,8 @@ pub struct MatrixInput {
     pub truck_size: Option<String>,
     #[doc = "won't work with osrm, just for extract"]
     pub truck_weight: Option<i32>,
+    #[doc = "won't work with osrm, just for extract"]
+    pub snap_avoid: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
