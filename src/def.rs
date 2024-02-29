@@ -634,11 +634,10 @@ pub struct NavigatingInput {
     pub road_info: Option<String>,
     #[doc = "help reroute, the history trace will be added to snap"]
     pub travelled_raw_locations: Option<String>,
-    pub hazmat: Option<bool>,
     pub truck_axle_count: Option<u32>,
     // in metric tons
     pub truck_axle_load: Option<f64>,
-    pub hazmat_category: Option<String>,
+    pub hazmat_type: Option<String>,
     pub cross_border: Option<bool>,
 }
 
@@ -799,9 +798,8 @@ pub struct ValhallaDirectionsInput {
     pub truck_axle_count: Option<u32>,
     // in metric tons
     pub truck_axle_load: Option<f64>,
-    pub hazmat: Option<bool>,
-    pub cross_border: Option<bool>,
-    pub hazmat_category: Option<String>,
+    pub cross_border: Option<bool>, 
+    pub hazmat_type: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -844,6 +842,7 @@ pub struct DirectionsInput {
     pub truck_weight: Option<i32>,
     #[doc = "Limits the search to segments with given bearing in degrees towards true north in clockwise direction. \n\nFormat: `degree,range;degree,range...`. Default:`\"\"`"]
     pub bearings: Option<String>,
+    pub snap_avoid: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -1464,9 +1463,8 @@ pub struct ValhallaMatrixInput {
     pub truck_weight: Option<i32>,
     pub truck_axle_count: Option<u32>,
     // in metric tons
-    pub truck_axle_load: Option<f64>,
-    pub hazmat: Option<bool>,
-    pub hazmat_category: Option<String>,
+    pub truck_axle_load: Option<f64>,    
+    pub hazmat_type: Option<String>,
     pub cross_border: Option<bool>,
 }
 
@@ -1498,6 +1496,8 @@ pub struct MatrixInput {
     pub truck_size: Option<String>,
     #[doc = "won't work with osrm, just for extract"]
     pub truck_weight: Option<i32>,
+    #[doc = "won't work with osrm, just for extract"]
+    pub snap_avoid: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
