@@ -1692,6 +1692,36 @@ pub struct SnapInput {
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
+pub struct ValhallaSnapOutput {
+    #[doc = "`Ok` for success."]
+    pub status: String,
+    #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
+    #[doc = "warning when facing unexpected behaviour"]
+    pub warning: Option<Vec<String>>,
+    #[serde(rename = "snappedPoints")]
+    pub snapped_points: Vec<SnappedPoint>,
+    #[doc = "total travel distance of the snapped path\n\nUnit: `meters`"]
+    pub distance: u64,
+    #[doc = "encoded geometry value in `polyline` or `polyline6`.\n\nFormat: [Link: Polyline](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)"]
+    pub geometry: Option<Vec<Option<String>>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub geojson: Option<GeoJSONFeature>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`road info objects crossed along the trip.`"]
+    pub road_info: Option<Vec<Option<RoadInfo>>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`snap node info objects crossed along the snap trip.`"]
+    pub snap_node_info: Option<Vec<Option<SnapNodeInfo>>>,
+    #[doc = "legs of route.\n\nNote: `waypoints` split `route` into `legs`"]
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub routes: Option<Vec<ValhallaRoute>>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    #[doc = "`debug related information.`"]
+    pub debug_info: Option<Vec<Option<DebugInfo>>>,
+}
+
+
+#[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
 pub struct SnapOutput {
     #[doc = "`Ok` for success."]
     pub status: String,
