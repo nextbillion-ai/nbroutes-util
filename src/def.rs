@@ -724,7 +724,7 @@ pub struct ProctorStep {
     pub exits: Option<String>,
     pub mode: Option<String>,
     pub metadata: Option<ProctorManeuver>,
-    pub intersections: Vec<ProctorIntersections>,
+    pub intersections: Vec<Intersection>,
     pub rotary_name: Option<String>,
     pub rotary_pronunciation: Option<String>,
     pub driving_side: Option<String>,
@@ -738,17 +738,6 @@ pub struct ProctorManeuver {
     pub maneuver_type: String,
     pub modifier: Option<String>,
     pub exit: i32,
-}
-
-#[derive(Serialize, Deserialize, Debug, Clone, Apiv2Schema)]
-pub struct ProctorIntersections {
-    pub location: Coordinate,
-    pub bearings: Vec<i32>,
-    pub classes: Vec<String>,
-    pub entry: Vec<bool>,
-    pub intersection_in: i32,
-    pub intersection_out: i32,
-    pub lanes: Vec<Lane>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema)]
@@ -798,7 +787,7 @@ pub struct ValhallaDirectionsInput {
     pub truck_axle_count: Option<u32>,
     // in metric tons
     pub truck_axle_load: Option<f64>,
-    pub cross_border: Option<bool>, 
+    pub cross_border: Option<bool>,
     pub hazmat_type: Option<String>,
 }
 
@@ -1311,33 +1300,37 @@ pub struct RoadShieldType {
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct Step {
-    #[doc = "encoded geometry value for step in `polyline` or `polyline6`.\n\nFormat: [Link: Polyline](https://developers.google.com/maps/documentation/utilities/polylinealgorithm)"]
     pub geometry: Option<String>,
-    #[doc = "start location of `step`"]
     pub start_location: Location,
-    #[doc = "end location of `step`"]
     pub end_location: Location,
-    #[doc = "step driving distance.\n\nUnit: `meters`"]
     pub distance: IntValue,
-    #[doc = "step driving duration.\n\nUnit: `seconds`"]
     pub duration: IntValue,
     #[serde(skip_serializing_if = "Option::is_none")]
-    #[doc = "step Maneuver"]
     pub maneuver: Option<Maneuver>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    #[doc = "step name"]
     pub name: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    #[doc = "step intersections"]
     pub intersections: Option<Vec<Intersection>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub geojson: Option<GeoJSONFeature>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    #[doc = "step reference"]
     pub reference: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    #[doc = "road shield info"]
-    pub road_shield_type: Option<RoadShieldType>,
+    pub metadata: Option<ProctorManeuver>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pronunciation: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub destinations: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub exits: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub mode: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub rotary_name: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub rotary_pronunciation: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub driving_side: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
@@ -1463,7 +1456,7 @@ pub struct ValhallaMatrixInput {
     pub truck_weight: Option<i32>,
     pub truck_axle_count: Option<u32>,
     // in metric tons
-    pub truck_axle_load: Option<f64>,    
+    pub truck_axle_load: Option<f64>,
     pub hazmat_type: Option<String>,
     pub cross_border: Option<bool>,
 }
@@ -1719,7 +1712,6 @@ pub struct ValhallaSnapOutput {
     #[doc = "`debug related information.`"]
     pub debug_info: Option<Vec<Option<DebugInfo>>>,
 }
-
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
 pub struct SnapOutput {
