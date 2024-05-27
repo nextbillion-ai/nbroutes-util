@@ -1063,6 +1063,8 @@ pub struct Route {
     pub predicted_duration: Option<f64>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub geojson: Option<GeoJSONFeature>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub confidence: Option<f64>,
 }
 
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
