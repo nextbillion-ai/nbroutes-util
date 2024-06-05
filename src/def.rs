@@ -1744,6 +1744,7 @@ pub struct SnapOutput {
     pub debug_info: Option<Vec<Option<DebugInfo>>>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub routes: Option<Vec<Route>>,
+    pub country_code: Option<String>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
