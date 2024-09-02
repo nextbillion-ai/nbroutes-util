@@ -791,7 +791,7 @@ pub struct ValhallaDirectionsInput {
     pub hazmat_type: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Apiv2Schema)]
+#[derive(Serialize, Deserialize, Apiv2Schema,Clone)]
 pub struct DirectionsInput {
     #[doc = "{{location_of_origin}}\n\nFormat: `lat,lng`.\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+$"]
     pub origin: String,
