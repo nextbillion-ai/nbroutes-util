@@ -1493,6 +1493,7 @@ pub struct MatrixInput {
     pub truck_weight: Option<i32>,
     #[doc = "won't work with osrm, just for extract"]
     pub snap_avoid: Option<String>,
+    pub route_failed_prompt: Option<bool>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
