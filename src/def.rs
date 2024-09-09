@@ -500,7 +500,7 @@ pub struct Violation {
 // wrapper type to keep consistent with python api
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub struct IntValue {
-    pub value: u64,
+    pub value: i64,
 }
 
 #[derive(Deserialize, Apiv2Schema)]
