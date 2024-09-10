@@ -1613,7 +1613,7 @@ where:\n
 e(xy) eta for origins[x] to dest[y]\n
 d(xy) distance for origins[x] to dest[y]\n
 "]
-    pub rows: Vec<Vec<Vec<u64>>>,
+    pub rows: Vec<Vec<Vec<i64>>>,
     #[serde(rename = "warning", skip_serializing_if = "Option::is_none")]
     #[doc = "warning when facing unexpected behaviour"]
     pub warning: Option<Vec<String>>,
