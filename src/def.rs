@@ -1688,7 +1688,7 @@ pub struct SnapInput {
     #[doc = "whether you need to return details\n\nDefault: `false`"]
     pub overview: Option<bool>,
     #[doc = "waypoints\n\nDefault: `none`"]
-    pub waypoints: Option<Vec<u64>>,
+    pub waypoints: Option<Vec<i32>>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
