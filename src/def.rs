@@ -1685,6 +1685,10 @@ pub struct SnapInput {
     pub road_info: Option<String>,
     #[doc = "is input geometry from flexible output\n\nDefault: `false`"]
     pub is_flexible_geometry: Option<bool>,
+    #[doc = "whether you need to return details\n\nDefault: `false`"]
+    pub overview: Option<bool>,
+    #[doc = "waypoints\n\nDefault: `none`"]
+    pub waypoints: Option<vec<u64>>,
 }
 
 #[derive(Serialize, Deserialize, Apiv2Schema, Debug)]
