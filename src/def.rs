@@ -1318,6 +1318,8 @@ pub struct Step {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub reference: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
+    pub ffs: Option<i64>,
+    #[serde(skip_serializing_if = "Option::is_none")]
     pub metadata: Option<ProctorManeuver>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pronunciation: Option<String>,
