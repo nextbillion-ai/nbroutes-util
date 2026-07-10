@@ -585,7 +585,7 @@ pub struct OptimizationInput {
 }
 
 #[derive(Serialize, Deserialize, Debug, Clone, Apiv2Schema)]
-pub struct ProctorManeuver {
+pub struct ManeuverMetadata {
     pub bearing_before: i32,
     pub bearing_after: i32,
     pub coordinate: Coordinate,
@@ -1174,7 +1174,7 @@ pub struct Step {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ffs: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub metadata: Option<ProctorManeuver>,
+    pub metadata: Option<ManeuverMetadata>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pronunciation: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
