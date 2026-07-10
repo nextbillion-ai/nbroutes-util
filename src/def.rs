@@ -584,154 +584,8 @@ pub struct OptimizationInput {
     pub approaches: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Apiv2Schema)]
-pub struct NavigatingInput {
-    #[doc = "geometry input, if this is given, other params will not be considered except `original_shape_type` & `lang` & `key`."]
-    pub original_shape: Option<String>,
-    #[doc = "format of geometry.\n\nDefault: `polyline`"]
-    pub original_shape_type: Option<String>,
-    #[doc = "output format of geometry, alse indicates geometry input in the old version\n\nValue: `geojson|polyline|polyline6`.\n\nDefault: `polyline`"]
-    pub geometry: Option<String>,
-    #[doc = "format of geometry in the old version.\n\nDefault: `polyline6`"]
-    pub geometry_type: Option<String>,
-    #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
-    pub key: Option<String>,
-    #[doc = "{{location_of_origin}}\n\nFormat: `lat,lng`.\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+$"]
-    pub origin: Option<String>,
-    #[doc = "location of destination.\n\nFormat: `lat,lng`.\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+$"]
-    pub destination: Option<String>,
-    #[doc = "location(s) of waypoint(s) along the trip.\n\nFormat: `lat0,lng0|lat1,lng1|...`.\n\nRegex: (^[\\d\\.\\-]+,[\\d\\.\\-]+(\\|[\\d\\.\\-]+,[\\d\\.\\-]+)*$)"]
-    pub waypoints: Option<String>,
-    #[doc = "mode of service.\n\nValues:`car|auto|bike|escooter|4w|2w...`.\n\nDefault: `\"\"`"]
-    pub mode: Option<String>,
-    #[doc = "Indicates the truck size in CM, only valid when mode=6w. \n\nFormat: `height,width,length`."]
-    pub truck_size: Option<String>,
-    #[doc = "Indicates the truck weight including trailers and shipped goods in KG, only valid when mode=6w."]
-    pub truck_weight: Option<i32>,
-    #[doc = "departure time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
-    #[doc = "`deprecated`"]
-    pub context: Option<String>,
-    pub departure_time: Option<i64>,
-    #[doc = "unique session id for trip identification.\n\nNote: Help to reuse cached trip characteritics when set. \n\nDefault: `\"\"`"]
-    pub session: Option<String>,
-    #[doc = "output verbosity of overview (whole trip) geometry.\n\nDefault: `full`"]
-    pub overview: Option<OverviewInput>,
-    #[doc = "number of alternative routes to return.\n\nDefault: `1` if `alternatives` is disabled, `3` otherwise"]
-    pub altcount: Option<i32>,
-    #[doc = "enable to return alternative routes.\n\nNote: `altcount` will default to `3` if this is enabled.\n\nDefault: `false`"]
-    pub alternatives: Option<bool>,
-    #[doc = "Indicates that the calculated route(s) should avoid the indicated features. \n\nFormat: `value1|value2|...`. Default:`\"\"`"]
-    pub avoid: Option<String>,
-    #[doc = "language of the text instruction"]
-    pub lang: Option<String>,
-    pub approaches: Option<String>,
-    pub origin_approaches: Option<String>,
-    #[doc = "Limits the search to segments with given bearing in degrees towards true north in clockwise direction. \n\nFormat: `degree,range;degree,range...`. Default:`\"\"`"]
-    pub bearings: Option<String>,
-    #[doc = "using shortest route when route_type=shortest."]
-    pub route_type: Option<String>,
-    #[doc = "road info objects to include in response.\n\nFormat: `type1|type2,...`.\n\nDefault:`\"\"`"]
-    pub road_info: Option<String>,
-    #[doc = "help reroute, the history trace will be added to snap"]
-    pub travelled_raw_locations: Option<String>,
-    pub truck_axle_count: Option<u32>,
-    // in metric tons
-    pub truck_axle_load: Option<f64>,
-    pub hazmat_type: Option<String>,
-    pub cross_border: Option<bool>,
-}
-
-#[derive(Serialize, Deserialize, Apiv2Schema)]
-pub struct TravelledRawLocation {
-    pub bearing: Option<f64>,
-    pub accuracy: Option<f64>,
-    pub lat: Option<f64>,
-    pub lon: Option<f64>,
-}
-
-#[derive(Serialize, Deserialize, Apiv2Schema)]
-pub struct NavigatingOutput {
-    #[doc = "`Ok` for success."]
-    pub status: String,
-    #[doc = "`routes` calculated."]
-    pub routes: Vec<Route>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[doc = "error message when `status` != `Ok`"]
-    pub error_msg: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub country_code: Option<String>,
-}
-
-#[derive(Serialize, Deserialize, Apiv2Schema)]
-pub struct NavigatingProctorOutput {
-    #[doc = "`Ok` for success."]
-    pub status: String,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[doc = "error message when `status` != `Ok`"]
-    pub error_msg: Option<String>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[doc = "warning when facing unexpected behaviour"]
-    pub warning: Option<Vec<String>>,
-    #[doc = "the json result send to Proctor."]
-    pub navigating_res: ProctorRouteResult,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    pub country_code: Option<String>,
-    #[doc = "`the value of the share.config.voice_instuction_advance_distance"]
-    pub voice_instruction_advance_distance: Option<i32>,
-    #[doc = "`the value of the share.config.instruction_fork_bearing_lower_bound"]
-    pub instruction_fork_bearing_lower_bound: Option<i32>,
-}
-
-#[derive(Debug, Serialize, Deserialize, Apiv2Schema)]
-pub struct ProctorRouteResult {
-    pub code: Option<String>,
-    pub message: Option<String>,
-    pub routes: Vec<ProctorRoute>,
-}
-#[derive(Debug, Serialize, Deserialize, Apiv2Schema)]
-pub struct ProctorRoute {
-    pub duration: f64,
-    pub distance: f64,
-    pub weight_name: Option<String>,
-    pub weight: Option<f64>,
-    pub geometry: Option<String>,
-    pub legs: Vec<ProctorLeg>,
-    #[serde(skip_serializing_if = "Option::is_none")]
-    #[doc = "`road info objects crossed along the trip.`"]
-    pub road_info: Option<RoadInfo>,
-}
-
-#[derive(Debug, Serialize, Deserialize, Apiv2Schema)]
-pub struct ProctorLeg {
-    pub annotation: Option<Annotation>,
-    pub duration: f64,
-    pub summary: Option<String>,
-    pub weight: f64,
-    pub distance: f64,
-    pub steps: Vec<ProctorStep>,
-}
-
-#[derive(Debug, Serialize, Deserialize, Apiv2Schema)]
-pub struct ProctorStep {
-    pub distance: f64,
-    pub duration: f64,
-    pub geometry: Option<String>,
-    pub weight: f64,
-    pub name: Option<String>,
-    pub reference: Option<String>,
-    pub pronunciation: Option<String>,
-    pub destinations: Option<String>,
-    pub exits: Option<String>,
-    pub mode: Option<String>,
-    pub metadata: Option<ProctorManeuver>,
-    pub intersections: Vec<Intersection>,
-    pub rotary_name: Option<String>,
-    pub rotary_pronunciation: Option<String>,
-    pub driving_side: Option<String>,
-}
-
 #[derive(Serialize, Deserialize, Debug, Clone, Apiv2Schema)]
-pub struct ProctorManeuver {
+pub struct ManeuverMetadata {
     pub bearing_before: i32,
     pub bearing_after: i32,
     pub coordinate: Coordinate,
@@ -791,7 +645,7 @@ pub struct ValhallaDirectionsInput {
     pub hazmat_type: Option<String>,
 }
 
-#[derive(Serialize, Deserialize, Apiv2Schema,Clone)]
+#[derive(Serialize, Deserialize, Apiv2Schema, Clone)]
 pub struct DirectionsInput {
     #[doc = "{{location_of_origin}}\n\nFormat: `lat,lng`.\n\nRegex: ^[\\d\\.\\-]+,[\\d\\.\\-]+$"]
     pub origin: String,
@@ -1320,7 +1174,7 @@ pub struct Step {
     #[serde(skip_serializing_if = "Option::is_none")]
     pub ffs: Option<i64>,
     #[serde(skip_serializing_if = "Option::is_none")]
-    pub metadata: Option<ProctorManeuver>,
+    pub metadata: Option<ManeuverMetadata>,
     #[serde(skip_serializing_if = "Option::is_none")]
     pub pronunciation: Option<String>,
     #[serde(skip_serializing_if = "Option::is_none")]
