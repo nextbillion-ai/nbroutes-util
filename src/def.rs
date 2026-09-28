@@ -1035,6 +1035,7 @@ pub struct Annotation {
     pub duration: Vec<f64>,
     pub distance: Vec<f64>,
     pub speed: Vec<f64>,
+    pub free_flow_speed: Vec<f64>,
     pub weight: Vec<f64>,
     pub nodes: Vec<i64>,
     pub datasources: Vec<i32>,
