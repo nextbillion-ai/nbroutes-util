@@ -1834,6 +1834,16 @@ mod tests {
     }
 
     #[test]
+    fn annotation_accepts_and_omits_empty_free_flow_speed() {
+        let annotation: Annotation =
+            serde_json::from_str(&annotation_json(Some("[]"))).unwrap();
+
+        assert!(annotation.free_flow_speed.is_empty());
+        let serialized = serde_json::to_value(annotation).unwrap();
+        assert!(serialized.get("free_flow_speed").is_none());
+    }
+
+    #[test]
     fn test_load() {
         {
             let content = "clusters:\n
