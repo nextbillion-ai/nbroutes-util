@@ -1035,8 +1035,6 @@ pub struct Annotation {
     pub duration: Vec<f64>,
     pub distance: Vec<f64>,
     pub speed: Vec<f64>,
-    #[serde(default, skip_serializing_if = "Vec::is_empty")]
-    pub free_flow_speed: Vec<f64>,
     pub weight: Vec<f64>,
     pub nodes: Vec<i64>,
     pub datasources: Vec<i32>,
@@ -1794,54 +1792,6 @@ pub struct KeyServerAuthKey {
 #[cfg(test)]
 mod tests {
     use super::*;
-
-    fn annotation_json(free_flow_speed: Option<&str>) -> String {
-        let free_flow_speed = free_flow_speed
-            .map(|value| format!(r#", "free_flow_speed": {}"#, value))
-            .unwrap_or_default();
-        format!(
-            r#"{{
-                "duration": [1.0],
-                "distance": [10.0],
-                "speed": [10.0]{},
-                "weight": [1.0],
-                "nodes": [1, 2],
-                "datasources": [0],
-                "metadata": null,
-                "turn_penalty": [0.0]
-            }}"#,
-            free_flow_speed
-        )
-    }
-
-    #[test]
-    fn annotation_accepts_legacy_json_without_free_flow_speed() {
-        let annotation: Annotation = serde_json::from_str(&annotation_json(None)).unwrap();
-
-        assert!(annotation.free_flow_speed.is_empty());
-        let serialized = serde_json::to_value(annotation).unwrap();
-        assert!(serialized.get("free_flow_speed").is_none());
-    }
-
-    #[test]
-    fn annotation_round_trips_non_empty_free_flow_speed() {
-        let annotation: Annotation =
-            serde_json::from_str(&annotation_json(Some("[12.3]"))).unwrap();
-
-        assert_eq!(annotation.free_flow_speed, vec![12.3]);
-        let serialized = serde_json::to_value(annotation).unwrap();
-        assert_eq!(serialized["free_flow_speed"], serde_json::json!([12.3]));
-    }
-
-    #[test]
-    fn annotation_accepts_and_omits_empty_free_flow_speed() {
-        let annotation: Annotation =
-            serde_json::from_str(&annotation_json(Some("[]"))).unwrap();
-
-        assert!(annotation.free_flow_speed.is_empty());
-        let serialized = serde_json::to_value(annotation).unwrap();
-        assert!(serialized.get("free_flow_speed").is_none());
-    }
 
     #[test]
     fn test_load() {
