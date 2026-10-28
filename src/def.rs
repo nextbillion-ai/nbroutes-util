@@ -9,6 +9,24 @@ use std::collections::HashMap;
 pub const STATUS_OK: &str = "Ok";
 pub const STATUS_FAILED: &str = "Failed";
 
+fn deserialize_departure_time<'de, D: serde::Deserializer<'de>>(
+    deserializer: D,
+) -> std::result::Result<Option<i64>, D::Error> {
+    #[derive(Deserialize)]
+    #[serde(untagged)]
+    enum DepartureTime {
+        Seconds(i64),
+        Text(String),
+    }
+
+    match Option::<DepartureTime>::deserialize(deserializer)? {
+        None => Ok(None),
+        Some(DepartureTime::Seconds(seconds)) => Ok(Some(seconds)),
+        Some(DepartureTime::Text(text)) if text == "now" => Ok(Some(crate::timestamp())),
+        Some(DepartureTime::Text(text)) => text.parse().map(Some).map_err(serde::de::Error::custom),
+    }
+}
+
 #[derive(Serialize, Deserialize, Debug, Apiv2Schema, Clone)]
 pub enum EngineError {
     InputFailedToParseJsonRequest,
@@ -210,6 +228,7 @@ pub struct ISOChroneValhallaInput {
     pub denoise: Option<f32>,
     pub generalize: Option<f32>,
     #[doc = "departure time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
+    #[serde(default, deserialize_with = "deserialize_departure_time")]
     pub departure_time: Option<i64>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
@@ -607,6 +626,7 @@ pub struct ValhallaDirectionsInput {
     #[doc = "mode of service.\n\nValues:`car|auto|bike|escooter|4w|2w...`.\n\nDefault: `\"\"`"]
     pub mode: Option<String>,
     #[doc = "departure time, conflict with arrive_time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
+    #[serde(default, deserialize_with = "deserialize_departure_time")]
     pub departure_time: Option<i64>,
     #[doc = "arrive time, conflict with departure_time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
     pub arrive_time: Option<i64>,
@@ -658,6 +678,7 @@ pub struct DirectionsInput {
     #[doc = "mode of service.\n\nValues:`car|auto|bike|escooter|4w|2w...`.\n\nDefault: `\"\"`"]
     pub mode: Option<String>,
     #[doc = "departure time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
+    #[serde(default, deserialize_with = "deserialize_departure_time")]
     pub departure_time: Option<i64>,
     #[doc = "unique session id for trip identification.\n\nNote: Help to reuse cached trip characteritics when set. \n\nDefault: `\"\"`"]
     pub session: Option<String>,
@@ -1291,6 +1312,7 @@ pub struct ValhallaMatrixInput {
     #[doc = "mode of service.\n\nValues:`car|auto|bike|escooter|4w|2w...`.\n\nDefault: `\"\"`"]
     pub mode: Option<String>,
     #[doc = "departure time, conflict with arrive_time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
+    #[serde(default, deserialize_with = "deserialize_departure_time")]
     pub departure_time: Option<i64>,
     #[doc = "arrive time, conflict with departure_time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
     pub arrive_time: Option<i64>,
@@ -1328,6 +1350,7 @@ pub struct MatrixInput {
     #[doc = "mode of service.\n\nValues:`car|auto|bike|escooter|4w|2w...`.\n\nDefault: `\"\"`"]
     pub mode: Option<String>,
     #[doc = "departure time.\n\nFormat: `unix timestamp`.\n\nUnit: `seconds`.\n\nDefault: `0`"]
+    #[serde(default, deserialize_with = "deserialize_departure_time")]
     pub departure_time: Option<i64>,
     #[doc = "apikey for authentication.\n\nDefault: `\"\"`"]
     pub key: Option<String>,
@@ -1504,6 +1527,7 @@ pub struct IsochroneInput {
     pub strokes: Option<String>,
     pub opacities: Option<String>, // range: [0, 1], 0 for transparent
     pub mode: Option<String>,
+    #[serde(default, deserialize_with = "deserialize_departure_time")]
     pub departure_time: Option<i64>,
     pub key: Option<String>,
 }
